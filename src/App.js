@@ -3,6 +3,8 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
 import ResizeWrapper from './ResizeWrapper';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import AdvertisingTimeline from './apps/AdvertisingTimeline.js';
 import BreakEven from './apps/BreakEven.js';
 import CounterApp from './apps/CounterApp.js';
@@ -11,9 +13,31 @@ import PositioningStatementCreator from './apps/PositioningStatementCreator.js';
 import PositioningStatementGlobal from './apps/PositioningStatementGlobal.js';
 import ToggleSwitchApp from './apps/ToggleSwitchApp.js';
 
+
+function DynamicTitle() {
+  const location = useLocation();
+
+  useEffect(() => {
+    const titles = {
+      '/advertisingtimeline': 'Advertising Timeline',
+  '/breakeven': 'Break Even',
+  '/counterapp': 'Counter App',
+  '/doublenumber': 'Double Number',
+  '/positioningstatementcreator': 'Positioning Statement Creator',
+  '/positioningstatementglobal': 'Positioning Statement Global',
+  '/toggleswitchapp': 'Toggle Switch App'
+    };
+    document.title = titles[location.pathname] || 'Interactive Learning Apps';
+  }, [location]);
+
+  return null;
+}
+
+
 function App() {
   return (
     <Router>
+      <DynamicTitle />
       <Routes>
         <Route
           path="/"
