@@ -1,0 +1,73 @@
+.App {
+    text-align: center;
+  }
+  
+  .App-logo {
+    height: 40vmin;
+    pointer-events: none;
+  }
+  
+  @media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+      animation: App-logo-spin infinite 20s linear;
+    }
+  }
+  
+  .App-header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+  }
+  
+  .App-link {
+    color: #61dafb;
+  }
+  
+  @keyframes App-logo-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* Aspect ratio 16:9 */
+    height: 0;
+    overflow: hidden;
+    width: 100%; /* Ensure it takes up the full width of the container */
+    background: #000; /* Optional background color */
+  }
+  
+  .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; /* Make sure it covers the full width of the container */
+    height: 100%; /* Maintain height based on width to ensure aspect ratio */
+  }
+  
+  /* For larger screens, keep the max width but also ensure it is centered */
+  @media (min-width: 768px) {
+    .video-container {
+      max-width: 100%; /* Remove max-width limitation for larger screens */
+      margin: 0 auto; /* Center the video if necessary */
+    }
+  }
+  
+  /* Hide the buttons on mobile view */
+  @media (max-width: 768px) {
+    .timeline-buttons {
+      display: none;
+    }
+  }
+  
+  
+  

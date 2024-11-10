@@ -1,0 +1,38 @@
+name: Update App.js Routes
+
+on:
+  push:
+    paths:
+      - 'src/apps/*.js'
+  pull_request:
+    paths:
+      - 'src/apps/*.js'
+
+jobs:
+  update-app-js:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16' # Specify the Node.js version here
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run updateAppJs.js script
+        run: node updateAppJs.js
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.name "GitHub Actions"
+          git config --local user.email "actions@github.com"
+          git add src/App.js
+          git commit -m "Automated update of App.js with new routes and links"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
