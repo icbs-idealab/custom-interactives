@@ -9,8 +9,17 @@ const appJsPath = path.join(__dirname, 'src', 'App.js');
 const files = fs.readdirSync(appsDir).filter(file => file.endsWith('.js'));
 
 // Generate imports for each app and the ResizeWrapper
-const imports = `import ResizeWrapper from './ResizeWrapper';\n` +
+const imports = `import ResizeWrapper from './ResizeWrapper';\nimport { useEffect } from 'react';\nimport { useLocation } from 'react-router-dom';\n` +
                 files.map(file => `import ${path.basename(file, '.js')} from './apps/${file}';`).join('\n');
+
+// Generate title map for DynamicTitle component
+const titleMap = files
+  .map(file => {
+    const routeName = path.basename(file, '.js').toLowerCase();
+    const title = path.basename(file, '.js').replace(/([A-Z])/g, ' $1').trim();
+    return `'/${routeName}': '${title}'`;
+  })
+  .join(',\n  ');
 
 // Generate routes wrapped in ResizeWrapper
 const routes = files
@@ -29,6 +38,22 @@ const links = files
   })
   .join('\n                ');
 
+// Template for the DynamicTitle component
+const dynamicTitleComponent = `
+function DynamicTitle() {
+  const location = useLocation();
+
+  useEffect(() => {
+    const titles = {
+      ${titleMap}
+    };
+    document.title = titles[location.pathname] || 'Interactive Learning Apps';
+  }, [location]);
+
+  return null;
+}
+`;
+
 // Template for the App.js content
 const appJsContent = `
 import React from 'react';
@@ -36,9 +61,12 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
 ${imports}
 
+${dynamicTitleComponent}
+
 function App() {
   return (
     <Router>
+      <DynamicTitle />
       <Routes>
         <Route
           path="/"
@@ -65,4 +93,4 @@ export default App;
 
 // Write the updated App.js content
 fs.writeFileSync(appJsPath, appJsContent);
-console.log('App.js updated with new routes and links!');
+console.log('App.js updated with new routes, links, and dynamic titles!');

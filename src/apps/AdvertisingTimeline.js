@@ -18,7 +18,7 @@ const timelineData = [
     {
         decade: '1960s',
         title: 'The birth of the creative revolution',
-        description: 'The rise of creative-driven advertising, focusing on wit and storytelling. Madison Avenue agencies changed the landscape by prioritising creativity over hard-selling tactics.',
+        description: 'The rise of creative-driven advertising, focusing on wit and storytelling. Madison Avenue agencies changed the landscape by prioritising creativity over hard-sell tactics.',
         exampleAd: 'Volkswagen\'s \'Think Small\' (1960)',
         impact: 'This minimalist ad revolutionised car advertising by emphasising simplicity and irony.',
         icon: () => <FontAwesomeIcon icon={faPenNib} />,        
