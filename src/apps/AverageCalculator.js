@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import supabase from '../supabase';
+import Cookies from 'js-cookie'; // Import the cookie library
 
 const AverageCalculator = () => {
     const [inputNumber, setInputNumber] = useState('');
@@ -8,11 +9,18 @@ const AverageCalculator = () => {
     const [allInputs, setAllInputs] = useState([]);
 
     const appId = 'AverageCalculator'; // Unique identifier for this app
+    const cookieName = `submitted_${appId}`; // Cookie specific to this app
 
-    // Save a user's input to Supabase
+    const hasSubmitted = Cookies.get(cookieName); // Check if the cookie exists
+
     const saveNumber = async () => {
         if (!inputNumber || isNaN(inputNumber)) {
             setStatus('Please enter a valid number.');
+            return;
+        }
+
+        if (hasSubmitted) {
+            setStatus('You have already submitted a number for this app.');
             return;
         }
 
@@ -26,11 +34,11 @@ const AverageCalculator = () => {
         } else {
             setStatus('Number saved successfully!');
             setInputNumber('');
-            fetchAverage(); // Recalculate the average after saving
+            Cookies.set(cookieName, true, { expires: 1 }); // Set the cookie (expires in 1 day)
+            fetchAverage(); // Recalculate the average
         }
     };
 
-    // Fetch all numbers and calculate the average
     const fetchAverage = async () => {
         const { data, error } = await supabase
             .from('app_data')
@@ -43,19 +51,22 @@ const AverageCalculator = () => {
             return;
         }
 
-        // Extract numbers and calculate the average
         const numbers = data.map((item) => item.data.number);
         const avg = numbers.reduce((acc, num) => acc + num, 0) / numbers.length || 0;
 
-        setAllInputs(numbers); // Store all inputs for display
+        setAllInputs(numbers);
         setAverage(avg);
         setStatus('Average calculated successfully!');
     };
 
-    // Fetch the average on component mount
     useEffect(() => {
         fetchAverage();
     }, []);
+
+    const resetSubmission = () => {
+        Cookies.remove(cookieName); // Remove the cookie to allow new submission
+        setStatus('You can now submit again.');
+    };
 
     return (
         <div>
@@ -65,8 +76,14 @@ const AverageCalculator = () => {
                 value={inputNumber}
                 onChange={(e) => setInputNumber(e.target.value)}
                 placeholder="Enter a number"
+                disabled={hasSubmitted} // Disable input if user has already submitted
             />
-            <button onClick={saveNumber}>Save Number</button>
+            <button onClick={saveNumber} disabled={hasSubmitted}>
+                Save Number
+            </button>
+            <button onClick={resetSubmission}>
+                Reset Submission
+            </button>
             <p>{status}</p>
 
             <h2>Results</h2>
