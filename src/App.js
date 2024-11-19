@@ -6,11 +6,13 @@ import ResizeWrapper from './ResizeWrapper';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import AdvertisingTimeline from './apps/AdvertisingTimeline.js';
+import AverageCalculator from './apps/AverageCalculator.js';
 import BreakEven from './apps/BreakEven.js';
 import CounterApp from './apps/CounterApp.js';
 import DoubleNumber from './apps/DoubleNumber.js';
 import PositioningStatementCreator from './apps/PositioningStatementCreator.js';
 import PositioningStatementGlobal from './apps/PositioningStatementGlobal.js';
+import TestApp from './apps/TestApp.js';
 import ToggleSwitchApp from './apps/ToggleSwitchApp.js';
 
 
@@ -20,11 +22,13 @@ function DynamicTitle() {
   useEffect(() => {
     const titles = {
       '/advertisingtimeline': 'Advertising Timeline',
+  '/averagecalculator': 'Average Calculator',
   '/breakeven': 'Break Even',
   '/counterapp': 'Counter App',
   '/doublenumber': 'Double Number',
   '/positioningstatementcreator': 'Positioning Statement Creator',
   '/positioningstatementglobal': 'Positioning Statement Global',
+  '/testapp': 'Test App',
   '/toggleswitchapp': 'Toggle Switch App'
     };
     document.title = titles[location.pathname] || 'Interactive Learning Apps';
@@ -48,11 +52,13 @@ function App() {
               <nav style={{ marginTop: '1rem' }}>
                 <ul style={{ listStyle: 'none', padding: 0 }}>
                   <li style={{ marginBottom: '1rem' }}><Link to="/advertisingtimeline" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Advertising Timeline</Link></li>
+                <li style={{ marginBottom: '1rem' }}><Link to="/averagecalculator" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Average Calculator</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/breakeven" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Break Even</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/counterapp" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Counter App</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/doublenumber" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Double Number</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/positioningstatementcreator" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Positioning Statement Creator</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/positioningstatementglobal" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Positioning Statement Global</Link></li>
+                <li style={{ marginBottom: '1rem' }}><Link to="/testapp" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Test App</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/toggleswitchapp" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Toggle Switch App</Link></li>
                 </ul>
               </nav>
@@ -60,11 +66,13 @@ function App() {
           }
         />
         <Route path="/advertisingtimeline" element={<ResizeWrapper><AdvertisingTimeline /></ResizeWrapper>} />
+        <Route path="/averagecalculator" element={<ResizeWrapper><AverageCalculator /></ResizeWrapper>} />
         <Route path="/breakeven" element={<ResizeWrapper><BreakEven /></ResizeWrapper>} />
         <Route path="/counterapp" element={<ResizeWrapper><CounterApp /></ResizeWrapper>} />
         <Route path="/doublenumber" element={<ResizeWrapper><DoubleNumber /></ResizeWrapper>} />
         <Route path="/positioningstatementcreator" element={<ResizeWrapper><PositioningStatementCreator /></ResizeWrapper>} />
         <Route path="/positioningstatementglobal" element={<ResizeWrapper><PositioningStatementGlobal /></ResizeWrapper>} />
+        <Route path="/testapp" element={<ResizeWrapper><TestApp /></ResizeWrapper>} />
         <Route path="/toggleswitchapp" element={<ResizeWrapper><ToggleSwitchApp /></ResizeWrapper>} />
       </Routes>
     </Router>
