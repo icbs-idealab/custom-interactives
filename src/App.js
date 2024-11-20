@@ -12,7 +12,6 @@ import CounterApp from './apps/CounterApp.js';
 import DoubleNumber from './apps/DoubleNumber.js';
 import PositioningStatementCreator from './apps/PositioningStatementCreator.js';
 import PositioningStatementGlobal from './apps/PositioningStatementGlobal.js';
-import ReplitTe from './apps/ReplitTe.js';
 import TestApp from './apps/TestApp.js';
 import ToggleSwitchApp from './apps/ToggleSwitchApp.js';
 
@@ -29,7 +28,6 @@ function DynamicTitle() {
   '/doublenumber': 'Double Number',
   '/positioningstatementcreator': 'Positioning Statement Creator',
   '/positioningstatementglobal': 'Positioning Statement Global',
-  '/replitte': 'Replit Te',
   '/testapp': 'Test App',
   '/toggleswitchapp': 'Toggle Switch App'
     };
@@ -60,7 +58,6 @@ function App() {
                 <li style={{ marginBottom: '1rem' }}><Link to="/doublenumber" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Double Number</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/positioningstatementcreator" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Positioning Statement Creator</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/positioningstatementglobal" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Positioning Statement Global</Link></li>
-                <li style={{ marginBottom: '1rem' }}><Link to="/replitte" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Replit Te</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/testapp" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Test App</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/toggleswitchapp" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Toggle Switch App</Link></li>
                 </ul>
@@ -75,7 +72,6 @@ function App() {
         <Route path="/doublenumber" element={<ResizeWrapper><DoubleNumber /></ResizeWrapper>} />
         <Route path="/positioningstatementcreator" element={<ResizeWrapper><PositioningStatementCreator /></ResizeWrapper>} />
         <Route path="/positioningstatementglobal" element={<ResizeWrapper><PositioningStatementGlobal /></ResizeWrapper>} />
-        <Route path="/replitte" element={<ResizeWrapper><ReplitTe /></ResizeWrapper>} />
         <Route path="/testapp" element={<ResizeWrapper><TestApp /></ResizeWrapper>} />
         <Route path="/toggleswitchapp" element={<ResizeWrapper><ToggleSwitchApp /></ResizeWrapper>} />
       </Routes>
