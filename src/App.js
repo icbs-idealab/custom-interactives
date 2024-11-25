@@ -13,6 +13,7 @@ import DoubleNumber from './apps/DoubleNumber.js';
 import PositioningStatementCreator from './apps/PositioningStatementCreator.js';
 import PositioningStatementGlobal from './apps/PositioningStatementGlobal.js';
 import TestApp from './apps/TestApp.js';
+import TimModuleMap from './apps/TimModuleMap.js';
 import ToggleSwitchApp from './apps/ToggleSwitchApp.js';
 
 
@@ -29,6 +30,7 @@ function DynamicTitle() {
   '/positioningstatementcreator': 'Positioning Statement Creator',
   '/positioningstatementglobal': 'Positioning Statement Global',
   '/testapp': 'Test App',
+  '/timmodulemap': 'Tim Module Map',
   '/toggleswitchapp': 'Toggle Switch App'
     };
     document.title = titles[location.pathname] || 'Interactive Learning Apps';
@@ -59,6 +61,7 @@ function App() {
                 <li style={{ marginBottom: '1rem' }}><Link to="/positioningstatementcreator" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Positioning Statement Creator</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/positioningstatementglobal" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Positioning Statement Global</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/testapp" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Test App</Link></li>
+                <li style={{ marginBottom: '1rem' }}><Link to="/timmodulemap" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Tim Module Map</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/toggleswitchapp" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Toggle Switch App</Link></li>
                 </ul>
               </nav>
@@ -73,6 +76,7 @@ function App() {
         <Route path="/positioningstatementcreator" element={<ResizeWrapper><PositioningStatementCreator /></ResizeWrapper>} />
         <Route path="/positioningstatementglobal" element={<ResizeWrapper><PositioningStatementGlobal /></ResizeWrapper>} />
         <Route path="/testapp" element={<ResizeWrapper><TestApp /></ResizeWrapper>} />
+        <Route path="/timmodulemap" element={<ResizeWrapper><TimModuleMap /></ResizeWrapper>} />
         <Route path="/toggleswitchapp" element={<ResizeWrapper><ToggleSwitchApp /></ResizeWrapper>} />
       </Routes>
     </Router>
