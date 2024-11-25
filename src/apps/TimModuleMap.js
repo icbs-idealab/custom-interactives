@@ -1,6 +1,29 @@
 import React, { useState } from 'react';
-import { AlertDialog, AlertDialogContent, AlertDialogTrigger, AlertDialogCancel } from '@/components/ui/alert-dialog';
-import { Brain, Glasses, Network, Lightbulb, ArrowRight, X } from 'lucide-react';
+import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog';
+import { Brain, Glasses, Network, Lightbulb, X } from 'lucide-react';
+
+// Add some basic styles to handle the modal overlay and positioning
+const overlayStyles = {
+  position: 'fixed',
+  inset: 0,
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  zIndex: 50,
+};
+
+const contentStyles = {
+  position: 'fixed',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  backgroundColor: 'white',
+  borderRadius: '6px',
+  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
+  width: '90%',
+  maxWidth: '42rem',
+  maxHeight: '85vh',
+  overflowY: 'auto',
+  zIndex: 51,
+};
 
 const ModuleMap = () => {
   const [activeTheme, setActiveTheme] = useState(null);
@@ -19,6 +42,7 @@ const ModuleMap = () => {
     { name: 'Customer Experience', icon: <Brain className="w-5 h-5" /> },
     { name: 'Digital Transformation', icon: <Glasses className="w-5 h-5" /> }
   ];
+
 
   const sessions = {
     1: {
@@ -141,8 +165,8 @@ const ModuleMap = () => {
     const isHighlighted = activeTheme !== null && session.crossCutting.includes(activeTheme);
     
     return (
-      <AlertDialog>
-        <AlertDialogTrigger>
+      <AlertDialogPrimitive.Root>
+        <AlertDialogPrimitive.Trigger asChild>
           <div 
             className={`
               relative p-4 rounded-lg shadow-lg cursor-pointer
@@ -156,16 +180,21 @@ const ModuleMap = () => {
             <div className="text-sm font-bold">Session {sessionNum}</div>
             <div className="text-sm mt-2">{session.title}</div>
           </div>
-        </AlertDialogTrigger>
-        <AlertDialogContent className="max-w-2xl">
-          <div className="relative">
-            <AlertDialogCancel className="absolute right-0 top-0">
-              <X className="h-4 w-4" />
-            </AlertDialogCancel>
-            <SessionModal session={session} sessionNum={sessionNum} />
-          </div>
-        </AlertDialogContent>
-      </AlertDialog>
+        </AlertDialogPrimitive.Trigger>
+
+        <AlertDialogPrimitive.Portal>
+          <AlertDialogPrimitive.Overlay style={overlayStyles}>
+            <AlertDialogPrimitive.Content style={contentStyles}>
+              <div className="relative">
+                <AlertDialogPrimitive.Cancel className="absolute right-2 top-2 p-2 hover:bg-gray-100 rounded-full">
+                  <X className="h-4 w-4" />
+                </AlertDialogPrimitive.Cancel>
+                <SessionModal session={session} sessionNum={sessionNum} />
+              </div>
+            </AlertDialogPrimitive.Content>
+          </AlertDialogPrimitive.Overlay>
+        </AlertDialogPrimitive.Portal>
+      </AlertDialogPrimitive.Root>
     );
   };
 
