@@ -1,488 +1,277 @@
-import { useState } from 'react';
-import { Globe2, Flag, Users, BookOpen, Users2, CircleEqual, AlertCircle, PersonStanding, ClipboardList, GraduationCap, Target, BarChart3, MoveUp, Leaf, ListChecks, Quote } from 'lucide-react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, Treemap } from 'recharts';
+import { useState, useRef, useEffect } from 'react';
+import { ThumbsUp, ThumbsDown, Headphones, Type, BarChart, Moon, Sun, CheckCircle, Sparkles } from 'lucide-react';
 
-const StatsCard = ({ icon: Icon, number, text, color }) => (
-  <div className={`p-6 flex flex-col items-center justify-center text-center space-y-3 w-72 h-60 rounded-2xl border ${color} transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg`}>
-    <div className="rounded-full bg-white/90 p-4 shadow-sm">
-      <Icon className="w-8 h-8" />
-    </div>
-    <span className="text-5xl font-bold mt-2">{number}</span>
-    <p className="text-sm font-medium px-2 leading-snug opacity-90">{text}</p>
+// Basic Card Component
+const Card = ({ children, className = '', ...props }) => (
+  <div 
+    className={`bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden relative ${className}`} 
+    {...props}
+  >
+    {children}
   </div>
 );
 
-const TabButton = ({ active, onClick, children }) => (
-  <button
-    onClick={onClick}
-    className={`px-6 py-3 rounded-2xl transition-all duration-300 ${
-      active
-        ? 'bg-yellow-400 text-gray-700 shadow-sm hover:bg-yellow-300'
-        : 'bg-white hover:bg-gray-50 border border-gray-200 text-gray-600'
-    } transform hover:-translate-y-0.5`}
+// Basic Button Component
+const Button = ({ children, className = '', ...props }) => (
+  <button 
+    className={`flex items-center justify-center gap-2 px-6 py-3 rounded-2xl transition-all duration-300 ${className}`} 
+    {...props}
   >
     {children}
   </button>
 );
 
-const SimplifiedTreemap = ({ northPercentage }) => {
-  const southPercentage = 100 - northPercentage;
+// Theme Toggle Component
+const ThemeToggle = ({ isDark, onToggle }) => (
+  <Button
+    onClick={onToggle}
+    className="fixed top-6 right-6 p-3 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700
+    text-gray-700 dark:text-gray-200 hover:-translate-y-0.5 hover:shadow-md"
+    aria-label="Toggle theme"
+  >
+    {isDark ? (
+      <Sun className="w-5 h-5" />
+    ) : (
+      <Moon className="w-5 h-5" />
+    )}
+  </Button>
+);
 
-  const distributionData = [
-    {
-      percentage: northPercentage,
-      label: "Global North",
-      description: "(% of countries represented from the Global North)",
-      color: "bg-yellow-400 hover:bg-yellow-300",
-      textColor: "text-gray-700",
-      roundedSide: "rounded-2xl md:rounded-2xl md:rounded-r-none"
-    },
-    {
-      percentage: southPercentage,
-      label: "Global South",
-      description: "(% of countries represented from the Global South)",
-      color: "bg-yellow-400 hover:bg-yellow-300",
-      textColor: "text-gray-700",
-      roundedSide: "rounded-2xl md:rounded-2xl md:rounded-l-none"
-    }
-  ];
+const NavButton = ({ direction, onClick, disabled }) => (
+  <Button
+    onClick={onClick}
+    className={`absolute ${direction === 'left' ? '-left-4' : '-right-4'} top-1/2 -translate-y-1/2 z-10
+    h-12 w-12 flex items-center justify-center rounded-full 
+    bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600
+    text-gray-700 dark:text-gray-300 font-bold text-lg
+    hover:bg-gray-200 dark:hover:bg-gray-700 hover:scale-105 transition-transform
+    ${disabled ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}
+    disabled={disabled}
+    aria-label={direction === 'left' ? 'Previous' : 'Next'}
+  >
+    {direction === 'left' ? '←' : '→'}
+  </Button>
+);
 
-  return (
-    <div className="w-full max-w-6xl mx-auto mt-8">
-      <div className="flex flex-col md:flex-row md:items-stretch">
-        {distributionData.map((region, index) => (
-          <div
-            key={index}
-            className="flex-1 transition-all duration-300"
-            style={{
-              flexGrow: index === 0 ? northPercentage : southPercentage
-            }}
-          >
-            <div className={`${region.color} p-6 ${region.roundedSide} flex flex-col justify-between h-full transition-all duration-300 hover:shadow-lg`}>
-              <div>
-                <span className={`text-4xl font-bold ${region.textColor}`}>{region.percentage}%</span>
-                <h3 className={`text-xl font-semibold ${region.textColor} mt-2`}>{region.label}</h3>
-              </div>
-              <p className={`text-sm ${region.textColor} mt-4 break-words opacity-90`}>
-                {region.description}
-              </p>
-            </div>
-          </div>
-        ))}
+// Tooltip Component
+const Tooltip = ({ children, text }) => (
+    <div className="relative group">
+      {children}
+      <div className="absolute top-full mt-1 right-0 bg-gray-800 text-white text-sm rounded-lg px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        {text}
       </div>
     </div>
   );
-};
-
-const RepresentationTab = () => {
-  const stats = [
-    {
-      icon: Globe2,
-      number: "13",
-      text: "countries are represented in this module",
-      color: "bg-white text-gray-800 border-gray-200"
-    },
-    {
-      icon: Flag,
-      number: "United States",
-      text: "is the country with the highest representation (37 references)",
-      color: "bg-white text-gray-800 border-gray-200"
-    },
-    {
-      icon: Users,
-      number: "45%",
-      text: "of people referred to whose ethnicity is identifiable are caucasian",
-      color: "bg-white text-gray-800 border-gray-200"
-    }
-  ];
-
-  return (
-    <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {stats.map((stat, index) => (
-          <StatsCard
-            key={index}
-            icon={stat.icon}
-            number={stat.number}
-            text={stat.text}
-            color={stat.color}
-          />
-        ))}
-      </div>
-      <SimplifiedTreemap northPercentage={80} />
-    </div>
-  );
-};
-
-const EDITab = () => {
-  const stats = [
-    {
-      icon: CircleEqual,
-      number: "4",
-      text: "possible instances of gendered language identified",
-      color: "bg-white text-gray-800 border-gray-200"
-    },
-    {
-      icon: Users2,
-      number: "40%",
-      text: "of images with people show diverse representation",
-      color: "bg-white text-gray-800 border-gray-200"
-    },
-    {
-      icon: BookOpen,
-      number: "68%",
-      text: "of discipline-specific terms used are explained",
-      color: "bg-white text-gray-800 border-gray-200"
-    },
-    {
-      icon: AlertCircle,
-      number: "2",
-      text: "possible instances of stereotypes or generalizations found",
-      color: "bg-white text-gray-800 border-gray-200"
-    },
-    {
-      icon: PersonStanding,
-      number: "3",
-      text: "possible acknowledgements of EDI themes",
-      color: "bg-white text-gray-800 border-gray-200"
-    },
-    {
-      icon: Quote,
-      number: "5",
-      text: "possible cultural references identified",
-      color: "bg-white text-gray-800 border-gray-200"
-    }
-  ];
-
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-      {stats.map((stat, index) => (
-        <StatsCard
-          key={index}
-          icon={stat.icon}
-          number={stat.number}
-          text={stat.text}
-          color={stat.color}
-        />
-      ))}
-    </div>
-  );
-};
-const AssessmentPieChart = () => {
-    const data = [
-      { name: 'Participation', value: 1 },
-      { name: 'Report', value: 1 },
-      { name: 'Presentation', value: 1 }
-    ];
   
-    const COLORS = ['#facc15', '#fbbf24', '#f59e0b'];
   
-    return (
-      <div className="w-full max-w-6xl mx-auto mt-8 bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
-        <h3 className="text-lg font-semibold mb-4 text-gray-800">Distribution of Assessment Types</h3>
-        <div className="h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={data}
-                cx="50%"
-                cy="50%"
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-                label={({ name, value }) => `${name}: ${value}`}
-              >
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Legend verticalAlign="bottom" height={36} />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-    );
-  };
+  const ExerciseBox = ({ title, initialText, initialVersionContent }) => {
+    const [versions, setVersions] = useState([{ text: initialText, feedback: null, feedbackGiven: false }]);
+    const [currentVersion, setCurrentVersion] = useState(0);
+    const scrollContainerRef = useRef(null);
   
-  const AssessmentTab = () => {
-    const stats = [
-      {
-        icon: ClipboardList,
-        number: "3",
-        text: "types of assessment included",
-        color: "bg-white text-gray-800 border-gray-200"
-      },
-      {
-        icon: GraduationCap,
-        number: "2",
-        text: "assessments align with one or more module learning outcomes",
-        color: "bg-white text-gray-800 border-gray-200"
-      },
-      {
-        icon: Target,
-        number: "3/5",
-        text: "module learning outcomes are effective",
-        color: "bg-white text-gray-800 border-gray-200"
-      },
-      {
-        icon: ListChecks,
-        number: "0/2",
-        text: "of uploaded assessments have clear marking criteria or rubrics",
-        color: "bg-white text-gray-800 border-gray-200"
+    useEffect(() => {
+      if (scrollContainerRef.current) {
+        const container = scrollContainerRef.current;
+        const cardWidth = container.offsetWidth;
+        container.scrollTo({
+          left: cardWidth * currentVersion,
+          behavior: 'smooth',
+        });
       }
-    ];
+    }, [currentVersion]);
   
-    return (
-      <div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {stats.map((stat, index) => (
-            <StatsCard
-              key={index}
-              icon={stat.icon}
-              number={stat.number}
-              text={stat.text}
-              color={stat.color}
-            />
-          ))}
-        </div>
-        <AssessmentPieChart />
-      </div>
-    );
-  };
+    const handleScroll = (direction) => {
+      const newVersion = direction === 'left'
+        ? Math.max(0, currentVersion - 1)
+        : Math.min(versions.length - 1, currentVersion + 1);
+      setCurrentVersion(newVersion);
+    };
   
-  const SDGTreemap = () => {
-    const data = [
-      {
-        name: 'SDG 1: No Poverty',
-        shortName: 'SDG 1',
-        size: 12,
-        fill: '#facc15',
-      },
-      {
-        name: 'SDG 2: Zero Hunger',
-        shortName: 'SDG 2',
-        size: 15,
-        fill: '#fbbf24',
-      },
-      {
-        name: 'SDG 6: Clean Water',
-        shortName: 'SDG 6',
-        size: 15,
-        fill: '#f59e0b',
-      },
-      {
-        name: 'SDG 8: Decent Work',
-        shortName: 'SDG 8',
-        size: 28,
-        fill: '#facc15',
-      },
-      {
-        name: 'SDG 9: Industry Innovation',
-        shortName: 'SDG 9',
-        size: 25,
-        fill: '#fbbf24',
-      },
-      {
-        name: 'SDG 10: Reduced Inequalities',
-        shortName: 'SDG 10',
-        size: 20,
-        fill: '#f59e0b',
-      },
-      {
-        name: 'SDG 11: Sustainable Cities',
-        shortName: 'SDG 11',
-        size: 16,
-        fill: '#facc15',
-      },
-      {
-        name: 'SDG 13: Climate Action',
-        shortName: 'SDG 13',
-        size: 22,
-        fill: '#fbbf24',
-      },
-      {
-        name: 'SDG 14: Life Below Water',
-        shortName: 'SDG 14',
-        size: 12,
-        fill: '#f59e0b',
-      },
-      {
-        name: 'SDG 15: Life on Land',
-        shortName: 'SDG 15',
-        size: 14,
-        fill: '#facc15',
-      },
-      {
-        name: 'SDG 16: Peace & Justice',
-        shortName: 'SDG 16',
-        size: 15,
-        fill: '#fbbf24',
-      },
-      {
-        name: 'SDG 17: Partnerships',
-        shortName: 'SDG 17',
-        size: 22,
-        fill: '#f59e0b',
-      }
-    ];
+    const handleFeedback = (type, versionIndex) => {
+      setVersions(versions.map((version, index) => 
+        index === versionIndex
+          ? { ...version, feedback: type, feedbackGiven: true }
+          : version
+      ));
+    };
   
-    const CustomizedContent = (props) => {
-      const { x, y, width, height, shortName, fill } = props;
-  
-      return (
-        <g>
-          <rect
-            x={x}
-            y={y}
-            width={width}
-            height={height}
-            style={{
-              fill,
-              stroke: '#fff',
-              strokeWidth: 2,
-              strokeOpacity: 1,
-            }}
-          />
-          {width > 30 && height > 30 && (
-            <text
-              x={x + width / 2}
-              y={y + height / 2}
-              textAnchor="middle"
-              dominantBaseline="middle"
-              fill="#1f2937"
-              fontSize={14}
-              fontWeight="bold"
-              style={{ pointerEvents: 'none' }}
-            >
-              {shortName}
-            </text>
-          )}
-        </g>
-      );
+    const addExercise = (text) => {
+      const newIndex = versions.length;
+      setVersions([...versions, { text, feedback: null, feedbackGiven: false }]);
+      setCurrentVersion(newIndex); // Switch focus to the newly added version
     };
   
     return (
-      <div className="w-full max-w-6xl mx-auto mt-8 bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
-        <h3 className="text-lg font-semibold mb-4 text-gray-800">SDG Coverage Distribution</h3>
-        <div className="h-[500px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <Treemap
-              data={data}
-              dataKey="size"
-              aspectRatio={4/3}
-              stroke="#fff"
-              content={<CustomizedContent />}
-            >
-              <Tooltip
-                content={({ active, payload }) => {
-                  if (active && payload && payload.length) {
-                    const data = payload[0].payload;
-                    return (
-                      <div className="bg-white p-2 shadow-lg rounded-lg border border-gray-200">
-                        <p className="text-sm font-semibold text-gray-800">{data.name}</p>
-                        <p className="text-sm text-gray-600">{data.size} references</p>
-                      </div>
-                    );
-                  }
-                  return null;
-                }}
-              />
-            </Treemap>
-          </ResponsiveContainer>
-        </div>
-      </div>
-    );
-  };
-  
-  const SDGTab = () => {
-    const stats = [
-      {
-        icon: BarChart3,
-        number: "8/17",
-        text: "SDGs are addressed by the content",
-        color: "bg-white text-gray-800 border-gray-200"
-      },
-      {
-        icon: MoveUp,
-        number: "SDG 8",
-        text: "Decent Work and Economic Growth is the most prominent SDG theme",
-        color: "bg-white text-gray-800 border-gray-200"
-      },
-      {
-        icon: Leaf,
-        number: "4",
-        text: "references to climate-related themes and actions",
-        color: "bg-white text-gray-800 border-gray-200"
-      }
-    ];
-  
-    return (
-      <div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {stats.map((stat, index) => (
-            <StatsCard
-              key={index}
-              icon={stat.icon}
-              number={stat.number}
-              text={stat.text}
-              color={stat.color}
-            />
-          ))}
-        </div>
-        <SDGTreemap />
-      </div>
-    );
-  };
-  
-  const RepresentationDashboard = () => {
-    const [activeTab, setActiveTab] = useState('representation');
-  
-    return (
-      <div className="w-full mx-auto p-4 sm:p-8 bg-gradient-to-b from-blue-50 to-white min-h-screen">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-2xl font-bold text-gray-800 mb-8 flex items-center gap-2">
-            Module Analysis Dashboard ✨
-          </h1>
-          
-          <div className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden mb-6">
-            <div className="p-6 border-b border-gray-100">
-              <div className="flex flex-wrap gap-3 justify-center">
-                <TabButton 
-                  active={activeTab === 'representation'} 
-                  onClick={() => setActiveTab('representation')}
-                >
-                  Representation
-                </TabButton>
-                <TabButton 
-                  active={activeTab === 'edi'} 
-                  onClick={() => setActiveTab('edi')}
-                >
-                  EDI
-                </TabButton>
-                <TabButton 
-                  active={activeTab === 'assessment'} 
-                  onClick={() => setActiveTab('assessment')}
-                >
-                  Assessment
-                </TabButton>
-                <TabButton 
-                  active={activeTab === 'sdg'} 
-                  onClick={() => setActiveTab('sdg')}
-                >
-                  SDGs
-                </TabButton>
-              </div>
-            </div>
-  
-            <div className="p-6">
-              {activeTab === 'representation' ? <RepresentationTab /> : 
-               activeTab === 'edi' ? <EDITab /> : 
-               activeTab === 'assessment' ? <AssessmentTab /> : <SDGTab />}
+        <Card className="mb-6">
+          <div className="p-6 border-b border-gray-100 dark:border-gray-700">
+            <div className="flex items-center justify-between">
+              <span className="font-semibold text-gray-700 dark:text-gray-200">
+                {title}
+              </span>
+              <span className="text-sm bg-gray-50 dark:bg-gray-900 px-4 py-1.5 rounded-xl border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300">
+                {currentVersion + 1} / {versions.length}
+              </span>
             </div>
           </div>
-        </div>
-      </div>
-    );
+    
+          <div className="p-6">
+            <div className="relative">
+              <NavButton 
+                direction="left"
+                onClick={() => handleScroll('left')}
+                disabled={currentVersion === 0}
+              />
+              
+              <NavButton 
+                direction="right"
+                onClick={() => handleScroll('right')}
+                disabled={currentVersion === versions.length - 1}
+              />
+    
+              <div 
+                ref={scrollContainerRef}
+                className="flex overflow-x-hidden gap-6 snap-x snap-mandatory touch-pan-x px-2"
+              >
+                {versions.map((version, index) => (
+                  <div 
+                    key={index}
+                    className="flex-none w-full snap-center relative"
+                  >
+                    {/* Icon for Cards */}
+                    {index === 0 ? (
+                      <Tooltip text="Lecturer approved exercise">
+                        <div className="absolute top-3 right-3 bg-green-500 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-md">
+                          <CheckCircle size={16} />
+                        </div>
+                      </Tooltip>
+                    ) : (
+                      <Tooltip text="AI-generated exercise">
+                        <div className="absolute top-3 right-3 bg-blue-500 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-md">
+                          <Sparkles size={16} />
+                        </div>
+                      </Tooltip>
+                    )}
+    
+                    <div className="rounded-2xl p-6">
+                      <div className="mb-8 text-gray-700 dark:text-gray-200 text-lg">
+                        {version.text}
+                      </div>
+                      
+                      <div className="space-y-6">
+                        <div className="flex flex-wrap justify-center gap-3">
+                          <Button
+                            className="bg-yellow-400 text-gray-700 hover:bg-yellow-300"
+                            onClick={() => addExercise("Generated a new example")}
+                          >
+                            Generate text example
+                          </Button>
+                          <Button
+                            className="bg-yellow-400 text-gray-700 hover:bg-yellow-300"
+                            onClick={() => addExercise("Generated an audio explanation")}
+                          >
+                            Generate audio explanation
+                          </Button>
+                          <Button
+                            className="bg-yellow-400 text-gray-700 hover:bg-yellow-300"
+                            onClick={() => addExercise("Generated a visualization")}
+                          >
+                            Generate visualization
+                          </Button>
+                        </div>
+    
+                        <div className="space-y-3">
+                          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                            <Button
+                              className={`border-green-200 text-green-600 hover:bg-green-50 ${version.feedback === 'understand' && 'bg-green-50'}`}
+                              onClick={() => handleFeedback('understand', index)}
+                            >
+                              <ThumbsUp className="w-5 h-5" />
+                              I understand
+                            </Button>
+                            <Button
+                              className={`border-red-200 text-red-600 hover:bg-red-50 ${version.feedback === 'dont-understand' && 'bg-red-50'}`}
+                              onClick={() => handleFeedback('dont-understand', index)}
+                            >
+                              <ThumbsDown className="w-5 h-5" />
+                              I don't understand
+                            </Button>
+                          </div>
+                          {/* Feedback Message */}
+                          {version.feedback === 'understand' && (
+                            <p className="text-green-600 text-sm mt-2 text-center">
+                              Great! This exercise will be boosted.
+                            </p>
+                          )}
+                          {version.feedback === 'dont-understand' && (
+                            <p className="text-blue-600 text-sm mt-2 text-center">
+                              Try generating another exercise.
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Card>
+      );
+    };
+        
+const LearningComponent = () => {
+  const [theme, setTheme] = useState('light');
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', newTheme);
   };
-  
-  export default RepresentationDashboard;
+
+  return (
+    <div className="w-full mx-auto p-4 sm:p-8 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 min-h-screen">
+      <ThemeToggle isDark={theme === 'dark'} onToggle={toggleTheme} />
+
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-8">
+          Private Equity: Waterfall Structures and Incentives
+        </h1>
+        <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
+        In this activity, you will explore key concepts in private equity, focusing on waterfall structures, carried interest mechanisms, and distribution thresholds. Each exercise is designed to provide an interactive and practical understanding of these topics, allowing you to analyze scenarios, experiment with calculations, and apply theoretical principles to realistic private equity cases. 
+        </p>
+
+        <ExerciseBox
+          title="Waterfall Structures"
+          initialText="Understand how waterfall structures dictate the distribution of profits in private equity deals."
+          initialVersionContent="Explore scenarios for preferred returns and hurdle rates."
+        />
+
+        <p className="text-lg text-gray-700 dark:text-gray-300 mt-8 mb-6">
+        Having explored the fundamentals of waterfall structures, the next step is to understand how carried interest mechanisms create incentives for private equity managers. These mechanisms are essential for aligning the interests of fund managers and investors, and in the following exercise, you’ll delve into how carried interest is calculated and distributed across various scenarios.
+        </p>
+
+        <ExerciseBox
+          title="Carried Interest Mechanisms"
+          initialText="Carried interest is a critical incentive structure in private equity. Let’s explore how it works."
+          initialVersionContent="Analyze IRR hurdles and carried interest calculations."
+        />
+
+        <p className="text-lg text-gray-700 dark:text-gray-300 mt-8 mb-6">
+        Now that you’ve examined the intricacies of carried interest, it’s time to consider how distribution thresholds influence private equity deals. This final exercise will guide you through the impact of these thresholds on profit-sharing arrangements, highlighting the balance between investor priorities and managerial rewards.        </p>
+
+        <ExerciseBox
+          title="Distribution Thresholds"
+          initialText="Learn how distribution thresholds impact profit-sharing among investors and managers."
+          initialVersionContent="Simulate different threshold levels and their effects on equity returns."
+        />
+
+        <p className="text-lg text-gray-700 dark:text-gray-300 mt-12">
+          By mastering these concepts, you'll gain a strong foundation in private equity structures and their implications. In the next activity, you will build on these foundations by examining the due diligence process and assessing how market conditions and investment strategies influence fund performance.
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default LearningComponent;
