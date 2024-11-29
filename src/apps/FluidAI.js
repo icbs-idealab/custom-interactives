@@ -96,12 +96,23 @@ const Tooltip = ({ children, text }) => (
     };
   
     const addExercise = (text) => {
-      const newIndex = versions.length;
-      setVersions([...versions, { text, feedback: null, feedbackGiven: false }]);
-      setCurrentVersion(newIndex); // Switch focus to the newly added version
-    };
-  
-    return (
+        const newIndex = versions.length;
+        setVersions([...versions, { text, feedback: null, feedbackGiven: false, submittedAnswer: '' }]);
+        setCurrentVersion(newIndex); // Switch focus to the newly added version
+      };
+    
+      const handleSubmit = (index) => {
+        const input = document.getElementById(`input-${index}`);
+        if (input && input.value.trim() !== '') {
+          setVersions(versions.map((version, idx) => 
+            idx === index
+              ? { ...version, submittedAnswer: input.value.trim() }
+              : version
+          ));
+        }
+      };
+    
+      return (
         <Card className="mb-6">
           <div className="p-6 border-b border-gray-100 dark:border-gray-700">
             <div className="flex items-center justify-between">
@@ -121,7 +132,6 @@ const Tooltip = ({ children, text }) => (
                 onClick={() => handleScroll('left')}
                 disabled={currentVersion === 0}
               />
-              
               <NavButton 
                 direction="right"
                 onClick={() => handleScroll('right')}
@@ -133,10 +143,7 @@ const Tooltip = ({ children, text }) => (
                 className="flex overflow-x-hidden gap-6 snap-x snap-mandatory touch-pan-x px-2"
               >
                 {versions.map((version, index) => (
-                  <div 
-                    key={index}
-                    className="flex-none w-full snap-center relative"
-                  >
+                  <div key={index} className="flex-none w-full snap-center relative">
                     {/* Icon for Cards */}
                     {index === 0 ? (
                       <Tooltip text="Lecturer approved exercise">
@@ -208,6 +215,29 @@ const Tooltip = ({ children, text }) => (
                             </p>
                           )}
                         </div>
+    
+                        {/* Free Text Input */}
+                        <div className="mt-4">
+                          <textarea
+                            id={`input-${index}`}
+                            className={`w-full p-3 border rounded-lg resize-none ${
+                              version.submittedAnswer
+                                ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                                : 'bg-white'
+                            }`}
+                            placeholder="Enter your answer here..."
+                            disabled={!!version.submittedAnswer}
+                            defaultValue={version.submittedAnswer}
+                          />
+                          {!version.submittedAnswer && (
+                            <Button
+                              className="mt-2 bg-blue-500 text-white hover:bg-blue-400"
+                              onClick={() => handleSubmit(index)}
+                            >
+                              Submit Answer
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -218,7 +248,7 @@ const Tooltip = ({ children, text }) => (
         </Card>
       );
     };
-        
+            
 const LearningComponent = () => {
   const [theme, setTheme] = useState('light');
 
