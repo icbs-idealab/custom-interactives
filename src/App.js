@@ -11,6 +11,7 @@ import BreakEven from './apps/BreakEven.js';
 import CounterApp from './apps/CounterApp.js';
 import DoubleNumber from './apps/DoubleNumber.js';
 import FluidAI from './apps/FluidAI.js';
+import MarketingDashboard from './apps/MarketingDashboard.js';
 import PositioningStatementCreator from './apps/PositioningStatementCreator.js';
 import PositioningStatementGlobal from './apps/PositioningStatementGlobal.js';
 import TestApp from './apps/TestApp.js';
@@ -29,6 +30,7 @@ function DynamicTitle() {
   '/counterapp': 'Counter App',
   '/doublenumber': 'Double Number',
   '/fluidai': 'Fluid A I',
+  '/marketingdashboard': 'Marketing Dashboard',
   '/positioningstatementcreator': 'Positioning Statement Creator',
   '/positioningstatementglobal': 'Positioning Statement Global',
   '/testapp': 'Test App',
@@ -61,6 +63,7 @@ function App() {
                 <li style={{ marginBottom: '1rem' }}><Link to="/counterapp" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Counter App</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/doublenumber" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Double Number</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/fluidai" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Fluid A I</Link></li>
+                <li style={{ marginBottom: '1rem' }}><Link to="/marketingdashboard" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Marketing Dashboard</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/positioningstatementcreator" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Positioning Statement Creator</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/positioningstatementglobal" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Positioning Statement Global</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/testapp" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Test App</Link></li>
@@ -77,6 +80,7 @@ function App() {
         <Route path="/counterapp" element={<ResizeWrapper><CounterApp /></ResizeWrapper>} />
         <Route path="/doublenumber" element={<ResizeWrapper><DoubleNumber /></ResizeWrapper>} />
         <Route path="/fluidai" element={<ResizeWrapper><FluidAI /></ResizeWrapper>} />
+        <Route path="/marketingdashboard" element={<ResizeWrapper><MarketingDashboard /></ResizeWrapper>} />
         <Route path="/positioningstatementcreator" element={<ResizeWrapper><PositioningStatementCreator /></ResizeWrapper>} />
         <Route path="/positioningstatementglobal" element={<ResizeWrapper><PositioningStatementGlobal /></ResizeWrapper>} />
         <Route path="/testapp" element={<ResizeWrapper><TestApp /></ResizeWrapper>} />
