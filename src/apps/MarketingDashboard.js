@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import supabase from "../supabase";
-import Cookies from "js-cookie";
 import {
     BarChart,
     Bar,
@@ -25,7 +24,8 @@ const MarketingROISimulator = () => {
     const [allSubmissions, setAllSubmissions] = useState([]);
 
     const appId = "MarketingROISimulator";
-    const cookieName = `submitted_${appId}`;
+    const storageKey = `submitted_${appId}`;
+    const hasSubmitted = localStorage.getItem(storageKey);
 
     // Simulated ROI multipliers for each channel
     const roiMultipliers = {
@@ -60,15 +60,21 @@ const MarketingROISimulator = () => {
     };
 
     const generateUserId = () => {
-        const existingUserId = Cookies.get(cookieName);
+        const existingUserId = localStorage.getItem(storageKey);
         if (existingUserId) return existingUserId;
+
         const newUserId = `user_${Date.now()}`;
-        Cookies.set(cookieName, newUserId);
+        localStorage.setItem(storageKey, newUserId);
         return newUserId;
     };
 
     const handleSubmit = async () => {
         if (!validateInput()) return;
+
+        if (hasSubmitted) {
+            setStatus("You have already submitted your allocations.");
+            return;
+        }
 
         const roi = calculateROI(budgetAllocations);
         setPredictedROI(roi);
@@ -78,13 +84,14 @@ const MarketingROISimulator = () => {
     };
 
     const saveSubmission = async (allocations, roi) => {
+        const userId = generateUserId();
         const { error } = await supabase.from("app_data").insert([
             {
                 app_id: appId,
                 data: {
                     budgetAllocations: allocations,
                     predictedROI: roi,
-                    userId: generateUserId(),
+                    userId,
                 },
             },
         ]);
@@ -95,6 +102,38 @@ const MarketingROISimulator = () => {
             return;
         }
         setStatus("Submission saved successfully!");
+        localStorage.setItem(storageKey, userId);
+    };
+
+    const resetSubmission = async () => {
+        const userId = localStorage.getItem(storageKey);
+        if (!userId) {
+            setStatus("No submission to reset.");
+            return;
+        }
+
+        const { error } = await supabase
+            .from("app_data")
+            .delete()
+            .eq("app_id", appId)
+            .eq("data->>userId", userId);
+
+        if (error) {
+            console.error("Error resetting submission:", error);
+            setStatus("Error resetting submission.");
+        } else {
+            setStatus("Submission reset successfully.");
+            localStorage.removeItem(storageKey);
+            setBudgetAllocations({
+                social_media: "",
+                email: "",
+                search_ads: "",
+                content: "",
+                influencer: "",
+            });
+            setPredictedROI(null);
+            await fetchResults();
+        }
     };
 
     const fetchResults = async () => {
@@ -193,7 +232,8 @@ const MarketingROISimulator = () => {
                                             e.target.value,
                                         )
                                     }
-                                    className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
+                                    disabled={!!hasSubmitted}
+                                    className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-200"
                                     min="0"
                                     max="100"
                                 />
@@ -204,7 +244,12 @@ const MarketingROISimulator = () => {
 
                 <button
                     onClick={handleSubmit}
-                    className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
+                    disabled={!!hasSubmitted}
+                    className={`w-full py-2 px-4 rounded transition duration-200 ${
+                        hasSubmitted
+                            ? "bg-gray-400 text-gray-600 cursor-not-allowed"
+                            : "bg-blue-500 text-white hover:bg-blue-600"
+                    }`}
                 >
                     Calculate ROI
                 </button>
@@ -222,6 +267,13 @@ const MarketingROISimulator = () => {
                         </h2>
                     </div>
                 )}
+
+                <button
+                    onClick={resetSubmission}
+                    className="mt-4 w-full bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition"
+                >
+                    Reset Submission
+                </button>
 
                 {averageAllocations && (
                     <div className="mt-8">
