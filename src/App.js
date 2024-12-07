@@ -9,7 +9,6 @@ import AdvertisingTimeline from './apps/AdvertisingTimeline.js';
 import AverageCalculator from './apps/AverageCalculator.js';
 import BreakEven from './apps/BreakEven.js';
 import CounterApp from './apps/CounterApp.js';
-import CounterAppCopy from './apps/CounterAppCopy.js';
 import DoubleNumber from './apps/DoubleNumber.js';
 import FluidAI from './apps/FluidAI.js';
 import MarketingDashboard from './apps/MarketingDashboard.js';
@@ -29,7 +28,6 @@ function DynamicTitle() {
   '/averagecalculator': 'Average Calculator',
   '/breakeven': 'Break Even',
   '/counterapp': 'Counter App',
-  '/counterappcopy': 'Counter App Copy',
   '/doublenumber': 'Double Number',
   '/fluidai': 'Fluid A I',
   '/marketingdashboard': 'Marketing Dashboard',
@@ -63,7 +61,6 @@ function App() {
                 <li style={{ marginBottom: '1rem' }}><Link to="/averagecalculator" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Average Calculator</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/breakeven" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Break Even</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/counterapp" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Counter App</Link></li>
-                <li style={{ marginBottom: '1rem' }}><Link to="/counterappcopy" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Counter App Copy</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/doublenumber" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Double Number</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/fluidai" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Fluid A I</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/marketingdashboard" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Marketing Dashboard</Link></li>
@@ -81,7 +78,6 @@ function App() {
         <Route path="/averagecalculator" element={<ResizeWrapper><AverageCalculator /></ResizeWrapper>} />
         <Route path="/breakeven" element={<ResizeWrapper><BreakEven /></ResizeWrapper>} />
         <Route path="/counterapp" element={<ResizeWrapper><CounterApp /></ResizeWrapper>} />
-        <Route path="/counterappcopy" element={<ResizeWrapper><CounterAppCopy /></ResizeWrapper>} />
         <Route path="/doublenumber" element={<ResizeWrapper><DoubleNumber /></ResizeWrapper>} />
         <Route path="/fluidai" element={<ResizeWrapper><FluidAI /></ResizeWrapper>} />
         <Route path="/marketingdashboard" element={<ResizeWrapper><MarketingDashboard /></ResizeWrapper>} />
