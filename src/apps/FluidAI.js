@@ -206,7 +206,7 @@ const LearningComponent = () => {
   };
 
   return (
-    <div className="w-full mx-auto p-4 sm:p-8 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 min-h-screen">
+    <div className="w-full mx-auto p-4 sm:p-8 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 min-h-full">
       <Button className="fixed top-6 right-6 p-3 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:-translate-y-0.5 hover:shadow-md" onClick={toggleTheme} aria-label="Toggle theme">
         {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
       </Button>
