@@ -143,7 +143,7 @@ const ExerciseBox = ({ title, initialText, initialVersionContent }) => {
                   onClick={() => handleFeedback("dont-understand", currentVersion)}
                 >
                   <ThumbsDown className="w-5 h-5" />
-                  I don't understand!
+                  I don't understand
                 </Button>
               </div>
               {/* Feedback Message */}
@@ -206,78 +206,68 @@ const LearningComponent = () => {
   };
 
   return (
-    <div
-  className="w-full mx-auto p-4 sm:p-8 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800"
-  style={{
-    minHeight: "100vh", // Ensure it always covers the full viewport
-    height: "auto", // Allow height to shrink
-    overflow: "hidden", // Prevent scrollbars from unnecessarily showing
-  }}
->
+    <div className="w-full mx-auto p-4 sm:p-8 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 min-h-screen">
+      <Button className="fixed top-6 right-6 p-3 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:-translate-y-0.5 hover:shadow-md" onClick={toggleTheme} aria-label="Toggle theme">
+        {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+      </Button>
 
-      <div className="w-full mx-auto p-4 sm:p-8 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 min-h-screen">
-        <Button className="fixed top-6 right-6 p-3 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:-translate-y-0.5 hover:shadow-md" onClick={toggleTheme} aria-label="Toggle theme">
-          {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-        </Button>
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-8">
+          Private Equity: Waterfall Structures and Incentives
+        </h1>
+        <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
+          In this activity, you will explore key concepts in private equity,
+          focusing on waterfall structures, carried interest mechanisms, and
+          distribution thresholds. Each exercise is designed to provide an
+          interactive and practical understanding of these topics, allowing you
+          to analyze scenarios, experiment with calculations, and apply
+          theoretical principles to realistic private equity cases.
+        </p>
 
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-8">
-            Private Equity: Waterfall Structures and Incentives
-          </h1>
-          <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
-            In this activity, you will explore key concepts in private equity,
-            focusing on waterfall structures, carried interest mechanisms, and
-            distribution thresholds. Each exercise is designed to provide an
-            interactive and practical understanding of these topics, allowing you
-            to analyze scenarios, experiment with calculations, and apply
-            theoretical principles to realistic private equity cases.
-          </p>
+        <ExerciseBox
+          title="Waterfall Structures"
+          initialText="Understand how waterfall structures dictate the distribution of profits in private equity deals."
+          initialVersionContent="Explore scenarios for preferred returns and hurdle rates."
+        />
 
-          <ExerciseBox
-            title="Waterfall Structures"
-            initialText="Understand how waterfall structures dictate the distribution of profits in private equity deals."
-            initialVersionContent="Explore scenarios for preferred returns and hurdle rates."
-          />
+        <p className="text-lg text-gray-700 dark:text-gray-300 mt-8 mb-6">
+          Having explored the fundamentals of waterfall structures, the next
+          step is to understand how carried interest mechanisms create
+          incentives for private equity managers. These mechanisms are essential
+          for aligning the interests of fund managers and investors and in the
+          following exercise, you’ll delve into how carried interest is
+          calculated and distributed across various scenarios.
+        </p>
 
-          <p className="text-lg text-gray-700 dark:text-gray-300 mt-8 mb-6">
-            Having explored the fundamentals of waterfall structures, the next
-            step is to understand how carried interest mechanisms create
-            incentives for private equity managers. These mechanisms are essential
-            for aligning the interests of fund managers and investors, and in the
-            following exercise, you’ll delve into how carried interest is
-            calculated and distributed across various scenarios.
-          </p>
+        <ExerciseBox
+          title="Carried Interest Mechanisms"
+          initialText="Carried interest is a critical incentive structure in private equity. Let’s explore how it works."
+          initialVersionContent="Analyze IRR hurdles and carried interest calculations."
+        />
 
-          <ExerciseBox
-            title="Carried Interest Mechanisms"
-            initialText="Carried interest is a critical incentive structure in private equity. Let’s explore how it works."
-            initialVersionContent="Analyze IRR hurdles and carried interest calculations."
-          />
+        <p className="text-lg text-gray-700 dark:text-gray-300 mt-8 mb-6">
+          Now that you’ve examined the intricacies of carried interest, it’s
+          time to consider how distribution thresholds influence private equity
+          deals. This final exercise will guide you through the impact of these
+          thresholds on profit-sharing arrangements, highlighting the balance
+          between investor priorities and managerial rewards.
+        </p>
 
-          <p className="text-lg text-gray-700 dark:text-gray-300 mt-8 mb-6">
-            Now that you’ve examined the intricacies of carried interest, it’s
-            time to consider how distribution thresholds influence private equity
-            deals. This final exercise will guide you through the impact of these
-            thresholds on profit-sharing arrangements, highlighting the balance
-            between investor priorities and managerial rewards.
-          </p>
+        <ExerciseBox
+          title="Distribution Thresholds"
+          initialText="Learn how distribution thresholds impact profit-sharing among investors and managers."
+          initialVersionContent="Simulate different threshold levels and their effects on equity returns."
+        />
 
-          <ExerciseBox
-            title="Distribution Thresholds"
-            initialText="Learn how distribution thresholds impact profit-sharing among investors and managers."
-            initialVersionContent="Simulate different threshold levels and their effects on equity returns."
-          />
-
-          <p className="text-lg text-gray-700 dark:text-gray-300 mt-12">
-            By mastering these concepts, you'll gain a strong foundation in
-            private equity structures and their implications. In the next
-            activity, you will build on these foundations by examining the due
-            diligence process and assessing how market conditions and investment
-            strategies influence fund performance.
-          </p>
-        </div>
+        <p className="text-lg text-gray-700 dark:text-gray-300 mt-12">
+          By mastering these concepts, you'll gain a strong foundation in
+          private equity structures and their implications. In the next
+          activity, you will build on these foundations by examining the due
+          diligence process and assessing how market conditions and investment
+          strategies influence fund performance.
+        </p>
       </div>
-      </div>
+    </div>
   );
 };
 
