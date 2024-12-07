@@ -12,8 +12,8 @@ export function initiateAutoResize() {
       height += extraPadding;
     }
 
-    // Adjust the iframe height for both increases and decreases in content size
-    if (Math.abs(height - prevHeight) > 5 || height < prevHeight) {
+    // Always send a message if the height changes (either increase or decrease)
+    if (height !== prevHeight) {
       console.log("Sending resize message with height:", height);
 
       window.parent.postMessage(
@@ -24,9 +24,23 @@ export function initiateAutoResize() {
         "*"
       );
 
-      prevHeight = height;
+      prevHeight = height; // Update the previous height
     }
   });
 
   resizeObserver.observe(container);
+
+  // Ensure initial height is sent
+  const initialHeight = container.scrollHeight < minHeightThreshold 
+    ? container.scrollHeight + extraPadding 
+    : container.scrollHeight;
+
+  window.parent.postMessage(
+    {
+      height: initialHeight,
+      source: "insendi-activity-resize",
+    },
+    "*"
+  );
+  prevHeight = initialHeight;
 }

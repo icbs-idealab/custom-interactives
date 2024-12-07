@@ -203,7 +203,7 @@ const MarketingROISimulator = () => {
                 </h1>
 
                 <p className="text-sm text-gray-500 mb-6 text-center">
-                    Allocate your marketing budgets across different channels
+                    Allocate your marketing budget across different channels
                     (total must equal 100%). See how your strategy compares to
                     the class average and predicted ROI.
                 </p>
