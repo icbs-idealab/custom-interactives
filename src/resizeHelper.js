@@ -12,7 +12,8 @@ export function initiateAutoResize() {
       height += extraPadding;
     }
 
-    if (Math.abs(height - prevHeight) > 5) {
+    // Adjust the iframe height for both increases and decreases in content size
+    if (Math.abs(height - prevHeight) > 5 || height < prevHeight) {
       console.log("Sending resize message with height:", height);
 
       window.parent.postMessage(
