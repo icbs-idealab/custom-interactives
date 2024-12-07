@@ -2,12 +2,13 @@ export function initiateAutoResize() {
   const container = document.querySelector('#root'); // Or any top-level container
   let prevHeight = 0;
 
+  const minHeightThreshold = 100; // Define a threshold for small apps
+  const extraPadding = 30; // Extra padding for small apps
+
   const resizeObserver = new ResizeObserver(() => {
     let height = container.scrollHeight;
 
-    // Add an extra 20px if the height is less than a threshold (e.g., 100px)
-    const minHeightThreshold = 100; // Define a threshold for small apps
-    const extraPadding = 30; // Extra padding for small apps
+    // Add extra padding for small heights
     if (height < minHeightThreshold) {
       height += extraPadding;
     }
