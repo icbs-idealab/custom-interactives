@@ -164,7 +164,7 @@ const AdvertisingTimeline = () => {
             {...handlers}
             onKeyDown={handleKeyDown}
             tabIndex="0"
-            className="min-h-screen bg-gradient-to-br from-yellow-100 to-orange-200 flex flex-col items-center justify-start p-8"
+            className="min-h-full bg-gradient-to-br from-yellow-100 to-orange-200 flex flex-col items-center justify-start p-8"
             aria-labelledby="timeline-heading"
         >
 
