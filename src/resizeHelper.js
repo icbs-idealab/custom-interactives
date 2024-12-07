@@ -7,7 +7,7 @@ export function initiateAutoResize() {
 
     // Add an extra 20px if the height is less than a threshold (e.g., 100px)
     const minHeightThreshold = 100; // Define a threshold for small apps
-    const extraPadding = 20; // Extra padding for small apps
+    const extraPadding = 30; // Extra padding for small apps
     if (height < minHeightThreshold) {
       height += extraPadding;
     }
