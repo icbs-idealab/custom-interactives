@@ -1,15 +1,21 @@
-export function initiateAutoResize() {
-  const container = document.querySelector('#root'); // Or any top-level container
+// src/resizeHelper.js
+let intervalId;
+
+export function initiateAutoResize(interval = 250) {
+  if (intervalId) return; // Prevent multiple intervals
+
   let prevHeight = 0;
 
-  const resizeObserver = new ResizeObserver(() => {
-    const height = container.scrollHeight;
+  intervalId = setInterval(() => {
+    const height = document.body.scrollHeight;
+
+    // Only send a resize message if the height difference is greater than 5 pixels
     if (Math.abs(height - prevHeight) > 5) {
       console.log("Sending resize message with height:", height);
 
       window.parent.postMessage(
         {
-          height: height,
+          height: height, // Remove adjustHeight if it’s causing issues
           source: "insendi-activity-resize",
         },
         "*"
@@ -17,7 +23,5 @@ export function initiateAutoResize() {
 
       prevHeight = height;
     }
-  });
-
-  resizeObserver.observe(container);
+  }, interval);
 }
