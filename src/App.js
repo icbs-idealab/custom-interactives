@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import dotenv from "dotenv";
 
 import ResizeWrapper from './ResizeWrapper';
 import { useEffect } from 'react';
@@ -19,7 +18,6 @@ import TestApp from './apps/TestApp.js';
 import TimModuleMap from './apps/TimModuleMap.js';
 import ToggleSwitchApp from './apps/ToggleSwitchApp.js';
 
-dotenv.config();
 
 function DynamicTitle() {
   const location = useLocation();
