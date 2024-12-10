@@ -46,7 +46,7 @@ const TestApp = () => {
                 onChange={(e) => setInputData(e.target.value)}
                 placeholder="Enter some data"
             />
-            <button onClick={saveData}>Save</button>
+            <button onClick={saveData}>Save!</button>
             <button onClick={fetchData}>Fetch</button>
             <p>{status}</p>
             <h3>Fetched Data:</h3>
