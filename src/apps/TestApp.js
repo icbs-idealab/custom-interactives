@@ -47,7 +47,7 @@ const TestApp = () => {
                 placeholder="Enter some data"
             />
             <button onClick={saveData}>Save!</button>
-            <button onClick={fetchData}>Fetch</button>
+            <button onClick={fetchData}>Fetch!</button>
             <p>{status}</p>
             <h3>Fetched Data:</h3>
             <ul>
