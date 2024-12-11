@@ -122,7 +122,7 @@ const Timeline = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-8 max-w-4xl mx-auto">
+    <div className="bg-white rounded-xl shadow-lg p-8 max-w-full mx-auto">
       <div className="relative">
         <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-indigo-200 via-purple-200 to-pink-200" />
         <div className="space-y-8">
