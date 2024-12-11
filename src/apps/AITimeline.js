@@ -65,7 +65,7 @@ const Timeline = () => {
       year: 1956,
       title: "Dartmouth Conference",
       summary:
-        "The historic conference brought together experts in neural networks, computation, and automata theory, officially establishing AI as a field of study.",
+        "The historic conference brought together experts in neural networks, computation and automata theory, officially establishing AI as a field of study.",
     },
     {
       year: 1960,
@@ -83,13 +83,13 @@ const Timeline = () => {
       year: 2006,
       title: "Deep Learning",
       summary:
-        "Hinton's work reignited interest in neural networks by introducing deep learning techniques that would revolutionize AI capabilities.",
+        "Hinton's work reignited interest in neural networks by introducing deep learning techniques that would revolutionise AI capabilities.",
     },
     {
       year: 2011,
       title: "IBM Watson",
       summary:
-        "Watson's victory showed AI's ability to understand and respond to natural language questions, process complex information, and compete with human champions.",
+        "Watson's victory showed AI's ability to understand and respond to natural language questions, process complex information and compete with human champions.",
     },
     {
       year: 2012,
@@ -101,7 +101,7 @@ const Timeline = () => {
       year: 2017,
       title: "Transformers",
       summary:
-        "Transformers revolutionized NLP by enabling more efficient processing of text sequences, becoming the foundation for modern language models.",
+        "Transformers revolutionised NLP by enabling more efficient processing of text sequences, becoming the foundation for modern language models.",
     },
     {
       year: 2018,
