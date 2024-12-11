@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import ResizeWrapper from './ResizeWrapper';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import AITimeline from './apps/AITimeline.js';
 import AdvertisingTimeline from './apps/AdvertisingTimeline.js';
 import AverageCalculator from './apps/AverageCalculator.js';
 import BreakEven from './apps/BreakEven.js';
@@ -25,7 +26,8 @@ function DynamicTitle() {
 
   useEffect(() => {
     const titles = {
-      '/advertisingtimeline': 'Advertising Timeline',
+      '/aitimeline': 'A I Timeline',
+  '/advertisingtimeline': 'Advertising Timeline',
   '/averagecalculator': 'Average Calculator',
   '/breakeven': 'Break Even',
   '/counterapp': 'Counter App',
@@ -59,7 +61,8 @@ function App() {
               <p>Select an app to get started:</p>
               <nav style={{ marginTop: '1rem' }}>
                 <ul style={{ listStyle: 'none', padding: 0 }}>
-                  <li style={{ marginBottom: '1rem' }}><Link to="/advertisingtimeline" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Advertising Timeline</Link></li>
+                  <li style={{ marginBottom: '1rem' }}><Link to="/aitimeline" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> A I Timeline</Link></li>
+                <li style={{ marginBottom: '1rem' }}><Link to="/advertisingtimeline" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Advertising Timeline</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/averagecalculator" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Average Calculator</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/breakeven" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Break Even</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/counterapp" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Counter App</Link></li>
@@ -77,6 +80,7 @@ function App() {
             </div>
           }
         />
+        <Route path="/aitimeline" element={<ResizeWrapper><AITimeline /></ResizeWrapper>} />
         <Route path="/advertisingtimeline" element={<ResizeWrapper><AdvertisingTimeline /></ResizeWrapper>} />
         <Route path="/averagecalculator" element={<ResizeWrapper><AverageCalculator /></ResizeWrapper>} />
         <Route path="/breakeven" element={<ResizeWrapper><BreakEven /></ResizeWrapper>} />
