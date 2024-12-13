@@ -58,13 +58,13 @@ const Timeline = () => {
   const events = [
     {
       year: 1943,
-      title: "Foundations of Neural Networks",
+      title: "Foundations of neural networks",
       summary:
         "Warren McCulloch and Walter Pitts published 'A Logical Calculus of Ideas Immanent in Nervous Activity,' laying the theoretical groundwork for neural networks by modelling how the brain processes information.",
     },
     {
       year: 1950,
-      title: "Turing's Paper",
+      title: "Turing's paper",
       summary:
         "Alan Turing introduced the concept of the Turing Test in his paper 'Computing Machinery and Intelligence,' proposing a practical way to evaluate a machine's ability to exhibit human-like intelligence.",
     },
@@ -76,7 +76,7 @@ const Timeline = () => {
     },
     {
       year: 1960,
-      title: "AI Winter",
+      title: "AI winter",
       summary:
         "A lack of significant progress and overambitious predictions led to a decline in funding and interest in AI research, marking the first 'AI Winter.'",
     },
@@ -88,13 +88,13 @@ const Timeline = () => {
     },
     {
       year: 1980,
-      title: "Expert Systems",
+      title: "Expert systems",
       summary:
         "Expert systems gained prominence as AI programs designed to simulate the decision-making abilities of human experts, with applications in industries such as finance and medicine.",
     },
     {
       year: 1986,
-      title: "Backpropagation in Neural Networks",
+      title: "Backpropagation in neural networks",
       summary:
         "Geoffrey Hinton, David Rumelhart, and Ronald Williams introduced the backpropagation algorithm, allowing for the training of deeper neural networks and advancing machine learning techniques.",
     },
@@ -112,7 +112,7 @@ const Timeline = () => {
     },
     {
       year: 2006,
-      title: "Deep Learning",
+      title: "Deep learning",
       summary:
         "Geoffrey Hinton's work popularised deep learning techniques, enabling breakthroughs in image and speech recognition and reinvigorating interest in AI research.",
     },
@@ -124,7 +124,7 @@ const Timeline = () => {
     },
     {
       year: 2012,
-      title: "Advances in Neural Networks",
+      title: "Advances in neural networks",
       summary:
         "Deep neural networks achieved significant success in image recognition tasks, setting the stage for modern AI applications in computer vision.",
     },
@@ -142,7 +142,7 @@ const Timeline = () => {
     },
     {
       year: 2023,
-      title: "AI Copyright Lawsuit",
+      title: "AI copyright lawsuit",
       summary:
         "Artists filed a class-action lawsuit against Stability AI, DeviantArt, and MidJourney, raising legal questions about the use of copyrighted works in training AI models.",
     },
@@ -155,7 +155,7 @@ const Timeline = () => {
   return (
     <div className="bg-white rounded-none shadow-lg p-8 max-w-full mx-auto">
       <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
-        A Timeline of the history of AI
+        A timeline of the history of AI
       </h1>
       <div className="relative">
         <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-indigo-200 via-purple-200 to-pink-200" />
