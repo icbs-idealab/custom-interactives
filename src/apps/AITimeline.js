@@ -153,7 +153,7 @@ const Timeline = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-8 max-w-full mx-auto">
+    <div className="bg-white rounded-none shadow-lg p-8 max-w-full mx-auto">
       <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
         A Timeline of the history of AI
       </h1>
