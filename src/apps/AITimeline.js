@@ -3,8 +3,12 @@ import React, { useState } from "react";
 const TimelineEvent = ({ event, index, isSelected, onClick }) => {
   const isEven = index % 2 === 0;
   return (
-    <div className={`md:flex md:items-center ${isEven ? "" : "md:flex-row-reverse"}`}>
-      <div className={`w-full md:w-5/12 mb-4 md:mb-0 ${isEven ? "md:text-right md:pr-4" : "md:text-left md:pl-4"}`}>
+    <div
+      className={`md:flex md:items-center ${isEven ? "" : "md:flex-row-reverse"}`}
+    >
+      <div
+        className={`w-full md:w-5/12 mb-4 md:mb-0 ${isEven ? "md:text-right md:pr-4" : "md:text-left md:pl-4"}`}
+      >
         <button
           onClick={onClick}
           className={`w-full p-4 rounded-lg transition-all duration-200 text-left ${
@@ -150,7 +154,9 @@ const Timeline = () => {
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-8 max-w-full mx-auto">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">A Timeline of the History of AI</h1>
+      <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+        A Timeline of the history of AI
+      </h1>
       <div className="relative">
         <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-indigo-200 via-purple-200 to-pink-200" />
         <div className="space-y-4 md:space-y-8">
