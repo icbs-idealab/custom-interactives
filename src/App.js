@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
@@ -19,6 +18,7 @@ import PositioningStatementGlobal from './apps/PositioningStatementGlobal.js';
 import TestApp from './apps/TestApp.js';
 import TimModuleMap from './apps/TimModuleMap.js';
 import ToggleSwitchApp from './apps/ToggleSwitchApp.js';
+import AIPersonaBuilder from './apps/AIPersonaBuilder'; // Added import
 
 
 function DynamicTitle() {
@@ -39,7 +39,8 @@ function DynamicTitle() {
   '/positioningstatementglobal': 'Positioning Statement Global',
   '/testapp': 'Test App',
   '/timmodulemap': 'Tim Module Map',
-  '/toggleswitchapp': 'Toggle Switch App'
+  '/toggleswitchapp': 'Toggle Switch App',
+  '/aipersonabuilder': 'AI Persona Builder' // Added title
     };
     document.title = titles[location.pathname] || 'Interactive Learning Apps';
   }, [location]);
@@ -75,6 +76,7 @@ function App() {
                 <li style={{ marginBottom: '1rem' }}><Link to="/testapp" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Test App</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/timmodulemap" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Tim Module Map</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/toggleswitchapp" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Toggle Switch App</Link></li>
+                <li style={{ marginBottom: '1rem' }}><Link to="/aipersonabuilder" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> AI Persona Builder</Link></li> {/* Added link */}
                 </ul>
               </nav>
             </div>
@@ -94,6 +96,7 @@ function App() {
         <Route path="/testapp" element={<ResizeWrapper><TestApp /></ResizeWrapper>} />
         <Route path="/timmodulemap" element={<ResizeWrapper><TimModuleMap /></ResizeWrapper>} />
         <Route path="/toggleswitchapp" element={<ResizeWrapper><ToggleSwitchApp /></ResizeWrapper>} />
+        <Route path="/aipersonabuilder" element={<ResizeWrapper><AIPersonaBuilder /></ResizeWrapper>} /> {/* Added route */}
       </Routes>
     </Router>
   );
