@@ -1,15 +1,16 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
 import ResizeWrapper from './ResizeWrapper';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import AIPersonaBuilder from './apps/AIPersonaBuilder.js';
 import AITimeline from './apps/AITimeline.js';
 import AdvertisingTimeline from './apps/AdvertisingTimeline.js';
 import AverageCalculator from './apps/AverageCalculator.js';
 import BreakEven from './apps/BreakEven.js';
 import CounterApp from './apps/CounterApp.js';
-import CounterAppTwo from './apps/CounterAppTwo.js';
 import DoubleNumber from './apps/DoubleNumber.js';
 import FluidAI from './apps/FluidAI.js';
 import MarketingDashboard from './apps/MarketingDashboard.js';
@@ -18,7 +19,6 @@ import PositioningStatementGlobal from './apps/PositioningStatementGlobal.js';
 import TestApp from './apps/TestApp.js';
 import TimModuleMap from './apps/TimModuleMap.js';
 import ToggleSwitchApp from './apps/ToggleSwitchApp.js';
-import AIPersonaBuilder from './apps/AIPersonaBuilder'; // Added import
 
 
 function DynamicTitle() {
@@ -26,12 +26,12 @@ function DynamicTitle() {
 
   useEffect(() => {
     const titles = {
-      '/aitimeline': 'A I Timeline',
+      '/aipersonabuilder': 'A I Persona Builder',
+  '/aitimeline': 'A I Timeline',
   '/advertisingtimeline': 'Advertising Timeline',
   '/averagecalculator': 'Average Calculator',
   '/breakeven': 'Break Even',
   '/counterapp': 'Counter App',
-  '/counterapptwo': 'Counter App Two',
   '/doublenumber': 'Double Number',
   '/fluidai': 'Fluid A I',
   '/marketingdashboard': 'Marketing Dashboard',
@@ -39,8 +39,7 @@ function DynamicTitle() {
   '/positioningstatementglobal': 'Positioning Statement Global',
   '/testapp': 'Test App',
   '/timmodulemap': 'Tim Module Map',
-  '/toggleswitchapp': 'Toggle Switch App',
-  '/aipersonabuilder': 'AI Persona Builder' // Added title
+  '/toggleswitchapp': 'Toggle Switch App'
     };
     document.title = titles[location.pathname] || 'Interactive Learning Apps';
   }, [location]);
@@ -62,12 +61,12 @@ function App() {
               <p>Select an app to get started:</p>
               <nav style={{ marginTop: '1rem' }}>
                 <ul style={{ listStyle: 'none', padding: 0 }}>
-                  <li style={{ marginBottom: '1rem' }}><Link to="/aitimeline" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> A I Timeline</Link></li>
+                  <li style={{ marginBottom: '1rem' }}><Link to="/aipersonabuilder" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> A I Persona Builder</Link></li>
+                <li style={{ marginBottom: '1rem' }}><Link to="/aitimeline" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> A I Timeline</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/advertisingtimeline" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Advertising Timeline</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/averagecalculator" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Average Calculator</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/breakeven" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Break Even</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/counterapp" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Counter App</Link></li>
-                <li style={{ marginBottom: '1rem' }}><Link to="/counterapptwo" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Counter App Two</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/doublenumber" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Double Number</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/fluidai" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Fluid A I</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/marketingdashboard" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Marketing Dashboard</Link></li>
@@ -76,18 +75,17 @@ function App() {
                 <li style={{ marginBottom: '1rem' }}><Link to="/testapp" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Test App</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/timmodulemap" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Tim Module Map</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/toggleswitchapp" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Toggle Switch App</Link></li>
-                <li style={{ marginBottom: '1rem' }}><Link to="/aipersonabuilder" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> AI Persona Builder</Link></li> {/* Added link */}
                 </ul>
               </nav>
             </div>
           }
         />
+        <Route path="/aipersonabuilder" element={<ResizeWrapper><AIPersonaBuilder /></ResizeWrapper>} />
         <Route path="/aitimeline" element={<ResizeWrapper><AITimeline /></ResizeWrapper>} />
         <Route path="/advertisingtimeline" element={<ResizeWrapper><AdvertisingTimeline /></ResizeWrapper>} />
         <Route path="/averagecalculator" element={<ResizeWrapper><AverageCalculator /></ResizeWrapper>} />
         <Route path="/breakeven" element={<ResizeWrapper><BreakEven /></ResizeWrapper>} />
         <Route path="/counterapp" element={<ResizeWrapper><CounterApp /></ResizeWrapper>} />
-        <Route path="/counterapptwo" element={<ResizeWrapper><CounterAppTwo /></ResizeWrapper>} />
         <Route path="/doublenumber" element={<ResizeWrapper><DoubleNumber /></ResizeWrapper>} />
         <Route path="/fluidai" element={<ResizeWrapper><FluidAI /></ResizeWrapper>} />
         <Route path="/marketingdashboard" element={<ResizeWrapper><MarketingDashboard /></ResizeWrapper>} />
@@ -96,7 +94,6 @@ function App() {
         <Route path="/testapp" element={<ResizeWrapper><TestApp /></ResizeWrapper>} />
         <Route path="/timmodulemap" element={<ResizeWrapper><TimModuleMap /></ResizeWrapper>} />
         <Route path="/toggleswitchapp" element={<ResizeWrapper><ToggleSwitchApp /></ResizeWrapper>} />
-        <Route path="/aipersonabuilder" element={<ResizeWrapper><AIPersonaBuilder /></ResizeWrapper>} /> {/* Added route */}
       </Routes>
     </Router>
   );
