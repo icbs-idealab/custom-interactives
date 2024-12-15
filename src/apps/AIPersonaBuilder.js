@@ -20,7 +20,8 @@ const AIPersonaBuilder = () => {
   const generatePersona = async () => {
     setLoading(true);
     try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      // Generate persona details
+      const personaResponse = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,9 +48,28 @@ const AIPersonaBuilder = () => {
         })
       });
 
-      const data = await response.json();
+      const data = await personaResponse.json();
       const generatedPersona = JSON.parse(data.choices[0].message.content);
-      setPersona(generatedPersona);
+      
+      // Generate image using DALL-E
+      const imageResponse = await fetch('https://api.openai.com/v1/images/generations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
+        },
+        body: JSON.stringify({
+          prompt: `Professional headshot of ${generatedPersona.name}, a ${generatedPersona.occupation}. High quality, realistic photo.`,
+          n: 1,
+          size: "512x512"
+        })
+      });
+
+      const imageData = await imageResponse.json();
+      setPersona({
+        ...generatedPersona,
+        image: imageData.data[0].url
+      });
     } catch (error) {
       console.error('Error:', error);
     }
@@ -120,7 +140,14 @@ const AIPersonaBuilder = () => {
 
       {persona && (
         <div className="mt-8 p-6 bg-gray-50 rounded-lg">
-          <h2 className="text-2xl font-bold mb-4">{persona.name}</h2>
+          {persona.image && (
+            <img 
+              src={persona.image} 
+              alt={persona.name}
+              className="w-32 h-32 rounded-full mx-auto mb-4 object-cover shadow-lg"
+            />
+          )}
+          <h2 className="text-2xl font-bold mb-4 text-center">{persona.name}</h2>
           <div className="space-y-4">
             <p><strong>Occupation:</strong> {persona.occupation}</p>
             <div>
