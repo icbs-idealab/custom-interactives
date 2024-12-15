@@ -146,7 +146,18 @@ const AIPersonaBuilder = () => {
               </ul>
             </div>
             <p><strong>Communication Style:</strong> {persona.communicationStyle}</p>
-            <p><strong>Shopping Preferences:</strong> {persona.shoppingPreferences}</p>
+            <div>
+              <strong>Shopping Preferences:</strong>
+              {typeof persona.shoppingPreferences === 'object' ? (
+                <ul className="list-disc pl-5 mt-2">
+                  {Object.entries(persona.shoppingPreferences).map(([key, value]) => (
+                    <li key={key}><strong>{key}:</strong> {value}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-2">{persona.shoppingPreferences}</p>
+              )}
+            </div>
           </div>
         </div>
       )}
