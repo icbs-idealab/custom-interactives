@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 
 const AIPersonaBuilder = () => {
@@ -127,17 +126,23 @@ const AIPersonaBuilder = () => {
             <div>
               <strong>Challenges:</strong>
               <ul className="list-disc pl-5 mt-2">
-                {persona.challenges.map((challenge, index) => (
-                  <li key={index}>{challenge}</li>
-                ))}
+                {Array.isArray(persona.challenges) ? 
+              persona.challenges.map((challenge, index) => (
+                <li key={index}>{challenge}</li>
+              )) : 
+              <li>{persona.challenges}</li>
+            }
               </ul>
             </div>
             <div>
               <strong>Goals:</strong>
               <ul className="list-disc pl-5 mt-2">
-                {persona.goals.map((goal, index) => (
-                  <li key={index}>{goal}</li>
-                ))}
+                {Array.isArray(persona.goals) ? 
+              persona.goals.map((goal, index) => (
+                <li key={index}>{goal}</li>
+              )) : 
+              <li>{persona.goals}</li>
+            }
               </ul>
             </div>
             <p><strong>Communication Style:</strong> {persona.communicationStyle}</p>
