@@ -13,7 +13,7 @@ const BreakEvenCalculator = () => {
 
   useEffect(() => {
     calculateBreakEven();
-  }, [newPlantCost, rdCost, marketingCost, unitProductionCost, pricePerPlane]);
+  }, [newPlantCost, rdCost, marketingCost, unitProductionCost, pricePerPlane, calculateBreakEven]);
 
   const calculateBreakEven = () => {
     const fixedCosts = newPlantCost + rdCost + marketingCost;

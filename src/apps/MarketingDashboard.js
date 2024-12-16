@@ -21,7 +21,7 @@ const MarketingROISimulator = () => {
     const [averageAllocations, setAverageAllocations] = useState(null);
     const [predictedROI, setPredictedROI] = useState(null);
     const [status, setStatus] = useState("");
-    const [allSubmissions, setAllSubmissions] = useState([]);
+    
 
     const appId = "MarketingROISimulator";
     const storageKey = `submitted_${appId}`;
