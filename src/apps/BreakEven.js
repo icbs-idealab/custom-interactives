@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   LineChart,
   Line,
@@ -20,11 +20,7 @@ const BreakEvenCalculator = () => {
   const [chartData, setChartData] = useState([]);
   const [calculations, setCalculations] = useState({});
 
-  useEffect(() => {
-    calculateBreakEven();
-  }, [newPlantCost, rdCost, marketingCost, unitProductionCost, pricePerPlane]);
-
-  const calculateBreakEven = () => {
+  const calculateBreakEven = useCallback(() => {
     const fixedCosts = newPlantCost + rdCost + marketingCost;
     const profitPerPlane = pricePerPlane - unitProductionCost;
     const breakEven = (fixedCosts * 1000) / profitPerPlane;
@@ -45,7 +41,11 @@ const BreakEvenCalculator = () => {
       });
     }
     setChartData(data);
-  };
+  }, [newPlantCost, rdCost, marketingCost, unitProductionCost, pricePerPlane]);
+
+  useEffect(() => {
+    calculateBreakEven();
+  }, [calculateBreakEven]);
 
   const inputStyle = {
     margin: "5px 0",
