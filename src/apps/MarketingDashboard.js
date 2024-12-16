@@ -150,7 +150,6 @@ const MarketingROISimulator = () => {
 
         if (data && data.length > 0) {
             const submissions = data.map((item) => item.data);
-            setAllSubmissions(submissions);
             calculateAverages(submissions);
         }
     };

@@ -12,10 +12,31 @@ const BreakEvenCalculator = () => {
   const [calculations, setCalculations] = useState({});
 
   useEffect(() => {
-    calculateBreakEven();
-  }, [newPlantCost, rdCost, marketingCost, unitProductionCost, pricePerPlane, calculateBreakEven]);
+    const calculateBreakEven = () => {
+      const fixedCosts = newPlantCost + rdCost + marketingCost;
+      const profitPerPlane = pricePerPlane - unitProductionCost;
+      const breakEven = (fixedCosts * 1000) / profitPerPlane;
+      setBreakEvenPoint(Math.ceil(breakEven * 10) / 10);
+  
+      setCalculations({
+        fixedCosts,
+        profitPerPlane,
+        breakEven
+      });
+  
+      const data = [];
+      for (let i = 0; i <= breakEven * 2; i += breakEven / 10) {
+        data.push({
+          units: Math.round(i),
+          totalCosts: fixedCosts * 1000 + i * unitProductionCost,
+          totalRevenue: i * pricePerPlane,
+        });
+      }
+      setChartData(data);
+    };
 
-  const calculateBreakEven = () => {
+    calculateBreakEven();
+  }, [newPlantCost, rdCost, marketingCost, unitProductionCost, pricePerPlane]);
     const fixedCosts = newPlantCost + rdCost + marketingCost;
     const profitPerPlane = pricePerPlane - unitProductionCost;
     const breakEven = (fixedCosts * 1000) / profitPerPlane;
