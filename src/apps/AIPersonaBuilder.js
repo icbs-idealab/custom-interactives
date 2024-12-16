@@ -3,6 +3,7 @@ import React, { useState } from "react";
 const AIPersonaBuilder = () => {
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState(null);
+  const [validationError, setValidationError] = useState("");
   const storageKey = "consumer_analysis_generated";
   const hasGenerated = localStorage.getItem(storageKey);
 
@@ -36,8 +37,10 @@ const AIPersonaBuilder = () => {
 
   const generateAnalysis = async () => {
     if (!isFormValid()) {
+      setValidationError("Please fill in all fields before generating analysis");
       return;
     }
+    setValidationError("");
     setLoading(true);
     try {
       const analysisResponse = await fetch(
@@ -200,9 +203,12 @@ const AIPersonaBuilder = () => {
         </div>
       </div>
 
+      {validationError && (
+        <p className="text-red-500 text-sm mb-2">{validationError}</p>
+      )}
       <button
         onClick={generateAnalysis}
-        disabled={loading || hasGenerated || !isFormValid()}
+        disabled={loading || hasGenerated}
         className={`w-full py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
           hasGenerated
             ? "bg-gray-400 text-gray-600 cursor-not-allowed"
