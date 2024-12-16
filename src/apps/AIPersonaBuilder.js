@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 const AIPersonaBuilder = () => {
   const [loading, setLoading] = useState(false);
   const [persona, setPersona] = useState(null);
-  const storageKey = 'persona_generated';
-  const hasGenerated = localStorage.getItem(storageKey);
   const [formData, setFormData] = useState({
     age: '',
     interests: '',
@@ -72,22 +70,10 @@ const AIPersonaBuilder = () => {
         ...generatedPersona,
         image: imageData.data[0].url
       });
-      localStorage.setItem(storageKey, 'true');
     } catch (error) {
       console.error('Error:', error);
     }
     setLoading(false);
-  };
-
-  const resetGeneration = () => {
-    localStorage.removeItem(storageKey);
-    setPersona(null);
-    setFormData({
-      age: '',
-      interests: '',
-      buyingBehavior: '',
-      additionalInfo: ''
-    });
   };
 
   return (
@@ -146,24 +132,11 @@ const AIPersonaBuilder = () => {
 
       <button
         onClick={generatePersona}
-        disabled={loading || hasGenerated}
-        className={`w-full py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
-          hasGenerated
-            ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-            : 'bg-indigo-600 text-white hover:bg-indigo-700'
-        }`}
+        disabled={loading}
+        className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       >
-        {loading ? 'Generating...' : hasGenerated ? 'Persona Already Generated' : 'Generate Persona'}
+        {loading ? 'Generating...' : 'Generate Persona'}
       </button>
-
-      {hasGenerated && (
-        <button
-          onClick={resetGeneration}
-          className="mt-4 w-full bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition"
-        >
-          Reset & Generate New Persona
-        </button>
-      )}
 
       {persona && (
         <div className="mt-8 p-6 bg-gray-50 rounded-lg">
