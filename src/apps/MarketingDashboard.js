@@ -21,7 +21,7 @@ const MarketingROISimulator = () => {
     const [averageAllocations, setAverageAllocations] = useState(null);
     const [predictedROI, setPredictedROI] = useState(null);
     const [status, setStatus] = useState("");
-    
+    const [allSubmissions, setAllSubmissions] = useState([]);
 
     const appId = "MarketingROISimulator";
     const storageKey = `submitted_${appId}`;
@@ -150,6 +150,7 @@ const MarketingROISimulator = () => {
 
         if (data && data.length > 0) {
             const submissions = data.map((item) => item.data);
+            setAllSubmissions(submissions);
             calculateAverages(submissions);
         }
     };
