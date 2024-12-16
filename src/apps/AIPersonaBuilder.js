@@ -30,7 +30,14 @@ const AIPersonaBuilder = () => {
     });
   };
 
+  const isFormValid = () => {
+    return Object.values(formData).every(value => value.trim() !== "");
+  };
+
   const generateAnalysis = async () => {
+    if (!isFormValid()) {
+      return;
+    }
     setLoading(true);
     try {
       const analysisResponse = await fetch(
@@ -195,7 +202,7 @@ const AIPersonaBuilder = () => {
 
       <button
         onClick={generateAnalysis}
-        disabled={loading || hasGenerated}
+        disabled={loading || hasGenerated || !isFormValid()}
         className={`w-full py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
           hasGenerated
             ? "bg-gray-400 text-gray-600 cursor-not-allowed"
@@ -226,10 +233,7 @@ const AIPersonaBuilder = () => {
             </h3>
             <ul className="space-y-2">
               {analysis.consumerNeeds.map((need, index) => (
-                <li key={index} className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-white rounded-full"></span>
-                  {need}
-                </li>
+                <li key={index} className="list-disc ml-4">• {need}</li>
               ))}
             </ul>
           </div>
@@ -240,10 +244,7 @@ const AIPersonaBuilder = () => {
             </h3>
             <ul className="space-y-2">
               {analysis.purchasingMotivations.map((motivation, index) => (
-                <li key={index} className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-white rounded-full"></span>
-                  {motivation}
-                </li>
+                <li key={index} className="list-disc ml-4">• {motivation}</li>
               ))}
             </ul>
           </div>
@@ -254,10 +255,7 @@ const AIPersonaBuilder = () => {
             </h3>
             <ul className="space-y-2">
               {analysis.barriers.map((barrier, index) => (
-                <li key={index} className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-white rounded-full"></span>
-                  {barrier}
-                </li>
+                <li key={index} className="list-disc ml-4">• {barrier}</li>
               ))}
             </ul>
           </div>
@@ -268,10 +266,7 @@ const AIPersonaBuilder = () => {
             </h3>
             <ul className="space-y-2">
               {analysis.emotionalTriggers.map((trigger, index) => (
-                <li key={index} className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-white rounded-full"></span>
-                  {trigger}
-                </li>
+                <li key={index} className="list-disc ml-4">• {trigger}</li>
               ))}
             </ul>
           </div>
