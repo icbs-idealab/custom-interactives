@@ -96,23 +96,23 @@ const AIPersonaBuilder = () => {
         Marketing Campaign Generator
       </h1>
 
-      <div className="space-y-4 mb-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+      <div className="space-y-6 mb-8">
+        <div className="transform transition-all hover:scale-[1.02]">
+          <label className="block text-lg font-semibold text-indigo-700 mb-2">
             Target Audience
           </label>
           <textarea
             name="targetAudience"
             value={formData.targetAudience}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-xl border-2 border-indigo-200 shadow-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/50 bg-gradient-to-r from-white to-indigo-50 p-4 text-gray-700 placeholder-gray-400 transition-all duration-300"
             placeholder="Describe your target audience (demographics, interests, behaviors)"
             rows="3"
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div className="transform transition-all hover:scale-[1.02]">
+          <label className="block text-lg font-semibold text-purple-700 mb-2">
             Brand Name
           </label>
           <input
@@ -120,20 +120,20 @@ const AIPersonaBuilder = () => {
             name="brandName"
             value={formData.brandName}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-xl border-2 border-purple-200 shadow-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 bg-gradient-to-r from-white to-purple-50 p-4 text-gray-700 placeholder-gray-400 transition-all duration-300"
             placeholder="Enter your brand name"
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div className="transform transition-all hover:scale-[1.02]">
+          <label className="block text-lg font-semibold text-pink-700 mb-2">
             Brand Description
           </label>
           <textarea
             name="brandDescription"
             value={formData.brandDescription}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-xl border-2 border-pink-200 shadow-lg focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 bg-gradient-to-r from-white to-pink-50 p-4 text-gray-700 placeholder-gray-400 transition-all duration-300"
             placeholder="What does your brand do? What problems does it solve?"
             rows="3"
           />
