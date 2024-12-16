@@ -195,55 +195,79 @@ const AIPersonaBuilder = () => {
       )}
 
       {analysis && (
-        <div className="mt-8 p-6 bg-gray-50 rounded-lg space-y-6">
-          <div>
-            <h3 className="text-xl font-bold mb-3">Consumer Needs</h3>
-            <ul className="list-disc pl-5">
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="p-6 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg transform hover:scale-105 transition-transform">
+            <h3 className="text-xl font-bold mb-3 border-b border-white/20 pb-2">Consumer Needs</h3>
+            <ul className="space-y-2">
               {analysis.consumerNeeds.map((need, index) => (
-                <li key={index} className="mb-2">{need}</li>
+                <li key={index} className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-white rounded-full"></span>
+                  {need}
+                </li>
               ))}
             </ul>
           </div>
 
-          <div>
-            <h3 className="text-xl font-bold mb-3">Purchasing Motivations</h3>
-            <ul className="list-disc pl-5">
+          <div className="p-6 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 text-white shadow-lg transform hover:scale-105 transition-transform">
+            <h3 className="text-xl font-bold mb-3 border-b border-white/20 pb-2">Purchasing Motivations</h3>
+            <ul className="space-y-2">
               {analysis.purchasingMotivations.map((motivation, index) => (
-                <li key={index} className="mb-2">{motivation}</li>
+                <li key={index} className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-white rounded-full"></span>
+                  {motivation}
+                </li>
               ))}
             </ul>
           </div>
 
-          <div>
-            <h3 className="text-xl font-bold mb-3">Potential Barriers</h3>
-            <ul className="list-disc pl-5">
+          <div className="p-6 rounded-xl bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg transform hover:scale-105 transition-transform">
+            <h3 className="text-xl font-bold mb-3 border-b border-white/20 pb-2">Potential Barriers</h3>
+            <ul className="space-y-2">
               {analysis.barriers.map((barrier, index) => (
-                <li key={index} className="mb-2">{barrier}</li>
+                <li key={index} className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-white rounded-full"></span>
+                  {barrier}
+                </li>
               ))}
             </ul>
           </div>
 
-          <div>
-            <h3 className="text-xl font-bold mb-3">Emotional Triggers</h3>
-            <ul className="list-disc pl-5">
+          <div className="p-6 rounded-xl bg-gradient-to-br from-green-500 to-green-600 text-white shadow-lg transform hover:scale-105 transition-transform">
+            <h3 className="text-xl font-bold mb-3 border-b border-white/20 pb-2">Emotional Triggers</h3>
+            <ul className="space-y-2">
               {analysis.emotionalTriggers.map((trigger, index) => (
-                <li key={index} className="mb-2">{trigger}</li>
+                <li key={index} className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-white rounded-full"></span>
+                  {trigger}
+                </li>
               ))}
             </ul>
           </div>
 
-          <div>
-            <h3 className="text-xl font-bold mb-3">Engagement Strategies</h3>
-            <div className="pl-5">
-              <p><strong>Platforms:</strong> {analysis.engagementStrategies.platforms}</p>
-              <p><strong>Tone:</strong> {analysis.engagementStrategies.tone}</p>
-              <p><strong>Content Types:</strong> {analysis.engagementStrategies.contentTypes}</p>
+          <div className="p-6 rounded-xl bg-gradient-to-br from-yellow-500 to-yellow-600 text-white shadow-lg transform hover:scale-105 transition-transform">
+            <h3 className="text-xl font-bold mb-3 border-b border-white/20 pb-2">Engagement Strategies</h3>
+            <div className="space-y-2">
+              <p className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-white rounded-full"></span>
+                <strong>Platforms:</strong> {analysis.engagementStrategies.platforms}
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-white rounded-full"></span>
+                <strong>Tone:</strong> {analysis.engagementStrategies.tone}
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-white rounded-full"></span>
+                <strong>Content Types:</strong> {analysis.engagementStrategies.contentTypes}
+              </p>
             </div>
           </div>
 
-          <div>
-            <h3 className="text-xl font-bold mb-3">Campaign Feedback</h3>
-            <p className="pl-5">{analysis.campaignFeedback}</p>
+          <div className="p-6 rounded-xl bg-gradient-to-br from-pink-500 to-pink-600 text-white shadow-lg transform hover:scale-105 transition-transform">
+            <h3 className="text-xl font-bold mb-3 border-b border-white/20 pb-2">Campaign Feedback</h3>
+            <p className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-white rounded-full"></span>
+              {analysis.campaignFeedback}
+            </p>
           </div>
         </div>
       )}
