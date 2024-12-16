@@ -44,7 +44,7 @@ const AIPersonaBuilder = () => {
           model: "gpt-3.5-turbo",
           messages: [{
             role: "user",
-            content: `Analyze this consumer audience and provide marketing insights:
+            content: `You are a marketing analysis tool. Create a JSON analysis of the following consumer audience:
               Profile: ${formData.profile}
               Demographics: ${formData.demographics}
               Psychographics: ${formData.psychographics}
@@ -52,13 +52,19 @@ const AIPersonaBuilder = () => {
               Context: ${formData.context}
               Campaign Idea: ${formData.campaignIdea}
               
-              Format the response as a JSON object with the following fields:
-              - consumerNeeds (array of key needs and values)
-              - purchasingMotivations (array)
-              - barriers (array)
-              - emotionalTriggers (array)
-              - engagementStrategies (object with platforms, tone, contentTypes)
-              - campaignFeedback (detailed response to the campaign idea)`
+              Respond with a strict JSON object using this exact format:
+              {
+                "consumerNeeds": ["need1", "need2"],
+                "purchasingMotivations": ["motivation1", "motivation2"],
+                "barriers": ["barrier1", "barrier2"],
+                "emotionalTriggers": ["trigger1", "trigger2"],
+                "engagementStrategies": {
+                  "platforms": "platform description",
+                  "tone": "tone description",
+                  "contentTypes": "content types description"
+                },
+                "campaignFeedback": "campaign feedback text"
+              }`
           }]
         })
       });
