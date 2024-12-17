@@ -10,6 +10,7 @@ import AITimeline from './apps/AITimeline.js';
 import AdvertisingTimeline from './apps/AdvertisingTimeline.js';
 import AverageCalculator from './apps/AverageCalculator.js';
 import BreakEven from './apps/BreakEven.js';
+import CampaignIdeas from './apps/CampaignIdeas.js';
 import CounterApp from './apps/CounterApp.js';
 import DoubleNumber from './apps/DoubleNumber.js';
 import FluidAI from './apps/FluidAI.js';
@@ -31,6 +32,7 @@ function DynamicTitle() {
   '/advertisingtimeline': 'Advertising Timeline',
   '/averagecalculator': 'Average Calculator',
   '/breakeven': 'Break Even',
+  '/campaignideas': 'Campaign Ideas',
   '/counterapp': 'Counter App',
   '/doublenumber': 'Double Number',
   '/fluidai': 'Fluid A I',
@@ -66,6 +68,7 @@ function App() {
                 <li style={{ marginBottom: '1rem' }}><Link to="/advertisingtimeline" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Advertising Timeline</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/averagecalculator" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Average Calculator</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/breakeven" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Break Even</Link></li>
+                <li style={{ marginBottom: '1rem' }}><Link to="/campaignideas" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Campaign Ideas</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/counterapp" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Counter App</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/doublenumber" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Double Number</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/fluidai" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Fluid A I</Link></li>
@@ -85,6 +88,7 @@ function App() {
         <Route path="/advertisingtimeline" element={<ResizeWrapper><AdvertisingTimeline /></ResizeWrapper>} />
         <Route path="/averagecalculator" element={<ResizeWrapper><AverageCalculator /></ResizeWrapper>} />
         <Route path="/breakeven" element={<ResizeWrapper><BreakEven /></ResizeWrapper>} />
+        <Route path="/campaignideas" element={<ResizeWrapper><CampaignIdeas /></ResizeWrapper>} />
         <Route path="/counterapp" element={<ResizeWrapper><CounterApp /></ResizeWrapper>} />
         <Route path="/doublenumber" element={<ResizeWrapper><DoubleNumber /></ResizeWrapper>} />
         <Route path="/fluidai" element={<ResizeWrapper><FluidAI /></ResizeWrapper>} />
