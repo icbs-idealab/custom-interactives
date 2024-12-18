@@ -8,6 +8,10 @@ const MarketingCampaignGenerator = () => {
     targetAudience: "",
   });
   const [error, setError] = useState("");
+  
+  const appId = "CampaignIdeas";
+  const storageKey = `submitted_${appId}`;
+  const hasSubmitted = localStorage.getItem(storageKey);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,6 +26,12 @@ const MarketingCampaignGenerator = () => {
       setError("Please fill in all fields.");
       return;
     }
+    
+    if (hasSubmitted) {
+      setError("You have already generated campaigns.");
+      return;
+    }
+    
     setError("");
     setLoading(true);
 
@@ -39,6 +49,7 @@ const MarketingCampaignGenerator = () => {
 
       const data = await response.json();
       setCampaigns(data.campaigns);
+      localStorage.setItem(storageKey, 'true');
     } catch (err) {
       console.error(err);
       setError("Failed to generate campaigns. Please try again.");
@@ -87,8 +98,12 @@ const MarketingCampaignGenerator = () => {
 
         <button
           onClick={generateCampaigns}
-          disabled={loading}
-          className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-3 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg disabled:opacity-50"
+          disabled={loading || hasSubmitted}
+          className={`w-full p-3 rounded-lg transition-all shadow-lg ${
+            hasSubmitted 
+              ? 'bg-gray-400 cursor-not-allowed' 
+              : 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700'
+          }`}
         >
           {loading ? "Generating..." : "Generate Campaign Ideas"}
         </button>
