@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY, // Use the secure environment variable
+  apiKey: process.env.OPENAI_API_KEY, // Use secure API key
 });
 
 export default async function handler(req, res) {
@@ -12,8 +12,8 @@ export default async function handler(req, res) {
   const { startupIdea, targetAudience } = req.body;
 
   try {
-    const response = await openai.beta.chat.completions.parse({
-      model: "gpt-4o-2024-08-06", // Ensure you're using a valid model
+    const stream = await openai.beta.chat.completions.stream({
+      model: "gpt-4o-2024-08-06",
       messages: [
         {
           role: "system",
@@ -28,18 +28,18 @@ export default async function handler(req, res) {
           Respond strictly in JSON format.`,
         },
       ],
-      response_format: { type: "json_object" }, // Correct response format
+      response_format: { type: "json_object" }, // Ensure JSON output
     });
 
-    // Log response for debugging
-    console.log("OpenAI Response:", response);
-
-    res.status(200).json(response.choices[0].message.parsed);
+    res.writeHead(200, { "Content-Type": "application/json" });
+    for await (const chunk of stream) {
+      res.write(JSON.stringify(chunk)); // Stream chunks to the client
+    }
+    res.end();
   } catch (error) {
     console.error("Error from OpenAI:", error);
-    res.status(500).json({
-      error: "Failed to generate campaigns",
-      details: error.message || "Unknown error occurred",
-    });
+    res
+      .status(500)
+      .json({ error: "Failed to generate campaigns", details: error.message });
   }
 }
