@@ -12,8 +12,8 @@ export default async function handler(req, res) {
   const { startupIdea, targetAudience } = req.body;
 
   try {
-    const response = await openai.beta.chat.completions.parse({
-      model: "gpt-4o-2024-08-06",
+    const response = await openai.beta.chat.completions.create({
+      model: "gpt-4o", // Use the correct model name
       messages: [
         {
           role: "system",
@@ -28,12 +28,14 @@ export default async function handler(req, res) {
           Respond strictly in JSON format.`,
         },
       ],
-      response_format: { type: "json" },
+      response_format: { type: "json_object" }, // Use "json_object" here
     });
 
-    res.status(200).json(response.choices[0].message.parsed);
+    res.status(200).json(response.choices[0].message.content);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to generate campaigns" });
+    console.error("Error from OpenAI:", error);
+    res
+      .status(500)
+      .json({ error: "Failed to generate campaigns", details: error.message });
   }
 }
