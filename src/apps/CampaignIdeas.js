@@ -1,26 +1,4 @@
 import React, { useState } from "react";
-import OpenAI from "openai";
-import { z } from "zod";
-import { zodResponseFormat } from "openai/helpers/zod";
-
-// Initialize OpenAI
-const openai = new OpenAI({
-  apiKey: process.env.REACT_APP_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true,
-});
-
-// Define the Zod Schema
-const CampaignSchema = z.object({
-  campaigns: z.array(
-    z.object({
-      name: z.string(),
-      approach: z.string(),
-      platforms: z.array(z.string()),
-      engagementMethods: z.array(z.string()),
-      evaluationMetrics: z.array(z.string()),
-    }),
-  ),
-});
 
 const MarketingCampaignGenerator = () => {
   const [loading, setLoading] = useState(false);
@@ -48,35 +26,18 @@ const MarketingCampaignGenerator = () => {
     setLoading(true);
 
     try {
-      const response = await openai.beta.chat.completions.parse({
-        model: "gpt-4o",
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are a marketing expert generating structured campaign ideas.",
-          },
-          {
-            role: "user",
-            content: `Create three marketing campaign ideas for the following:
-            - Startup Idea: ${formData.startupIdea}
-            - Target Audience: ${formData.targetAudience}
-
-            Include:
-            - A name for each campaign.
-            - A suggested approach.
-            - Platforms (e.g., social media, TV, online ads, etc.).
-            - Engagement methods.
-            - Evaluation metrics to measure success.`,
-          },
-        ],
-        response_format: zodResponseFormat(CampaignSchema, "campaign_ideas"),
+      const response = await fetch("/api/generate-campaigns", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
 
-      const parsedResponse = response.choices[0].message.parsed;
-      setCampaigns(parsedResponse.campaigns);
+      if (!response.ok) throw new Error("Failed to fetch campaigns");
+
+      const data = await response.json();
+      setCampaigns(data.campaigns);
     } catch (err) {
-      console.error("Error:", err);
+      console.error(err);
       setError("Failed to generate campaigns. Please try again.");
     }
     setLoading(false);
