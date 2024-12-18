@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY, // Use secure API key
+  apiKey: process.env.OPENAI_API_KEY, // Ensure this is set in your environment variables
 });
 
 export default async function handler(req, res) {
@@ -12,8 +12,8 @@ export default async function handler(req, res) {
   const { startupIdea, targetAudience } = req.body;
 
   try {
-    const stream = await openai.beta.chat.completions.stream({
-      model: "gpt-4o-2024-08-06",
+    const response = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo", // or 'gpt-4' if you have access
       messages: [
         {
           role: "system",
@@ -23,23 +23,51 @@ export default async function handler(req, res) {
         {
           role: "user",
           content: `Create three marketing campaign ideas for the following:
-          - Startup Idea: ${startupIdea}
-          - Target Audience: ${targetAudience}
-          Respond strictly in JSON format.`,
+- Startup Idea: ${startupIdea}
+- Target Audience: ${targetAudience}
+
+Respond ONLY in JSON format, without any additional text or explanation. Use the following template:
+
+{
+  "campaigns": [
+    {
+      "name": "string",
+      "approach": "string",
+      "platforms": ["string"],
+      "engagementMethods": ["string"],
+      "evaluationMetrics": ["string"]
+    },
+    ...
+  ]
+}
+
+Ensure the JSON is valid and can be parsed by JSON.parse() in JavaScript.`,
         },
       ],
-      response_format: { type: "json_object" }, // Ensure JSON output
+      temperature: 0, // For more deterministic output
     });
 
-    res.writeHead(200, { "Content-Type": "application/json" });
-    for await (const chunk of stream) {
-      res.write(JSON.stringify(chunk)); // Stream chunks to the client
+    const assistantMessage = response.choices[0].message.content;
+
+    // Try parsing the assistant's message as JSON
+    let parsedContent;
+    try {
+      parsedContent = JSON.parse(assistantMessage);
+    } catch (parseError) {
+      console.error("Error parsing assistant message as JSON:", parseError);
+      console.error("Assistant message:", assistantMessage);
+      return res
+        .status(500)
+        .json({ error: "Failed to parse response from OpenAI" });
     }
-    res.end();
+
+    // Return the parsed content to the client
+    res.status(200).json(parsedContent);
   } catch (error) {
     console.error("Error from OpenAI:", error);
-    res
-      .status(500)
-      .json({ error: "Failed to generate campaigns", details: error.message });
+    res.status(500).json({
+      error: "Failed to generate campaigns",
+      details: error.message || "Unknown error occurred",
+    });
   }
 }

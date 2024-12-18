@@ -32,7 +32,10 @@ const MarketingCampaignGenerator = () => {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) throw new Error("Failed to fetch campaigns");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to fetch campaigns");
+      }
 
       const data = await response.json();
       setCampaigns(data.campaigns);
