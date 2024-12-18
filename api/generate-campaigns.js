@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY, // Securely use the API key from Vercel environment variables
+  apiKey: process.env.OPENAI_API_KEY, // Use the secure environment variable
 });
 
 export default async function handler(req, res) {
@@ -12,8 +12,8 @@ export default async function handler(req, res) {
   const { startupIdea, targetAudience } = req.body;
 
   try {
-    const response = await openai.beta.chat.completions.create({
-      model: "gpt-4o", // Use the correct model name
+    const response = await openai.beta.chat.completions.parse({
+      model: "gpt-4o-2024-08-06", // Ensure you're using a valid model
       messages: [
         {
           role: "system",
@@ -28,14 +28,18 @@ export default async function handler(req, res) {
           Respond strictly in JSON format.`,
         },
       ],
-      response_format: { type: "json_object" }, // Use "json_object" here
+      response_format: { type: "json_object" }, // Correct response format
     });
 
-    res.status(200).json(response.choices[0].message.content);
+    // Log response for debugging
+    console.log("OpenAI Response:", response);
+
+    res.status(200).json(response.choices[0].message.parsed);
   } catch (error) {
     console.error("Error from OpenAI:", error);
-    res
-      .status(500)
-      .json({ error: "Failed to generate campaigns", details: error.message });
+    res.status(500).json({
+      error: "Failed to generate campaigns",
+      details: error.message || "Unknown error occurred",
+    });
   }
 }
