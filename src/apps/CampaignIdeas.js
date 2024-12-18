@@ -47,7 +47,7 @@ const MarketingCampaignGenerator = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50">
+    <div className="min-h-full bg-gradient-to-br from-indigo-50 to-purple-50">
       <div className="max-w-4xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
           Marketing campaign ideas generator
