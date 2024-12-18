@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import ResizeWrapper from './ResizeWrapper';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import AIPersonaBuilder from './apps/AIPersonaBuilder.js';
 import AITimeline from './apps/AITimeline.js';
 import AdvertisingTimeline from './apps/AdvertisingTimeline.js';
 import AverageCalculator from './apps/AverageCalculator.js';
@@ -27,8 +26,7 @@ function DynamicTitle() {
 
   useEffect(() => {
     const titles = {
-      '/aipersonabuilder': 'A I Persona Builder',
-  '/aitimeline': 'A I Timeline',
+      '/aitimeline': 'A I Timeline',
   '/advertisingtimeline': 'Advertising Timeline',
   '/averagecalculator': 'Average Calculator',
   '/breakeven': 'Break Even',
@@ -63,8 +61,7 @@ function App() {
               <p>Select an app to get started:</p>
               <nav style={{ marginTop: '1rem' }}>
                 <ul style={{ listStyle: 'none', padding: 0 }}>
-                  <li style={{ marginBottom: '1rem' }}><Link to="/aipersonabuilder" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> A I Persona Builder</Link></li>
-                <li style={{ marginBottom: '1rem' }}><Link to="/aitimeline" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> A I Timeline</Link></li>
+                  <li style={{ marginBottom: '1rem' }}><Link to="/aitimeline" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> A I Timeline</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/advertisingtimeline" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Advertising Timeline</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/averagecalculator" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Average Calculator</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/breakeven" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Break Even</Link></li>
@@ -83,7 +80,6 @@ function App() {
             </div>
           }
         />
-        <Route path="/aipersonabuilder" element={<ResizeWrapper><AIPersonaBuilder /></ResizeWrapper>} />
         <Route path="/aitimeline" element={<ResizeWrapper><AITimeline /></ResizeWrapper>} />
         <Route path="/advertisingtimeline" element={<ResizeWrapper><AdvertisingTimeline /></ResizeWrapper>} />
         <Route path="/averagecalculator" element={<ResizeWrapper><AverageCalculator /></ResizeWrapper>} />
