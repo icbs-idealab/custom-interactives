@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 
 const AIPersonaBuilder = () => {
@@ -22,12 +21,14 @@ const AIPersonaBuilder = () => {
   };
 
   const isFormValid = () => {
-    return Object.values(formData).every(value => value.trim() !== "");
+    return Object.values(formData).every((value) => value.trim() !== "");
   };
 
   const generateAnalysis = async () => {
     if (!isFormValid()) {
-      setValidationError("Please fill in all fields before generating campaigns");
+      setValidationError(
+        "Please fill in all fields before generating campaigns",
+      );
       return;
     }
     setValidationError("");
@@ -164,7 +165,7 @@ const AIPersonaBuilder = () => {
           onClick={resetAnalysis}
           className="mt-4 w-full bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition"
         >
-          Reset & Generate New Campaigns
+          Reset and Generate New Campaigns
         </button>
       )}
 
@@ -178,7 +179,7 @@ const AIPersonaBuilder = () => {
               <h3 className="text-xl font-bold mb-3 border-b border-white/20 pb-2">
                 Campaign {index + 1}: {campaign.name}
               </h3>
-              
+
               <div className="space-y-4">
                 <div>
                   <p className="text-white/90">{campaign.description}</p>
