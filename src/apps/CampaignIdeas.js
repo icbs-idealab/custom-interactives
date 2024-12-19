@@ -124,29 +124,25 @@ const MarketingCampaignGenerator = () => {
                 </h3>
                 <div className="space-y-3 text-gray-700">
                   <p className="pb-2 border-b border-gray-100">
-                    <span className="font-semibold text-purple-600 flex items-center gap-2">
-                      <FontAwesomeIcon icon={faBullseye} className="text-purple-500" />
+                    <span className="font-semibold text-purple-600">
                       Approach:
                     </span>{" "}
                     {campaign.approach}
                   </p>
                   <p className="pb-2 border-b border-gray-100">
-                    <span className="font-semibold text-purple-600 flex items-center gap-2">
-                      <FontAwesomeIcon icon={faBullhorn} className="text-purple-500" />
+                    <span className="font-semibold text-purple-600">
                       Platforms:
                     </span>{" "}
                     {campaign.platforms.join(", ")}
                   </p>
                   <p className="pb-2 border-b border-gray-100">
-                    <span className="font-semibold text-purple-600 flex items-center gap-2">
-                      <FontAwesomeIcon icon={faHandshake} className="text-purple-500" />
+                    <span className="font-semibold text-purple-600">
                       Engagement Methods:
                     </span>{" "}
                     {campaign.engagementMethods.join(", ")}
                   </p>
                   <p>
-                    <span className="font-semibold text-purple-600 flex items-center gap-2">
-                      <FontAwesomeIcon icon={faChartLine} className="text-purple-500" />
+                    <span className="font-semibold text-purple-600">
                       Evaluation Metrics:
                     </span>{" "}
                     {campaign.evaluationMetrics.join(", ")}
