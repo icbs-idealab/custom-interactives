@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLightbulb, faUsers, faBullseye, faMegaphone, faChartLine, faHandshake } from '@fortawesome/free-solid-svg-icons';
 
 const MarketingCampaignGenerator = () => {
   const [loading, setLoading] = useState(false);
@@ -66,7 +68,8 @@ const MarketingCampaignGenerator = () => {
 
         <div className="space-y-6 mb-8">
           <div className="bg-white p-6 shadow-lg border border-indigo-100">
-            <label className="block text-lg font-semibold mb-2 text-indigo-700">
+            <label className="block text-lg font-semibold mb-2 text-indigo-700 flex items-center gap-2">
+              <FontAwesomeIcon icon={faLightbulb} className="text-yellow-500" />
               Startup idea
             </label>
             <textarea
@@ -80,7 +83,8 @@ const MarketingCampaignGenerator = () => {
           </div>
 
           <div className="bg-white p-6 shadow-lg border border-purple-100">
-            <label className="block text-lg font-semibold mb-2 text-purple-700">
+            <label className="block text-lg font-semibold mb-2 text-purple-700 flex items-center gap-2">
+              <FontAwesomeIcon icon={faUsers} className="text-purple-500" />
               Target audience
             </label>
             <textarea
@@ -120,25 +124,29 @@ const MarketingCampaignGenerator = () => {
                 </h3>
                 <div className="space-y-3 text-gray-700">
                   <p className="pb-2 border-b border-gray-100">
-                    <span className="font-semibold text-purple-600">
+                    <span className="font-semibold text-purple-600 flex items-center gap-2">
+                      <FontAwesomeIcon icon={faBullseye} className="text-purple-500" />
                       Approach:
                     </span>{" "}
                     {campaign.approach}
                   </p>
                   <p className="pb-2 border-b border-gray-100">
-                    <span className="font-semibold text-purple-600">
+                    <span className="font-semibold text-purple-600 flex items-center gap-2">
+                      <FontAwesomeIcon icon={faMegaphone} className="text-purple-500" />
                       Platforms:
                     </span>{" "}
                     {campaign.platforms.join(", ")}
                   </p>
                   <p className="pb-2 border-b border-gray-100">
-                    <span className="font-semibold text-purple-600">
+                    <span className="font-semibold text-purple-600 flex items-center gap-2">
+                      <FontAwesomeIcon icon={faHandshake} className="text-purple-500" />
                       Engagement Methods:
                     </span>{" "}
                     {campaign.engagementMethods.join(", ")}
                   </p>
                   <p>
-                    <span className="font-semibold text-purple-600">
+                    <span className="font-semibold text-purple-600 flex items-center gap-2">
+                      <FontAwesomeIcon icon={faChartLine} className="text-purple-500" />
                       Evaluation Metrics:
                     </span>{" "}
                     {campaign.evaluationMetrics.join(", ")}
