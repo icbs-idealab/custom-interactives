@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLightbulb, faUsers, faBullseye, faMegaphone, faChartLine, faHandshake } from '@fortawesome/free-solid-svg-icons';
+import { faLightbulb, faUsers, faBullseye, faBullhorn, faChartLine, faHandshake } from '@fortawesome/free-solid-svg-icons';
 
 const MarketingCampaignGenerator = () => {
   const [loading, setLoading] = useState(false);
@@ -132,7 +132,7 @@ const MarketingCampaignGenerator = () => {
                   </p>
                   <p className="pb-2 border-b border-gray-100">
                     <span className="font-semibold text-purple-600 flex items-center gap-2">
-                      <FontAwesomeIcon icon={faMegaphone} className="text-purple-500" />
+                      <FontAwesomeIcon icon={faBullhorn} className="text-purple-500" />
                       Platforms:
                     </span>{" "}
                     {campaign.platforms.join(", ")}
