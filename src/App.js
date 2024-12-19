@@ -12,6 +12,7 @@ import BreakEven from './apps/BreakEven.js';
 import CampaignIdeas from './apps/CampaignIdeas.js';
 import CounterApp from './apps/CounterApp.js';
 import DoubleNumber from './apps/DoubleNumber.js';
+import DragDropTimeline from './apps/DragDropTimeline.js';
 import FluidAI from './apps/FluidAI.js';
 import MarketingDashboard from './apps/MarketingDashboard.js';
 import PositioningStatementCreator from './apps/PositioningStatementCreator.js';
@@ -33,6 +34,7 @@ function DynamicTitle() {
   '/campaignideas': 'Campaign Ideas',
   '/counterapp': 'Counter App',
   '/doublenumber': 'Double Number',
+  '/dragdroptimeline': 'Drag Drop Timeline',
   '/fluidai': 'Fluid A I',
   '/marketingdashboard': 'Marketing Dashboard',
   '/positioningstatementcreator': 'Positioning Statement Creator',
@@ -68,6 +70,7 @@ function App() {
                 <li style={{ marginBottom: '1rem' }}><Link to="/campaignideas" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Campaign Ideas</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/counterapp" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Counter App</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/doublenumber" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Double Number</Link></li>
+                <li style={{ marginBottom: '1rem' }}><Link to="/dragdroptimeline" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Drag Drop Timeline</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/fluidai" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Fluid A I</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/marketingdashboard" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Marketing Dashboard</Link></li>
                 <li style={{ marginBottom: '1rem' }}><Link to="/positioningstatementcreator" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}> Positioning Statement Creator</Link></li>
@@ -87,6 +90,7 @@ function App() {
         <Route path="/campaignideas" element={<ResizeWrapper><CampaignIdeas /></ResizeWrapper>} />
         <Route path="/counterapp" element={<ResizeWrapper><CounterApp /></ResizeWrapper>} />
         <Route path="/doublenumber" element={<ResizeWrapper><DoubleNumber /></ResizeWrapper>} />
+        <Route path="/dragdroptimeline" element={<ResizeWrapper><DragDropTimeline /></ResizeWrapper>} />
         <Route path="/fluidai" element={<ResizeWrapper><FluidAI /></ResizeWrapper>} />
         <Route path="/marketingdashboard" element={<ResizeWrapper><MarketingDashboard /></ResizeWrapper>} />
         <Route path="/positioningstatementcreator" element={<ResizeWrapper><PositioningStatementCreator /></ResizeWrapper>} />
