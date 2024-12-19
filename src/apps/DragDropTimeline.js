@@ -60,6 +60,7 @@ const TimelineGame = () => {
   const [score, setScore] = useState(0);
   const [selectedPosition, setSelectedPosition] = useState(0);
   const [isRevealing, setIsRevealing] = useState(false);
+  const [hasRevealed, setHasRevealed] = useState(false);
 
   useEffect(() => {
     // Start with first event
@@ -126,8 +127,6 @@ const TimelineGame = () => {
 
     setDraggedOverIndex(null);
   };
-
-  const [hasRevealed, setHasRevealed] = useState(false);
 
   const revealCorrectOrder = () => {
     setIsRevealing(true);
@@ -245,68 +244,64 @@ const TimelineGame = () => {
     }
 
     return (
-      <div className="space-y-4">
-        {currentEvent && !gameComplete && (
-          <div className="border-2 border-blue-500 rounded-lg p-4">
-            <h3 className="font-semibold mb-2">Position the Event:</h3>
-            <div className="flex space-x-2">
-              <button
-                onClick={() => handlePositionChange('up')}
-                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-                aria-label="Move position up"
-                disabled={selectedPosition === 0}
-              >
-                ↑ Move Up
-              </button>
-              <button
-                onClick={() => handlePositionChange('down')}
-                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-                aria-label="Move position down"
-                disabled={selectedPosition === placedEvents.length}
-              >
-                ↓ Move Down
-              </button>
-              <button
-                onClick={() => placeEvent(selectedPosition)}
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                aria-label="Submit position"
-              >
-                Submit Position
-              </button>
-            </div>
-          </div>
-        )}
-
-        <div className="space-y-2">
-          {previewTimeline.map((event, index) => (
-            <div
-              key={event.id + (event.isPreview ? '-preview' : '')}
-              className={`p-4 rounded-lg ${
-                event.transitioning ? 'transition-all duration-1000' : ''
-              } ${
-                event.isPreview
-                  ? 'bg-white border-2 border-blue-500 shadow-lg'
-                  : event.isCorrect === null
-                  ? 'bg-white'
-                  : event.isCorrect
-                  ? 'bg-green-100'
-                  : 'bg-red-100'
-              }`}
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="font-semibold">{event.title}</h3>
-                  <p className="text-sm text-gray-600">{event.description}</p>
-                </div>
+      <div className="space-y-2">
+        {previewTimeline.map((event, index) => (
+          <div
+            key={event.id + (event.isPreview ? '-preview' : '')}
+            className={`p-4 rounded-lg ${
+              event.transitioning ? 'transition-all duration-1000' : ''
+            } ${
+              event.isPreview
+                ? 'bg-white border-2 border-blue-500 shadow-lg'
+                : event.isCorrect === null
+                ? 'bg-white'
+                : event.isCorrect
+                ? 'bg-green-100'
+                : 'bg-red-100'
+            }`}
+          >
+            <div className="flex justify-between items-start">
+              <div>
+                <h3 className="font-semibold">{event.title}</h3>
+                <p className="text-sm text-gray-600">{event.description}</p>
+              </div>
+              <div className="flex items-center space-x-2">
                 {event.revealed && (
                   <span className="text-sm font-mono bg-gray-100 px-2 py-1 rounded">
                     {event.year}
                   </span>
                 )}
+                {event.isPreview && (
+                  <div className="flex items-center space-x-1">
+                    <button
+                      onClick={() => handlePositionChange('up')}
+                      className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                      aria-label="Move position up"
+                      disabled={selectedPosition === 0}
+                    >
+                      ↑
+                    </button>
+                    <button
+                      onClick={() => handlePositionChange('down')}
+                      className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                      aria-label="Move position down"
+                      disabled={selectedPosition === placedEvents.length}
+                    >
+                      ↓
+                    </button>
+                    <button
+                      onClick={() => placeEvent(selectedPosition)}
+                      className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                      aria-label="Submit position"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     );
   };
@@ -314,40 +309,45 @@ const TimelineGame = () => {
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="mb-8">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold">AI History Timeline</h1>
+        <h1 className="text-2xl font-bold mb-4">AI History Timeline</h1>
+        <p className="text-gray-600 mb-4">
+          {isAccessibleMode 
+            ? 'Use the up/down arrows to choose a position, then click Submit to place each event.'
+            : 'Drag and drop events to place them in chronological order.'}
+        </p>
+        
+        <div className="space-y-2">
           <button
             onClick={() => setIsAccessibleMode(!isAccessibleMode)}
-            className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+            className="w-full sm:w-auto px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
             aria-label={`Switch to ${isAccessibleMode ? 'drag and drop' : 'accessible'} version`}
           >
             Switch to {isAccessibleMode ? 'Drag and Drop' : 'Accessible'} Version
           </button>
-        </div>
-        <div className="flex justify-between items-center">
-          <p className="text-gray-600">
-            {isAccessibleMode 
-              ? 'Use the up/down arrows to choose a position, then click Submit to place each event.'
-              : 'Drag and drop events to place them in chronological order.'}
+
+          {gameComplete && !isRevealing && (
+            <div>
+              {hasRevealed ? (
+                <button
+                  onClick={resetGame}
+                  className="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                >
+                  Play Again
+                </button>
+              ) : (
+                <button
+                  onClick={revealCorrectOrder}
+                  className="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                  Reveal Correct Order
+                </button>
+              )}
+            </div>
+          )}
+          
+          <p className="text-gray-600 pt-2">
             Score: {score}/{events.length - 1}
           </p>
-          {gameComplete && !isRevealing && (
-            hasRevealed ? (
-              <button
-                onClick={resetGame}
-                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-              >
-                Play Again
-              </button>
-            ) : (
-              <button
-                onClick={revealCorrectOrder}
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
-                Reveal Correct Order
-              </button>
-            )
-          )}
         </div>
       </div>
 
