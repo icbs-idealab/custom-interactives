@@ -4,6 +4,7 @@ const TimelineGame = () => {
   const [events, setEvents] = useState([
     {
       id: 1,
+      presentationOrder: 4,
       year: 1943,
       title: "Foundations of neural networks",
       description: "Warren McCulloch and Walter Pitts published a paper titled 'A Logical Calculus of Ideas Immanent in Nervous Activity', which laid the theoretical groundwork for neural networks by modeling how the brain processes information.",
@@ -12,6 +13,7 @@ const TimelineGame = () => {
     },
     {
       id: 2,
+      presentationOrder: 3,
       year: 1950,
       title: "Turing's paper",
       description: "Alan Turing introduced the concept of the Turing Test in his paper 'Computing Machinery and Intelligence', proposing a practical way to evaluate a machine's ability to exhibit human-like intelligence.",
@@ -20,6 +22,7 @@ const TimelineGame = () => {
     },
     {
       id: 3,
+      presentationOrder: 6,
       year: 1956,
       title: "Dartmouth Conference",
       description: "The Dartmouth Conference brought together leading thinkers such as John McCarthy and Marvin Minsky to formalize artificial intelligence as a field of academic study.",
@@ -28,6 +31,7 @@ const TimelineGame = () => {
     },
     {
       id: 4,
+      presentationOrder: 8,
       year: 1965,
       title: "ELIZA",
       description: "Joseph Weizenbaum developed ELIZA, a natural language processing program capable of simulating conversation, marking an early step in human-computer interaction.",
@@ -36,21 +40,59 @@ const TimelineGame = () => {
     },
     {
       id: 5,
-      year: 1980,
-      title: "Expert systems",
-      description: "Expert systems gained prominence as AI programs designed to simulate the decision-making abilities of human experts, with applications in industries such as finance and medicine.",
-      revealed: false,
-      isCorrect: null
-    },
-    {
-      id: 6,
+      presentationOrder: 7,
       year: 1986,
       title: "Backpropagation in neural networks",
       description: "Geoffrey Hinton, David Rumelhart, and Ronald Williams introduced the backpropagation algorithm, allowing for the training of deeper neural networks and advancing machine learning techniques.",
       revealed: false,
       isCorrect: null
+    },
+    {
+      id: 6,
+      presentationOrder: 5,
+      year: 1997,
+      title: "Deep Blue",
+      description: "IBM's Deep Blue defeated chess world champion Garry Kasparov, demonstrating AI's ability to excel in strategic and highly complex tasks.",
+      revealed: false,
+      isCorrect: null
+    },
+    {
+      id: 7,
+      presentationOrder: 9,
+      year: 2006,
+      title: "Deep learning",
+      description: "Geoffrey Hinton's work popularized deep learning techniques, enabling breakthroughs in image and speech recognition and reinvigorating interest in AI research.",
+      revealed: false,
+      isCorrect: null
+    },
+    {
+      id: 8,
+      presentationOrder: 2,
+      year: 2011,
+      title: "IBM Watson",
+      description: "IBM's Watson competed on the television quiz show 'Jeopardy!' and defeated two former champions, showcasing AI's ability to process and analyze natural language at an advanced level.",
+      revealed: false,
+      isCorrect: null
+    },
+    {
+      id: 10,
+      presentationOrder: 1,
+      year: 2022,
+      title: "ChatGPT",
+      description: "OpenAI launched ChatGPT, an AI conversational model that brought advanced natural language capabilities to a broad audience, transforming how people interact with AI.",
+      revealed: false,
+      isCorrect: null
+    },
+    {
+      id: 11,
+      presentationOrder: 10,
+      year: 2023,
+      title: "AI copyright lawsuit",
+      description: "Artists filed a class-action lawsuit against Stability AI, DeviantArt, and MidJourney, raising legal questions about the use of copyrighted works in training AI models.",
+      revealed: false,
+      isCorrect: null
     }
-  ]);
+]);
 
   const [isAccessibleMode, setIsAccessibleMode] = useState(false);
   const [placedEvents, setPlacedEvents] = useState([]);
@@ -62,6 +104,9 @@ const TimelineGame = () => {
   const [isRevealing, setIsRevealing] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isReordering, setIsReordering] = useState(false);
+  const [showCompletion, setShowCompletion] = useState(false);
+
+
 
   useEffect(() => {
     // Check if we're on mobile and set accessible mode accordingly
@@ -79,9 +124,13 @@ const TimelineGame = () => {
     // Add resize listener
     window.addEventListener('resize', checkMobile);
 
+    // Sort events by presentation order
+    const orderedEvents = [...events].sort((a, b) => a.presentationOrder - b.presentationOrder);
+    
     // Start with first event
-    setPlacedEvents([{ ...events[0], revealed: true }]);
-    setCurrentEvent(events[1]);
+    setPlacedEvents([{ ...orderedEvents[0], revealed: true }]);
+    setCurrentEvent(orderedEvents[1]);
+
 
     // Cleanup
     return () => window.removeEventListener('resize', checkMobile);
@@ -169,16 +218,19 @@ const TimelineGame = () => {
 
     setIsReordering(false);
 
-    const nextEventIndex = events.findIndex(e => e.id === currentEvent.id) + 1;
+    const nextEventIndex = events
+    .sort((a, b) => a.presentationOrder - b.presentationOrder)
+    .findIndex(e => e.id === currentEvent.id) + 1;
     if (nextEventIndex < events.length) {
       setCurrentEvent(events[nextEventIndex]);
       setSelectedPosition(0);
     } else {
       setGameComplete(true);
+      setShowCompletion(true);  // Add this line
     }
 
     setDraggedOverIndex(null);
-  };
+    };
 
   
 
@@ -188,6 +240,7 @@ const TimelineGame = () => {
     setDraggedOverIndex(null);
     setSelectedPosition(0);
     setIsReordering(false);
+    setShowCompletion(false);  // Add this line
     setPlacedEvents([{ ...events[0], revealed: true }]);
     setCurrentEvent(events[1]);
   };
@@ -329,11 +382,11 @@ const TimelineGame = () => {
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold mb-4">AI History Timeline</h1>
+        <h1 className="text-2xl font-bold mb-4">AI history timeline</h1>
         <p className="text-gray-600 mb-4">
           {isAccessibleMode || isMobile
-            ? 'Use the up/down arrows to choose a position, then click Submit to place each event.'
-            : 'Drag and drop events to place them in chronological order.'}
+            ? 'Use the up/down arrows to choose a position, then click Submit to place each event. Events will then be sorted chronologically and the next event will appear for you to position.'
+            : 'Drag and drop events to place them in chronological order. After you have placed each event, they will be sorted chronologically and the next event will appear for you to position.'}
         </p>
         
         <div className="space-y-2">
@@ -348,16 +401,22 @@ const TimelineGame = () => {
             </button>
           )}
 
-{gameComplete && !isRevealing && (
-  <button
-    onClick={resetGame}
-    className="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-  >
-    Reset
-  </button>
-)}
 
-          
+{gameComplete && (
+  <div className="space-y-4">
+    {showCompletion && (
+      <div className="text-lg font-bold text-green-600">
+        Complete! Score: {score}/{events.length - 1}
+      </div>
+    )}
+    <button
+      onClick={resetGame}
+      className="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+    >
+      Reset
+    </button>
+  </div>
+)}          
           <p className="text-gray-600 pt-2">
             Score: {score}/{events.length - 1}
           </p>
