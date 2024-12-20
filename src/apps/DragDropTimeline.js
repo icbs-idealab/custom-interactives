@@ -60,12 +60,31 @@ const TimelineGame = () => {
   const [score, setScore] = useState(0);
   const [selectedPosition, setSelectedPosition] = useState(0);
   const [isRevealing, setIsRevealing] = useState(false);
-  const [hasRevealed, setHasRevealed] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isReordering, setIsReordering] = useState(false);
 
   useEffect(() => {
+    // Check if we're on mobile and set accessible mode accordingly
+    const checkMobile = () => {
+      const isMobileView = window.innerWidth < 640; // sm breakpoint in Tailwind
+      setIsMobile(isMobileView);
+      if (isMobileView) {
+        setIsAccessibleMode(true);
+      }
+    };
+
+    // Initial check
+    checkMobile();
+
+    // Add resize listener
+    window.addEventListener('resize', checkMobile);
+
     // Start with first event
     setPlacedEvents([{ ...events[0], revealed: true }]);
     setCurrentEvent(events[1]);
+
+    // Cleanup
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   const handleDragStart = (e, event) => {
@@ -93,6 +112,9 @@ const TimelineGame = () => {
   };
 
   const placeEvent = (position) => {
+    if (isReordering) return; // Prevent placing while reordering animation is happening
+    setIsReordering(true);
+    
     const newPlacedEvents = [...placedEvents];
     
     // Check if placement is correct
@@ -107,15 +129,45 @@ const TimelineGame = () => {
     const eventToPlace = {
       ...currentEvent,
       revealed: true,
-      isCorrect
+      isCorrect,
+      transitioning: false // Start without transition
     };
 
+    // First place the event and show color feedback
     newPlacedEvents.splice(position, 0, eventToPlace);
     setPlacedEvents(newPlacedEvents);
     
     if (isCorrect) {
       setScore(prev => prev + 1);
     }
+
+    // After showing feedback, sort events chronologically
+    setTimeout(() => {
+      // Enable transitions for all events
+      const eventsWithTransition = newPlacedEvents.map(event => ({
+        ...event,
+        transitioning: true
+      }));
+      setPlacedEvents(eventsWithTransition);
+
+      // Sort events after a brief delay to ensure transition class is applied
+      setTimeout(() => {
+        const sortedEvents = [...eventsWithTransition]
+          .sort((a, b) => a.year - b.year);
+        setPlacedEvents(sortedEvents);
+
+        // Remove transition class after animation
+        setTimeout(() => {
+          const finalEvents = sortedEvents.map(event => ({
+            ...event,
+            transitioning: false
+          }));
+          setPlacedEvents(finalEvents);
+        }, 1000);
+      }, 50);
+    }, 1000); // Delay before starting reorder animation
+
+    setIsReordering(false);
 
     const nextEventIndex = events.findIndex(e => e.id === currentEvent.id) + 1;
     if (nextEventIndex < events.length) {
@@ -128,46 +180,14 @@ const TimelineGame = () => {
     setDraggedOverIndex(null);
   };
 
-  const revealCorrectOrder = () => {
-    setIsRevealing(true);
-    setHasRevealed(true);
-    
-    // First, add transition classes to all events
-    const eventsWithTransition = placedEvents.map(event => ({
-      ...event,
-      transitioning: true
-    }));
-    setPlacedEvents(eventsWithTransition);
-
-    // After a brief delay, apply the correct order
-    setTimeout(() => {
-      const sortedEvents = [...placedEvents]
-        .sort((a, b) => a.year - b.year)
-        .map(event => ({
-          ...event,
-          isCorrect: true,
-          transitioning: true
-        }));
-      setPlacedEvents(sortedEvents);
-
-      // After animation completes, just remove transition class but keep sorted order
-      setTimeout(() => {
-        const finalEvents = sortedEvents.map(event => ({
-          ...event,
-          transitioning: false
-        }));
-        setPlacedEvents(finalEvents);
-        setIsRevealing(false);
-      }, 1000);
-    }, 100);
-  };
+  
 
   const resetGame = () => {
-    setHasRevealed(false);
     setGameComplete(false);
     setScore(0);
     setDraggedOverIndex(null);
     setSelectedPosition(0);
+    setIsReordering(false);
     setPlacedEvents([{ ...events[0], revealed: true }]);
     setCurrentEvent(events[1]);
   };
@@ -190,7 +210,7 @@ const TimelineGame = () => {
           <React.Fragment key={event.id}>
             <div
               className={`h-2 transition-all ${
-                draggedOverIndex === index ? 'bg-blue-200 h-8' : ''
+                draggedOverIndex === index ? 'bg-blue-200 h-20' : ''
               }`}
               onDragOver={(e) => handleDragOver(e, index)}
               onDrop={(e) => handleDrop(e, index)}
@@ -198,7 +218,7 @@ const TimelineGame = () => {
             
             <div
               className={`p-4 rounded-lg ${
-                event.transitioning ? 'transition-all duration-1000' : ''
+                event.transitioning ? 'transition-all duration-1000 ease-in-out transform' : ''
               } ${
                 event.isCorrect === null
                   ? 'bg-white'
@@ -224,7 +244,7 @@ const TimelineGame = () => {
         
         <div
           className={`h-2 transition-all ${
-            draggedOverIndex === placedEvents.length ? 'bg-blue-200 h-8' : ''
+            draggedOverIndex === placedEvents.length ? 'bg-blue-200 h-20' : ''
           }`}
           onDragOver={(e) => handleDragOver(e, placedEvents.length)}
           onDrop={(e) => handleDrop(e, placedEvents.length)}
@@ -249,7 +269,7 @@ const TimelineGame = () => {
           <div
             key={event.id + (event.isPreview ? '-preview' : '')}
             className={`p-4 rounded-lg ${
-              event.transitioning ? 'transition-all duration-1000' : ''
+              event.transitioning ? 'transition-all duration-1000 ease-in-out transform' : ''
             } ${
               event.isPreview
                 ? 'bg-white border-2 border-blue-500 shadow-lg'
@@ -271,7 +291,7 @@ const TimelineGame = () => {
                     {event.year}
                   </span>
                 )}
-                {event.isPreview && (
+                {event.isPreview && !isReordering && (
                   <div className="flex items-center space-x-1">
                     <button
                       onClick={() => handlePositionChange('up')}
@@ -311,39 +331,32 @@ const TimelineGame = () => {
       <div className="mb-8">
         <h1 className="text-2xl font-bold mb-4">AI History Timeline</h1>
         <p className="text-gray-600 mb-4">
-          {isAccessibleMode 
+          {isAccessibleMode || isMobile
             ? 'Use the up/down arrows to choose a position, then click Submit to place each event.'
             : 'Drag and drop events to place them in chronological order.'}
         </p>
         
         <div className="space-y-2">
-          <button
-            onClick={() => setIsAccessibleMode(!isAccessibleMode)}
-            className="w-full sm:w-auto px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-            aria-label={`Switch to ${isAccessibleMode ? 'drag and drop' : 'accessible'} version`}
-          >
-            Switch to {isAccessibleMode ? 'Drag and Drop' : 'Accessible'} Version
-          </button>
-
-          {gameComplete && !isRevealing && (
-            <div>
-              {hasRevealed ? (
-                <button
-                  onClick={resetGame}
-                  className="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                >
-                  Play Again
-                </button>
-              ) : (
-                <button
-                  onClick={revealCorrectOrder}
-                  className="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
-                  Reveal Correct Order
-                </button>
-              )}
-            </div>
+          {/* Only show toggle button on non-mobile screens */}
+          {!isMobile && (
+            <button
+              onClick={() => setIsAccessibleMode(!isAccessibleMode)}
+              className="hidden sm:block w-full sm:w-auto px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+              aria-label={`Switch to ${isAccessibleMode ? 'drag and drop' : 'accessible'} version`}
+            >
+              Switch to {isAccessibleMode ? 'Drag and Drop' : 'Accessible'} Version
+            </button>
           )}
+
+{gameComplete && !isRevealing && (
+  <button
+    onClick={resetGame}
+    className="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+  >
+    Reset
+  </button>
+)}
+
           
           <p className="text-gray-600 pt-2">
             Score: {score}/{events.length - 1}
@@ -351,7 +364,7 @@ const TimelineGame = () => {
         </div>
       </div>
 
-      {isAccessibleMode ? renderAccessibleVersion() : renderDragDropVersion()}
+      {(isAccessibleMode || isMobile) ? renderAccessibleVersion() : renderDragDropVersion()}
     </div>
   );
 };
