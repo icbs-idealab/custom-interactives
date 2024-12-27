@@ -1,119 +1,167 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLightbulb, faUsers, faBullseye, faBullhorn, faChartLine, faHandshake } from '@fortawesome/free-solid-svg-icons';
 
 const MarketingCampaignGenerator = () => {
-  const [loading, setLoading] = useState(false);
-  const [campaigns, setCampaigns] = useState(null);
   const [formData, setFormData] = useState({
     startupIdea: "",
     targetAudience: "",
   });
-  const [error, setError] = useState("");
-  
-  const appId = "CampaignIdeas";
-  const storageKey = `submitted_${appId}`;
-  const hasSubmitted = localStorage.getItem(storageKey);
+  const [fieldErrors, setFieldErrors] = useState({
+    startupIdea: "",
+    targetAudience: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [campaigns, setCampaigns] = useState(null);
+  const wordLimit = 100;
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    // Update form data
+    setFormData({ ...formData, [name]: value });
+
+    // Reset field-specific errors
+    setFieldErrors({ ...fieldErrors, [name]: "" });
   };
 
-  const isFormValid = () => {
-    return Object.values(formData).every((value) => value.trim() !== "");
+  const validateForm = () => {
+    const errors = {};
+
+    // Required field validation and word limit checks
+    if (!formData.startupIdea.trim()) {
+      errors.startupIdea = "Startup idea is required.";
+    } else if (formData.startupIdea.trim().split(/\s+/).length > wordLimit) {
+      errors.startupIdea = `Startup idea must be ${wordLimit} words or fewer.`;
+    }
+
+    if (!formData.targetAudience.trim()) {
+      errors.targetAudience = "Target audience is required.";
+    } else if (formData.targetAudience.trim().split(/\s+/).length > wordLimit) {
+      errors.targetAudience = `Target audience must be ${wordLimit} words or fewer.`;
+    }
+
+    setFieldErrors(errors);
+
+    // Return true if there are no errors
+    return Object.keys(errors).length === 0;
   };
 
-  const generateCampaigns = async () => {
-    if (!isFormValid()) {
-      setError("Please fill in all fields.");
-      return;
-    }
-    
-    if (hasSubmitted) {
-      setError("You have already generated campaigns.");
-      return;
-    }
-    
-    setError("");
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
+  
     setLoading(true);
-
+    setFieldErrors({}); // Clear previous errors
     try {
       const response = await fetch("/api/generate-campaigns", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
+  
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to fetch campaigns");
+        throw new Error("Failed to generate campaigns.");
       }
-
+  
       const data = await response.json();
       setCampaigns(data.campaigns);
-      localStorage.setItem(storageKey, 'true');
-    } catch (err) {
-      console.error(err);
-      setError("Failed to generate campaigns. Please try again.");
+    } catch (error) {
+      console.error(error);
+      setFieldErrors({ global: "An error occurred while generating campaigns. Please try again." });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
+  
 
   return (
     <div className="min-h-full bg-gradient-to-br from-indigo-50 to-purple-50">
       <div className="max-w-4xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-          Marketing campaign ideas generator
+          Marketing Campaign Ideas Generator
         </h1>
 
         <div className="space-y-6 mb-8">
-          <div className="bg-white p-6 shadow-lg border border-indigo-100">
-            <label className="block text-lg font-semibold mb-2 text-indigo-700 flex items-center gap-2">
-              <FontAwesomeIcon icon={faLightbulb} className="text-yellow-500" />
-              Startup idea
-            </label>
-            <textarea
-              name="startupIdea"
-              value={formData.startupIdea}
-              onChange={handleChange}
-              className="w-full border-2 border-indigo-100 rounded-lg p-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-              placeholder="Describe your startup idea..."
-              rows="3"
-            />
-          </div>
+  <div className="bg-white p-6 shadow-lg border border-indigo-100">
+    <label
+      htmlFor="startupIdea"
+      className="block text-lg font-semibold mb-2 text-indigo-700 flex items-center gap-2"
+    >
+      Startup Idea
+    </label>
+    <textarea
+      id="startupIdea"
+      name="startupIdea"
+      value={formData.startupIdea}
+      onChange={handleChange}
+      className={`w-full border-2 rounded-lg p-3 focus:ring-2 focus:ring-indigo-500 transition-all ${
+        fieldErrors.startupIdea ? "border-red-500" : "border-indigo-100"
+      }`}
+      aria-invalid={!!fieldErrors.startupIdea}
+      aria-describedby={fieldErrors.startupIdea ? "startupIdeaError" : undefined}
+      placeholder="Describe your startup idea..."
+      rows="3"
+    />
+    <div aria-live="assertive">
+      {fieldErrors.startupIdea && (
+        <p id="startupIdeaError" className="text-red-500 text-sm mt-1">
+          {fieldErrors.startupIdea}
+        </p>
+      )}
+    </div>
+  </div>
 
-          <div className="bg-white p-6 shadow-lg border border-purple-100">
-            <label className="block text-lg font-semibold mb-2 text-purple-700 flex items-center gap-2">
-              <FontAwesomeIcon icon={faUsers} className="text-purple-500" />
-              Target audience
-            </label>
-            <textarea
-              name="targetAudience"
-              value={formData.targetAudience}
-              onChange={handleChange}
-              className="w-full border-2 border-purple-100 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
-              placeholder="Describe your target audience..."
-              rows="3"
-            />
-          </div>
-        </div>
+  <div className="bg-white p-6 shadow-lg border border-purple-100">
+    <label
+      htmlFor="targetAudience"
+      className="block text-lg font-semibold mb-2 text-purple-700 flex items-center gap-2"
+    >
+      Target Audience
+    </label>
+    <textarea
+      id="targetAudience"
+      name="targetAudience"
+      value={formData.targetAudience}
+      onChange={handleChange}
+      className={`w-full border-2 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 transition-all ${
+        fieldErrors.targetAudience ? "border-red-500" : "border-purple-100"
+      }`}
+      aria-invalid={!!fieldErrors.targetAudience}
+      aria-describedby={fieldErrors.targetAudience ? "targetAudienceError" : undefined}
+      placeholder="Describe your target audience..."
+      rows="3"
+    />
+    <div aria-live="assertive">
+      {fieldErrors.targetAudience && (
+        <p id="targetAudienceError" className="text-red-500 text-sm mt-1">
+          {fieldErrors.targetAudience}
+        </p>
+      )}
+    </div>
+  </div>
+</div>
 
-        {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
+
+{fieldErrors.global && (
+  <div aria-live="assertive" className="text-red-500 text-center mt-4">
+    {fieldErrors.global}
+  </div>
+)}
+
 
         <button
-          onClick={generateCampaigns}
-          disabled={loading || hasSubmitted}
-          className={`w-full p-3 rounded-lg transition-all shadow-lg ${
-            hasSubmitted 
-              ? 'bg-gray-400 cursor-not-allowed' 
-              : 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700'
+          onClick={handleSubmit}
+          disabled={loading}
+          className={`w-full p-3 rounded-lg transition-all shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
+            loading
+              ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+              : "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700"
           }`}
+          aria-busy={loading}
         >
           {loading ? "Generating..." : "Generate Campaign Ideas"}
         </button>
 
         {campaigns && (
-          <div className="mt-8 space-y-6">
+          <div className="mt-8 space-y-6" aria-live="polite">
             {campaigns.map((campaign, index) => (
               <div
                 key={index}
