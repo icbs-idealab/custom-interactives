@@ -11,6 +11,9 @@ const MarketingCampaignGenerator = () => {
   });
   const [loading, setLoading] = useState(false);
   const [campaigns, setCampaigns] = useState(null);
+  const [hasSubmitted, setHasSubmitted] = useState(
+    localStorage.getItem("campaignGeneratorSubmitted") === "true"
+  );
   const wordLimit = 50;
   const generatedContentRef = useRef(null); // Ref for generated content
   const liveRegionRef = useRef(null); // Ref for live announcements
@@ -48,13 +51,21 @@ const MarketingCampaignGenerator = () => {
   };
 
   const handleSubmit = async () => {
+    if (hasSubmitted) {
+      if (liveRegionRef.current) {
+        liveRegionRef.current.textContent =
+          "You have already submitted your campaign idea.";
+      }
+      return;
+    }
+
     if (!validateForm()) {
       // Focus on the first invalid field
       const firstErrorField = document.querySelector("[aria-invalid='true']");
       if (firstErrorField) {
         firstErrorField.focus();
       }
-  
+
       // Announce errors via the live region
       if (liveRegionRef.current) {
         liveRegionRef.current.textContent =
@@ -62,32 +73,34 @@ const MarketingCampaignGenerator = () => {
       }
       return;
     }
-  
+
     setLoading(true);
     setFieldErrors({});
     setCampaigns(null);
     if (liveRegionRef.current) {
       liveRegionRef.current.textContent = "Generating campaigns. Please wait.";
     }
-  
+
     try {
       const response = await fetch("/api/generate-campaigns", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-  
+
       if (!response.ok) {
         throw new Error("Failed to generate campaigns.");
       }
-  
+
       const data = await response.json();
       setCampaigns(data.campaigns);
+      setHasSubmitted(true);
+      localStorage.setItem("campaignGeneratorSubmitted", "true");
     } catch (error) {
       console.error(error);
       const errorMessage =
         "An error occurred while generating campaigns. Please try again.";
-  
+
       // Announce error message via live region
       if (liveRegionRef.current) {
         liveRegionRef.current.textContent = ""; // Clear the live region first
@@ -95,13 +108,13 @@ const MarketingCampaignGenerator = () => {
           liveRegionRef.current.textContent = errorMessage;
         }, 100); // Small delay to ensure SR detects the change
       }
-  
+
       setFieldErrors({ global: errorMessage });
     } finally {
       setLoading(false);
     }
   };
-  
+
   return (
     <div className="min-h-full bg-gradient-to-br from-indigo-50 to-purple-50">
       <div className="max-w-4xl mx-auto px-4 py-8">
@@ -175,16 +188,20 @@ const MarketingCampaignGenerator = () => {
 
         <button
           onClick={handleSubmit}
-          disabled={loading}
+          disabled={loading || hasSubmitted}
           className={`w-full p-3 rounded-lg transition-all shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
-            loading
+            loading || hasSubmitted
               ? "bg-gray-300 text-gray-600 cursor-not-allowed"
               : "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700"
           }`}
           aria-busy={loading}
           aria-live="polite"
         >
-          {loading ? "Generating..." : "Generate Campaign Ideas"}
+          {loading
+            ? "Generating..."
+            : hasSubmitted
+            ? "Campaign Already Submitted"
+            : "Generate Campaign Ideas"}
         </button>
 
         {campaigns && (
