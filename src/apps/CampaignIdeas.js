@@ -5,6 +5,10 @@ const MarketingCampaignGenerator = () => {
     startupIdea: "",
     targetAudience: "",
   });
+    const [wordCounts, setWordCounts] = useState({
+      startupIdea: 0,
+      targetAudience: 0
+    })
   const [fieldErrors, setFieldErrors] = useState({
     startupIdea: "",
     targetAudience: "",
@@ -24,17 +28,34 @@ const MarketingCampaignGenerator = () => {
 
   useEffect(() => {
     if (campaigns && generatedContentRef.current) {
-      // Announce and focus generated content title
-      generatedContentRef.current.querySelector("h2").focus();
+      // Announce generated content first.
       if (liveRegionRef.current) {
         liveRegionRef.current.textContent = "Campaigns generated.";
       }
+        // THEN focus on the heading
+      generatedContentRef.current.querySelector("h2").focus();
     }
   }, [campaigns]);
 
+
+  const countWords = (text) => {
+        const trimmedText = text.trim();
+      return trimmedText === '' ? 0 : trimmedText.split(/\s+/).length;
+    }
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const currentWordCount = countWords(value);
+
+    if (currentWordCount <= wordLimit) {
+        setFormData({ ...formData, [name]: value });
+    } else {
+       // if it passes the limit then dont update
+       return
+    }
+
+      setWordCounts({ ...wordCounts, [name]: currentWordCount });
+
     setFieldErrors({ ...fieldErrors, [name]: "", global: null }); // Clear global errors on change
   };
 
@@ -42,13 +63,14 @@ const MarketingCampaignGenerator = () => {
     const errors = {};
     if (!formData.startupIdea.trim()) {
       errors.startupIdea = "Startup idea is required.";
-    } else if (formData.startupIdea.trim().split(/\s+/).length > wordLimit) {
-      errors.startupIdea = `Startup idea must be ${wordLimit} words or fewer.`;
+    } else if (wordCounts.startupIdea > wordLimit) {
+        errors.startupIdea = `Startup idea must be ${wordLimit} words or fewer.`;
     }
+
     if (!formData.targetAudience.trim()) {
       errors.targetAudience = "Target audience is required.";
-    } else if (formData.targetAudience.trim().split(/\s+/).length > wordLimit) {
-      errors.targetAudience = `Target audience must be ${wordLimit} words or fewer.`;
+    }else if (wordCounts.targetAudience > wordLimit) {
+        errors.targetAudience = `Target audience must be ${wordLimit} words or fewer.`;
     }
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
@@ -103,10 +125,10 @@ const MarketingCampaignGenerator = () => {
       localStorage.setItem("campaignGeneratorSubmitted", "true");
       // focus on the title after campaigns have been generated
       if (generatedContentRef.current) {
-        generatedContentRef.current.querySelector("h2").focus();
-        if (liveRegionRef.current) {
-          liveRegionRef.current.textContent = "Campaigns generated.";
-        }
+         if (liveRegionRef.current) {
+             liveRegionRef.current.textContent = "Campaigns generated.";
+            }
+         generatedContentRef.current.querySelector("h2").focus();
       }
     } catch (error) {
       console.error(error);
@@ -166,6 +188,9 @@ const MarketingCampaignGenerator = () => {
                 {fieldErrors.startupIdea}
               </p>
             )}
+            <p className="text-gray-500 text-sm mt-1">
+                {wordCounts.startupIdea}/{wordLimit} words
+            </p>
           </div>
 
           <div className="bg-white p-6 shadow-lg border border-purple-100">
@@ -202,6 +227,9 @@ const MarketingCampaignGenerator = () => {
                 {fieldErrors.targetAudience}
               </p>
             )}
+           <p className="text-gray-500 text-sm mt-1">
+                {wordCounts.targetAudience}/{wordLimit} words
+            </p>
           </div>
         </div>
         {fieldErrors.global && (
