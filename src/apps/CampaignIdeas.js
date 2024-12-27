@@ -224,7 +224,6 @@ const MarketingCampaignGenerator = () => {
               : "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700"
           }`}
           aria-busy={loading}
-          aria-live="polite"
           aria-disabled={hasSubmitted}
         >
           {loading ? (
