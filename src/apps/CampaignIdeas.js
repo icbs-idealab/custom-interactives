@@ -158,6 +158,7 @@ const MarketingCampaignGenerator = () => {
               : "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700"
           }`}
           aria-busy={loading}
+          aria-live="polite"
         >
           {loading ? "Generating..." : "Generate Campaign Ideas"}
         </button>
@@ -177,8 +178,35 @@ const MarketingCampaignGenerator = () => {
                 key={index}
                 className="bg-white p-6 shadow-lg border border-indigo-100 hover:border-purple-300 transition-all"
               >
-                <h3 className="text-xl font-bold mb-4 text-indigo-700">{campaign.name}</h3>
-                <p>{campaign.description}</p>
+                <h3 className="text-xl font-bold mb-4 text-indigo-700">
+                  {campaign.name}
+                </h3>
+                <div className="space-y-3 text-gray-700">
+                  <p className="pb-2 border-b border-gray-100">
+                    <span className="font-semibold text-purple-600">
+                      Approach:
+                    </span>{" "}
+                    {campaign.approach}
+                  </p>
+                  <p className="pb-2 border-b border-gray-100">
+                    <span className="font-semibold text-purple-600">
+                      Platforms:
+                    </span>{" "}
+                    {campaign.platforms.join(", ")}
+                  </p>
+                  <p className="pb-2 border-b border-gray-100">
+                    <span className="font-semibold text-purple-600">
+                      Engagement Methods:
+                    </span>{" "}
+                    {campaign.engagementMethods.join(", ")}
+                  </p>
+                  <p>
+                    <span className="font-semibold text-purple-600">
+                      Evaluation Metrics:
+                    </span>{" "}
+                    {campaign.evaluationMetrics.join(", ")}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
