@@ -32,10 +32,12 @@ const MarketingCampaignGenerator = () => {
       if (liveRegionRef.current) {
         liveRegionRef.current.textContent = "Campaigns generated.";
       }
-        // THEN focus on the heading
-      generatedContentRef.current.querySelector("h2").focus();
+      // THEN focus on the heading
+      // generatedContentRef.current.focus(); Removed from here
+      generatedContentRef.current.querySelector("h2").focus(); // This is now the only focus action
     }
   }, [campaigns]);
+
 
 
   const countWords = (text) => {
@@ -270,13 +272,14 @@ const MarketingCampaignGenerator = () => {
           <div
             className="mt-8 space-y-6"
             aria-live="polite"
-            tabIndex="-1"
+             // tabIndex="-1" Removed from here
             ref={generatedContentRef}
           >
             <h2 className="text-2xl font-bold text-center text-indigo-700" tabIndex="-1">
               Generated Campaign Ideas
             </h2>
             {campaigns.map((campaign, index) => (
+
               <div
                 key={index}
                 className="bg-white p-6 shadow-lg border border-indigo-100 hover:border-purple-300 transition-all"
