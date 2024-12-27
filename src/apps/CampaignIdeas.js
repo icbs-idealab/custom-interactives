@@ -48,36 +48,60 @@ const MarketingCampaignGenerator = () => {
   };
 
   const handleSubmit = async () => {
-    if (!validateForm()) return;
-
+    if (!validateForm()) {
+      // Focus on the first invalid field
+      const firstErrorField = document.querySelector("[aria-invalid='true']");
+      if (firstErrorField) {
+        firstErrorField.focus();
+      }
+  
+      // Announce errors via the live region
+      if (liveRegionRef.current) {
+        liveRegionRef.current.textContent =
+          "There are errors in the form. Please fix them before submitting.";
+      }
+      return;
+    }
+  
     setLoading(true);
     setFieldErrors({});
     setCampaigns(null);
     if (liveRegionRef.current) {
       liveRegionRef.current.textContent = "Generating campaigns. Please wait.";
     }
-
+  
     try {
       const response = await fetch("/api/generate-campaigns", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
+  
       if (!response.ok) {
         throw new Error("Failed to generate campaigns.");
       }
-
+  
       const data = await response.json();
       setCampaigns(data.campaigns);
     } catch (error) {
       console.error(error);
-      setFieldErrors({ global: "An error occurred while generating campaigns. Please try again." });
+      const errorMessage =
+        "An error occurred while generating campaigns. Please try again.";
+  
+      // Announce error message via live region
+      if (liveRegionRef.current) {
+        liveRegionRef.current.textContent = ""; // Clear the live region first
+        setTimeout(() => {
+          liveRegionRef.current.textContent = errorMessage;
+        }, 100); // Small delay to ensure SR detects the change
+      }
+  
+      setFieldErrors({ global: errorMessage });
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
     <div className="min-h-full bg-gradient-to-br from-indigo-50 to-purple-50">
       <div className="max-w-4xl mx-auto px-4 py-8">
