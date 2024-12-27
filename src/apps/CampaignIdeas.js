@@ -8,6 +8,7 @@ const MarketingCampaignGenerator = () => {
   const [fieldErrors, setFieldErrors] = useState({
     startupIdea: "",
     targetAudience: "",
+    global: null, // For global errors
   });
   const [loading, setLoading] = useState(false);
   const [campaigns, setCampaigns] = useState(null);
@@ -16,12 +17,15 @@ const MarketingCampaignGenerator = () => {
   );
   const wordLimit = 50;
   const generatedContentRef = useRef(null); // Ref for generated content
-  const liveRegionRef = useRef(null); // Ref for live announcements
+  const liveRegionRef = useRef(null); // Ref for polite announcements
+  const errorRegionRef = useRef(null); // Ref for assertive announcements
+  const submitButtonRef = useRef(null); // Ref for submit button
+  const formRef = useRef(null); // Ref for form
 
   useEffect(() => {
     if (campaigns && generatedContentRef.current) {
-      // Announce and focus generated content
-      generatedContentRef.current.focus();
+      // Announce and focus generated content title
+      generatedContentRef.current.querySelector("h2").focus();
       if (liveRegionRef.current) {
         liveRegionRef.current.textContent = "Campaigns generated.";
       }
@@ -31,7 +35,7 @@ const MarketingCampaignGenerator = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    setFieldErrors({ ...fieldErrors, [name]: "" });
+    setFieldErrors({ ...fieldErrors, [name]: "", global: null }); // Clear global errors on change
   };
 
   const validateForm = () => {
@@ -60,9 +64,10 @@ const MarketingCampaignGenerator = () => {
     }
 
     if (!validateForm()) {
-      // Focus on the first invalid field
+      // Focus on the first invalid field, and return focus to submit button
       const firstErrorField = document.querySelector("[aria-invalid='true']");
       if (firstErrorField) {
+        submitButtonRef.current.focus();
         firstErrorField.focus();
       }
 
@@ -96,17 +101,21 @@ const MarketingCampaignGenerator = () => {
       setCampaigns(data.campaigns);
       setHasSubmitted(true);
       localStorage.setItem("campaignGeneratorSubmitted", "true");
+      // focus on the title after campaigns have been generated
+      if (generatedContentRef.current) {
+        generatedContentRef.current.querySelector("h2").focus();
+        if (liveRegionRef.current) {
+          liveRegionRef.current.textContent = "Campaigns generated.";
+        }
+      }
     } catch (error) {
       console.error(error);
       const errorMessage =
         "An error occurred while generating campaigns. Please try again.";
 
       // Announce error message via live region
-      if (liveRegionRef.current) {
-        liveRegionRef.current.textContent = ""; // Clear the live region first
-        setTimeout(() => {
-          liveRegionRef.current.textContent = errorMessage;
-        }, 100); // Small delay to ensure SR detects the change
+      if (errorRegionRef.current) {
+        errorRegionRef.current.textContent = errorMessage;
       }
 
       setFieldErrors({ global: errorMessage });
@@ -123,8 +132,8 @@ const MarketingCampaignGenerator = () => {
         </h1>
 
         <div className="sr-only" aria-live="polite" ref={liveRegionRef} />
-
-        <div className="space-y-6 mb-8">
+        <div className="sr-only" aria-live="assertive" ref={errorRegionRef} />
+        <div ref={formRef} aria-describedby="globalErrorContainer" className="space-y-6 mb-8">
           <div className="bg-white p-6 shadow-lg border border-indigo-100">
             <label
               htmlFor="startupIdea"
@@ -141,12 +150,19 @@ const MarketingCampaignGenerator = () => {
                 fieldErrors.startupIdea ? "border-red-500" : "border-indigo-100"
               }`}
               aria-invalid={!!fieldErrors.startupIdea}
-              aria-describedby="startupIdeaError"
+              aria-describedby={`startupIdeaError_${
+                fieldErrors.startupIdea ? "error" : ""
+              }`}
               placeholder="Describe your startup idea..."
               rows="3"
             />
             {fieldErrors.startupIdea && (
-              <p id="startupIdeaError" className="text-red-500 text-sm mt-1">
+              <p
+                id={`startupIdeaError_${
+                  fieldErrors.startupIdea ? "error" : ""
+                }`}
+                className="text-red-500 text-sm mt-1"
+              >
                 {fieldErrors.startupIdea}
               </p>
             )}
@@ -165,43 +181,62 @@ const MarketingCampaignGenerator = () => {
               value={formData.targetAudience}
               onChange={handleChange}
               className={`w-full border-2 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 transition-all ${
-                fieldErrors.targetAudience ? "border-red-500" : "border-purple-100"
+                fieldErrors.targetAudience
+                  ? "border-red-500"
+                  : "border-purple-100"
               }`}
               aria-invalid={!!fieldErrors.targetAudience}
-              aria-describedby="targetAudienceError"
+              aria-describedby={`targetAudienceError_${
+                fieldErrors.targetAudience ? "error" : ""
+              }`}
               placeholder="Describe your target audience..."
               rows="3"
             />
             {fieldErrors.targetAudience && (
-              <p id="targetAudienceError" className="text-red-500 text-sm mt-1">
+              <p
+                id={`targetAudienceError_${
+                  fieldErrors.targetAudience ? "error" : ""
+                }`}
+                className="text-red-500 text-sm mt-1"
+              >
                 {fieldErrors.targetAudience}
               </p>
             )}
           </div>
         </div>
-
         {fieldErrors.global && (
-          <div aria-live="assertive" className="text-red-500 text-center mt-4">
+          <div
+            id="globalErrorContainer"
+            aria-live="assertive"
+            className="text-red-500 text-center mt-4"
+          >
             {fieldErrors.global}
           </div>
         )}
 
         <button
+          ref={submitButtonRef}
           onClick={handleSubmit}
           disabled={loading || hasSubmitted}
-          className={`w-full p-3 rounded-lg transition-all shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
+          className={`w-full p-3 rounded-lg transition-all shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 relative ${
             loading || hasSubmitted
               ? "bg-gray-300 text-gray-600 cursor-not-allowed"
               : "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700"
           }`}
           aria-busy={loading}
           aria-live="polite"
+          aria-disabled={hasSubmitted}
         >
-          {loading
-            ? "Generating..."
-            : hasSubmitted
-            ? "Campaign Already Submitted"
-            : "Generate Campaign Ideas"}
+          {loading ? (
+            <div className="flex items-center justify-center">
+              <span className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></span>
+              Generating...
+            </div>
+          ) : hasSubmitted ? (
+            "Campaign Already Submitted"
+          ) : (
+            "Generate Campaign Ideas"
+          )}
         </button>
 
         {campaigns && (
@@ -211,7 +246,7 @@ const MarketingCampaignGenerator = () => {
             tabIndex="-1"
             ref={generatedContentRef}
           >
-            <h2 className="text-2xl font-bold text-center text-indigo-700">
+            <h2 className="text-2xl font-bold text-center text-indigo-700" tabIndex="-1">
               Generated Campaign Ideas
             </h2>
             {campaigns.map((campaign, index) => (
