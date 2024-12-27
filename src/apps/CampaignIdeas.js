@@ -1,152 +1,166 @@
 import React, { useState, useRef, useEffect } from "react";
 
 const MarketingCampaignGenerator = () => {
-  const [formData, setFormData] = useState({
-    startupIdea: "",
-    targetAudience: "",
-  });
-    const [wordCounts, setWordCounts] = useState({
-      startupIdea: 0,
-      targetAudience: 0
-    })
-  const [fieldErrors, setFieldErrors] = useState({
-    startupIdea: "",
-    targetAudience: "",
-    global: null, // For global errors
-  });
-  const [loading, setLoading] = useState(false);
-  const [campaigns, setCampaigns] = useState(null);
-  const [hasSubmitted, setHasSubmitted] = useState(
-    localStorage.getItem("campaignGeneratorSubmitted") === "true"
-  );
-  const wordLimit = 50;
-  const generatedContentRef = useRef(null); // Ref for generated content
-  const liveRegionRef = useRef(null); // Ref for polite announcements
-  const errorRegionRef = useRef(null); // Ref for assertive announcements
-  const submitButtonRef = useRef(null); // Ref for submit button
-  const formRef = useRef(null); // Ref for form
+    const [formData, setFormData] = useState({
+        startupIdea: "",
+        targetAudience: "",
+      });
+        const [wordCounts, setWordCounts] = useState({
+          startupIdea: 0,
+          targetAudience: 0
+        })
+      const [fieldErrors, setFieldErrors] = useState({
+        startupIdea: "",
+        targetAudience: "",
+        global: null, // For global errors
+      });
+      const [loading, setLoading] = useState(false);
+      const [campaigns, setCampaigns] = useState(null);
+      const [hasSubmitted, setHasSubmitted] = useState(
+        localStorage.getItem("campaignGeneratorSubmitted") === "true"
+      );
+      const wordLimit = 50;
+      const generatedContentRef = useRef(null); // Ref for generated content
+      const liveRegionRef = useRef(null); // Ref for polite announcements
+      const errorRegionRef = useRef(null); // Ref for assertive announcements
+      const submitButtonRef = useRef(null); // Ref for submit button
+      const formRef = useRef(null); // Ref for form
 
-  useEffect(() => {
-    if (campaigns && generatedContentRef.current) {
-      // Announce generated content first.
-      if (liveRegionRef.current) {
-        liveRegionRef.current.textContent = "Campaigns generated.";
-      }
-      // THEN focus on the heading
-      // generatedContentRef.current.focus(); Removed from here
-      generatedContentRef.current.querySelector("h2").focus(); // This is now the only focus action
-    }
-  }, [campaigns]);
+      useEffect(() => {
+        if (campaigns && generatedContentRef.current) {
+          // Announce generated content first.
+          if (liveRegionRef.current) {
+            liveRegionRef.current.textContent = "Campaigns generated.";
+          }
+          // THEN focus on the heading
+          // generatedContentRef.current.focus(); Removed from here
+          generatedContentRef.current.querySelector("h2").focus(); // This is now the only focus action
+        }
+      }, [campaigns]);
 
 
-
-  const countWords = (text) => {
+    const countWords = (text) => {
         const trimmedText = text.trim();
       return trimmedText === '' ? 0 : trimmedText.split(/\s+/).length;
     }
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    const currentWordCount = countWords(value);
+      const handleChange = (e) => {
+        const { name, value } = e.target;
+        const currentWordCount = countWords(value);
 
-    if (currentWordCount <= wordLimit) {
-        setFormData({ ...formData, [name]: value });
-    } else {
-       // if it passes the limit then dont update
-       return
-    }
+        if (currentWordCount <= wordLimit) {
+            setFormData({ ...formData, [name]: value });
+        } else {
+           // if it passes the limit then dont update
+           return
+        }
 
-      setWordCounts({ ...wordCounts, [name]: currentWordCount });
+          setWordCounts({ ...wordCounts, [name]: currentWordCount });
 
-    setFieldErrors({ ...fieldErrors, [name]: "", global: null }); // Clear global errors on change
-  };
+        setFieldErrors({ ...fieldErrors, [name]: "", global: null }); // Clear global errors on change
+      };
 
-  const validateForm = () => {
-    const errors = {};
-    if (!formData.startupIdea.trim()) {
-      errors.startupIdea = "Startup idea is required.";
-    } else if (wordCounts.startupIdea > wordLimit) {
-        errors.startupIdea = `Startup idea must be ${wordLimit} words or fewer.`;
-    }
+      const validateForm = () => {
+        const errors = {};
+        if (!formData.startupIdea.trim()) {
+          errors.startupIdea = "Startup idea is required.";
+        } else if (wordCounts.startupIdea > wordLimit) {
+            errors.startupIdea = `Startup idea must be ${wordLimit} words or fewer.`;
+        }
 
-    if (!formData.targetAudience.trim()) {
-      errors.targetAudience = "Target audience is required.";
-    }else if (wordCounts.targetAudience > wordLimit) {
-        errors.targetAudience = `Target audience must be ${wordLimit} words or fewer.`;
-    }
-    setFieldErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
+        if (!formData.targetAudience.trim()) {
+          errors.targetAudience = "Target audience is required.";
+        }else if (wordCounts.targetAudience > wordLimit) {
+            errors.targetAudience = `Target audience must be ${wordLimit} words or fewer.`;
+        }
+        setFieldErrors(errors);
+        return Object.keys(errors).length === 0;
+      };
 
-  const handleSubmit = async () => {
-    if (hasSubmitted) {
-      if (liveRegionRef.current) {
-        liveRegionRef.current.textContent =
-          "You have already submitted your campaign idea.";
-      }
-      return;
-    }
+      const handleSubmit = async () => {
+        if (hasSubmitted) {
+          if (liveRegionRef.current) {
+            liveRegionRef.current.textContent =
+              "You have already submitted your campaign idea.";
+          }
+          return;
+        }
 
-    if (!validateForm()) {
-      // Focus on the first invalid field, and return focus to submit button
-      const firstErrorField = document.querySelector("[aria-invalid='true']");
-      if (firstErrorField) {
-        submitButtonRef.current.focus();
-        firstErrorField.focus();
-      }
-
-      // Announce errors via the live region
-      if (liveRegionRef.current) {
-        liveRegionRef.current.textContent =
-          "There are errors in the form. Please fix them before submitting.";
-      }
-      return;
-    }
-
-    setLoading(true);
-    setFieldErrors({});
-    setCampaigns(null);
-    if (liveRegionRef.current) {
-      liveRegionRef.current.textContent = "Generating campaigns. Please wait.";
-    }
-
-    try {
-      const response = await fetch("/api/generate-campaigns", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to generate campaigns.");
-      }
-
-      const data = await response.json();
-      setCampaigns(data.campaigns);
-      setHasSubmitted(true);
-      localStorage.setItem("campaignGeneratorSubmitted", "true");
-      // focus on the title after campaigns have been generated
-      if (generatedContentRef.current) {
-         if (liveRegionRef.current) {
-             liveRegionRef.current.textContent = "Campaigns generated.";
+        if (!validateForm()) {
+            // Focus on the first invalid field, and return focus to submit button
+            const firstErrorField = document.querySelector("[aria-invalid='true']");
+            if (firstErrorField) {
+              firstErrorField.focus();
             }
-         generatedContentRef.current.querySelector("h2").focus();
-      }
-    } catch (error) {
-      console.error(error);
-      const errorMessage =
-        "An error occurred while generating campaigns. Please try again.";
+            // Announce errors via the live region
+            if (liveRegionRef.current) {
+              liveRegionRef.current.textContent =
+                "There are errors in the form. Please fix them before submitting.";
+            }
+            return;
+          }
 
-      // Announce error message via live region
-      if (errorRegionRef.current) {
-        errorRegionRef.current.textContent = errorMessage;
-      }
 
-      setFieldErrors({ global: errorMessage });
-    } finally {
-      setLoading(false);
-    }
-  };
+        setLoading(true);
+        setFieldErrors({});
+        setCampaigns(null);
+        if (liveRegionRef.current) {
+          liveRegionRef.current.textContent = "Generating campaigns. Please wait.";
+        }
+
+        try {
+          const response = await fetch("/api/generate-campaigns", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to generate campaigns.");
+          }
+
+          const data = await response.json();
+          setCampaigns(data.campaigns);
+          setHasSubmitted(true);
+          localStorage.setItem("campaignGeneratorSubmitted", "true");
+          // focus on the title after campaigns have been generated
+          if (generatedContentRef.current) {
+             if (liveRegionRef.current) {
+                 liveRegionRef.current.textContent = "Campaigns generated.";
+                }
+             generatedContentRef.current.querySelector("h2").focus();
+          }
+        } catch (error) {
+          console.error(error);
+          const errorMessage =
+            "An error occurred while generating campaigns. Please try again.";
+
+          // Announce error message via live region
+          if (errorRegionRef.current) {
+            errorRegionRef.current.textContent = errorMessage;
+          }
+
+          setFieldErrors({ global: errorMessage });
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      const getErrorSummary = () => {
+          const errorKeys = Object.keys(fieldErrors).filter(key => key !== 'global' && fieldErrors[key]);
+
+          if (errorKeys.length === 0) {
+              return null;
+          }
+
+          return (
+              <ul className="text-red-500 text-center mt-4">
+                  {errorKeys.map(key => (
+                      <li key={key}>{fieldErrors[key]}</li>
+                  ))}
+              </ul>
+          );
+      };
 
   return (
     <div className="min-h-full bg-gradient-to-br from-indigo-50 to-purple-50">
@@ -157,7 +171,7 @@ const MarketingCampaignGenerator = () => {
 
         <div className="sr-only" aria-live="polite" ref={liveRegionRef} />
         <div className="sr-only" aria-live="assertive" ref={errorRegionRef} />
-        <div ref={formRef} aria-describedby="globalErrorContainer" className="space-y-6 mb-8">
+        <div ref={formRef} role="form" aria-describedby="globalErrorContainer" className="space-y-6 mb-8">
           <div className="bg-white p-6 shadow-lg border border-indigo-100">
             <label
               htmlFor="startupIdea"
@@ -234,6 +248,7 @@ const MarketingCampaignGenerator = () => {
             </p>
           </div>
         </div>
+          {getErrorSummary()}
         {fieldErrors.global && (
           <div
             id="globalErrorContainer"
