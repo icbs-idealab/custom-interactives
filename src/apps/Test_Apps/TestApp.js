@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import supabase from '../supabase'; // Import the Supabase client
+import supabase from '../../supabase'; // Import the Supabase client
 
 const TestApp = () => {
     const [inputData, setInputData] = useState('');

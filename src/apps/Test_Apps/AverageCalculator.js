@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import supabase from "../supabase"; // Adjust according to your supabase client initialization
+import supabase from "../../supabase"; // Adjust according to your supabase client initialization
 
 const AverageCalculator = () => {
     const [inputNumber, setInputNumber] = useState("");

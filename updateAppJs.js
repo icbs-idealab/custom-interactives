@@ -156,15 +156,15 @@ Object.keys(modules).forEach(moduleName => {
     <Route
       path="/${toRouteName(moduleName)}"
       element={
-        <div style={{ textAlign: 'center', padding: '2rem' }}>
-          <h2>${moduleName} module</h2>
-          <ul style={{ listStyle: 'none', padding: 0 }}>
+        <div className="text-center p-8">
+        <h2 className="text-2xl font-bold mb-4">${moduleName} module</h2>
+        <ul className="list-none p-0">
             ${
               modules[moduleName].map(appFile => {
                 const route = `/${toRouteName(moduleName)}/${toRouteName(appFile)}`;
                 return `
-                  <li style={{ marginBottom: '1rem' }}>
-                    <Link to="${route}" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}>
+                    <li className="mb-3">
+                    <Link to="${route}" className="text-xl underline text-blue-600 hover:text-blue-400">
                       ${toNiceTitle(appFile)}
                     </Link>
                   </li>
@@ -226,14 +226,17 @@ const topLevelLinks = topLevelApps.map(filename => {
  * {Object.keys(modules).length > 0 && ...} safely in runtime.
  */
 const homepageElement = `
-<div style={{ textAlign: 'center', padding: '2rem' }}>
-  <h1>Welcome to Interactive Learning Apps</h1>
-  <nav style={{ marginTop: '2rem' }}>
+<div className="text-center p-8 bg-slate-200">
+  <h1 className="text-3xl font-bold mb-4">
+    Welcome to Interactive Learning Apps
+  </h1>
+
+  <nav className="mt-4">
 
     {/* Only show Modules heading if there's at least one module */}
     {Object.keys(modules).length > 0 && (
       <>
-        <h2>Modules</h2>
+        <h2 className="font-bold text-2xl">Modules</h2>
         <ul style={{ listStyle: 'none', padding: 0 }}>
           ${moduleLinks}
         </ul>
@@ -243,7 +246,7 @@ const homepageElement = `
     {/* Only show Other Apps heading if there's at least one top-level app */}
     {topLevelApps.length > 0 && (
       <>
-        <h2>Other apps</h2>
+        <h2 className="font-bold text-2xl">Other apps</h2>
         <ul style={{ listStyle: 'none', padding: 0 }}>
           ${topLevelLinks}
         </ul>
