@@ -8,10 +8,10 @@ import BreakEven from './apps/BreakEven.js';
 import Marketing_Fundamentals_AdvertisingTimeline from './apps/Marketing_Fundamentals/AdvertisingTimeline.js';
 import Marketing_Fundamentals_PositioningStatementCreator from './apps/Marketing_Fundamentals/PositioningStatementCreator.js';
 import Marketing_Fundamentals_PositioningStatementGlobal from './apps/Marketing_Fundamentals/PositioningStatementGlobal.js';
-import SMO_TIM_AITimeline from './apps/SMO_TIM/AITimeline.js';
-import SMO_TIM_CampaignIdeas from './apps/SMO_TIM/CampaignIdeas.js';
-import SMO_TIM_DragDropTimeline from './apps/SMO_TIM/DragDropTimeline.js';
-import SMO_TIM_TimModuleMap from './apps/SMO_TIM/TimModuleMap.js';
+import SMO_TiM_AITimeline from './apps/SMO_TiM/AITimeline.js';
+import SMO_TiM_CampaignIdeas from './apps/SMO_TiM/CampaignIdeas.js';
+import SMO_TiM_DragDropTimeline from './apps/SMO_TiM/DragDropTimeline.js';
+import SMO_TiM_TimModuleMap from './apps/SMO_TiM/TimModuleMap.js';
 import Test_Apps_AverageCalculator from './apps/Test_Apps/AverageCalculator.js';
 import Test_Apps_CounterApp from './apps/Test_Apps/CounterApp.js';
 import Test_Apps_DoubleNumber from './apps/Test_Apps/DoubleNumber.js';
@@ -30,7 +30,7 @@ const modules = {
     "PositioningStatementCreator.js",
     "PositioningStatementGlobal.js"
   ],
-  "SMO_TIM": [
+  "SMO_TiM": [
     "AITimeline.js",
     "CampaignIdeas.js",
     "DragDropTimeline.js",
@@ -61,7 +61,7 @@ function DynamicTitle() {
       '/marketing_fundamentals/advertisingtimeline': 'Advertising Timeline',
       '/marketing_fundamentals/positioningstatementcreator': 'Positioning Statement Creator',
       '/marketing_fundamentals/positioningstatementglobal': 'Positioning Statement Global',
-      '/smo_tim': 'SMO_TIM',
+      '/smo_tim': 'SMO_TiM',
       '/smo_tim/aitimeline': 'A I Timeline',
       '/smo_tim/campaignideas': 'Campaign Ideas',
       '/smo_tim/dragdroptimeline': 'Drag Drop Timeline',
@@ -113,7 +113,7 @@ function App() {
   
     <li style={{ marginBottom: '1rem' }}>
       <Link to="/smo_tim" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}>
-        SMO_TIM
+        SMO_TiM
       </Link>
     </li>
   
@@ -227,7 +227,7 @@ function App() {
       path="/smo_tim"
       element={
         <div className="text-center p-8">
-        <h2 className="text-2xl font-bold mb-4">SMO_TIM module</h2>
+        <h2 className="text-2xl font-bold mb-4">SMO_TiM module</h2>
         <ul className="list-none p-0">
             
                     <li className="mb-3">
@@ -264,7 +264,7 @@ function App() {
         path="/smo_tim/aitimeline"
         element={
           <ResizeWrapper>
-            <SMO_TIM_AITimeline />
+            <SMO_TiM_AITimeline />
           </ResizeWrapper>
         }
       />
@@ -274,7 +274,7 @@ function App() {
         path="/smo_tim/campaignideas"
         element={
           <ResizeWrapper>
-            <SMO_TIM_CampaignIdeas />
+            <SMO_TiM_CampaignIdeas />
           </ResizeWrapper>
         }
       />
@@ -284,7 +284,7 @@ function App() {
         path="/smo_tim/dragdroptimeline"
         element={
           <ResizeWrapper>
-            <SMO_TIM_DragDropTimeline />
+            <SMO_TiM_DragDropTimeline />
           </ResizeWrapper>
         }
       />
@@ -294,7 +294,7 @@ function App() {
         path="/smo_tim/timmodulemap"
         element={
           <ResizeWrapper>
-            <SMO_TIM_TimModuleMap />
+            <SMO_TiM_TimModuleMap />
           </ResizeWrapper>
         }
       />
