@@ -78,74 +78,70 @@ const MarketingCampaignGenerator = () => {
       };
 
       const handleSubmit = async () => {
-        if (hasSubmitted) {
-          if (liveRegionRef.current) {
-            liveRegionRef.current.textContent =
-              "You have already submitted your campaign idea.";
-          }
-          return;
-        }
-
+        // Reset errors first
+        setFieldErrors((prevErrors) => ({ ...prevErrors, global: null }));
+    
         if (!validateForm()) {
-            // Focus on the first invalid field, and return focus to submit button
-            const firstErrorField = document.querySelector("[aria-invalid='true']");
-            if (firstErrorField) {
-              firstErrorField.focus();
+            // Always announce the global error for empty fields
+            const globalErrorMessage =
+                "One or more required fields has not been filled in. Please fill in the empty fields and then try submitting again.";
+    
+            if (errorRegionRef.current) {
+                // Ensure the live region is updated for the screen reader
+                errorRegionRef.current.textContent = ""; // Clear previous content to force re-announcement
+                errorRegionRef.current.textContent = globalErrorMessage;
             }
-            // Announce errors via the live region
-            if (liveRegionRef.current) {
-              liveRegionRef.current.textContent =
-                "There are errors in the form. Please fix them before submitting.";
-            }
+    
+            // Set global error state for UI rendering
+            setFieldErrors((prevErrors) => ({ ...prevErrors, global: globalErrorMessage }));
             return;
-          }
-
-
+        }
+    
         setLoading(true);
         setFieldErrors({});
         setCampaigns(null);
+    
         if (liveRegionRef.current) {
-          liveRegionRef.current.textContent = "Generating campaigns. Please wait.";
+            liveRegionRef.current.textContent = "Generating campaigns. Please wait.";
         }
-
+    
         try {
-          const response = await fetch("/api/generate-campaigns", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(formData),
-          });
-
-          if (!response.ok) {
-            throw new Error("Failed to generate campaigns.");
-          }
-
-          const data = await response.json();
-          setCampaigns(data.campaigns);
-          setHasSubmitted(true);
-          localStorage.setItem("campaignGeneratorSubmitted", "true");
-          // focus on the title after campaigns have been generated
-          if (generatedContentRef.current) {
-             if (liveRegionRef.current) {
-                 liveRegionRef.current.textContent = "Campaigns generated.";
+            const response = await fetch("/api/generate-campaigns", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            });
+    
+            if (!response.ok) {
+                throw new Error("Failed to generate campaigns.");
+            }
+    
+            const data = await response.json();
+            setCampaigns(data.campaigns);
+            setHasSubmitted(true);
+            localStorage.setItem("campaignGeneratorSubmitted", "true");
+    
+            if (generatedContentRef.current) {
+                if (liveRegionRef.current) {
+                    liveRegionRef.current.textContent = "Campaigns generated.";
                 }
-             generatedContentRef.current.querySelector("h2").focus();
-          }
+            }
         } catch (error) {
-          console.error(error);
-          const errorMessage =
-            "An error occurred while generating campaigns. Please try again.";
-
-          // Announce error message via live region
-          if (errorRegionRef.current) {
-            errorRegionRef.current.textContent = errorMessage;
-          }
-
-          setFieldErrors({ global: errorMessage });
+            console.error(error);
+            const errorMessage =
+                "An error occurred while generating campaigns. Please try again.";
+    
+            if (errorRegionRef.current) {
+                errorRegionRef.current.textContent = ""; // Clear previous content
+                errorRegionRef.current.textContent = errorMessage;
+            }
+    
+            setFieldErrors({ global: errorMessage });
         } finally {
-          setLoading(false);
+            setLoading(false);
         }
-      };
-
+    };
+    
       const getErrorSummary = () => {
           const errorKeys = Object.keys(fieldErrors).filter(key => key !== 'global' && fieldErrors[key]);
 
