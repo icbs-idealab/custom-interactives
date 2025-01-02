@@ -245,7 +245,7 @@ const Timeline = () => {
   const instructions = "Use arrow keys (on desktop) or swipe gestures (on mobile) to navigate between events. Press Enter, Space, or double-tap to expand event details.";
 
   return (
-    <div className="min-h-screen bg-sky-50">
+    <div className="min-h-full bg-sky-50">
       {/* Art deco header section */}
       <div className="bg-gradient-to-b from-red-600 to-red-700 p-8 shadow-xl">
         <h1 className="text-5xl font-bold text-white mb-2 text-center tracking-widest transform -rotate-1">
