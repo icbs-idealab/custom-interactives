@@ -242,7 +242,7 @@ const Timeline = () => {
   };
 
   // Instructions for screen readers
-  const instructions = "Use arrow keys to navigate between events. Press Enter or Space to expand event details.";
+  const instructions = "Use arrow keys (on desktop) or swipe gestures (on mobile) to navigate between events. Press Enter, Space, or double-tap to expand event details.";
 
   return (
     <div className="min-h-screen bg-sky-50">
