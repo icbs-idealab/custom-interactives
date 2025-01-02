@@ -1,59 +1,111 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
-const TimelineEvent = ({ event, index, isSelected, onClick }) => {
+const TimelineEvent = ({ event, index, isSelected, onClick, onKeyDown }) => {
   const isEven = index % 2 === 0;
+  const buttonRef = useRef(null);
+
+  const buttonId = `accordion-header-${event.year}`;
+  const regionId = `content-${event.year}`;
+
+  useEffect(() => {
+    if (isSelected && buttonRef.current) {
+      buttonRef.current.focus();
+    }
+  }, [isSelected]);
+
   return (
     <div
-      className={`md:flex md:items-center ${isEven ? "" : "md:flex-row-reverse"}`}
+      className={`md:flex md:items-center ${
+        isEven ? "" : "md:flex-row-reverse"
+      }`}
+      role="listitem"
     >
       <div
-        className={`w-full md:w-5/12 mb-4 md:mb-0 ${isEven ? "md:text-right md:pr-4" : "md:text-left md:pl-4"}`}
+        className={`w-full md:w-5/12 mb-4 md:mb-0 ${
+          isEven ? "md:text-right md:pr-4" : "md:text-left md:pl-4"
+        }`}
       >
-        <button
-          onClick={onClick}
-          className={`w-full p-4 rounded-lg transition-all duration-200 text-left ${
-            isSelected
-              ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg"
-              : "bg-white hover:bg-indigo-50 shadow"
+        {/* Heading and button */}
+        <div role="heading" aria-level="3">
+          <button
+            id={buttonId}
+            ref={buttonRef}
+            onClick={onClick}
+            onKeyDown={onKeyDown}
+            aria-expanded={isSelected}
+            aria-controls={regionId}
+            className={`w-full p-4 rounded-none transition-all duration-300 text-left relative overflow-hidden transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 ${
+              isSelected
+                ? "bg-red-600 text-white shadow-xl"
+                : "bg-white hover:bg-sky-50 shadow"
+            }`}
+          >
+            {/* Corner decorations */}
+            <div
+              className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-red-600 opacity-50"
+              aria-hidden="true"
+            ></div>
+            <div
+              className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-red-600 opacity-50"
+              aria-hidden="true"
+            ></div>
+
+            <div className="relative z-10">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-lg tracking-wider">
+                  {event.title}
+                </span>
+                <div
+                  className={`text-xl font-bold ${
+                    isSelected ? "text-sky-100" : "text-red-600"
+                  }`}
+                  aria-label={`Year ${event.year}`}
+                >
+                  {event.year}
+                </div>
+              </div>
+            </div>
+          </button>
+        </div>
+
+        {/* Panel content (separate from button) */}
+        <div
+          id={regionId}
+          role="region"
+          aria-labelledby={buttonId}
+          className={`transition-all duration-300 ${
+            isSelected ? "block bg-red-600 text-white p-4" : "hidden"
           }`}
         >
-          <div className="flex items-center justify-between">
-            <h3 className="font-bold text-lg">{event.title}</h3>
-            <div
-              className={`text-sm ${isSelected ? "text-gray-100" : "text-gray-600"}`}
-            >
-              {event.year}
-            </div>
-          </div>
-          {isSelected && (
-            <div className="mt-2">
-              <p
-                className={`text-sm font-medium ${isSelected ? "text-gray-100" : "text-gray-800"}`}
-              >
-                {event.summary}
-              </p>
-            </div>
-          )}
-        </button>
+          <p className="text-sm font-medium leading-relaxed">
+            {event.summary}
+          </p>
+        </div>
       </div>
 
-      <div className="hidden md:block md:w-2/12 md:flex md:justify-center">
+      {/* Timeline node and vertical line (unchanged) */}
+      <div
+        className="hidden md:block md:w-2/12 md:flex md:justify-center relative"
+        aria-hidden="true"
+      >
+        <div className="absolute top-0 bottom-0 w-px bg-gradient-to-b from-red-600 via-sky-300 to-red-600"></div>
         <div
-          className={`w-4 h-4 rounded-full border-4 transition-all duration-200 ${
+          className={`w-6 h-6 transform rotate-45 transition-all duration-300 ${
             isSelected
-              ? "border-indigo-500 bg-white scale-125"
-              : "border-indigo-300 bg-white hover:border-indigo-400"
+              ? "bg-red-600 scale-125 shadow-lg"
+              : "bg-white border-2 border-red-600 hover:bg-sky-50"
           }`}
         />
       </div>
 
-      <div className="hidden md:block md:w-5/12" />
+      <div className="hidden md:block md:w-5/12" aria-hidden="true" />
     </div>
   );
 };
 
 const Timeline = () => {
   const [selectedEventIndex, setSelectedEventIndex] = useState(null);
+  const timelineRef = useRef(null);
 
   const events = [
     {
@@ -148,27 +200,113 @@ const Timeline = () => {
     },
   ];
 
+
+
+
+
+
+    
+
+  
+
   const handleEventClick = (index) => {
     setSelectedEventIndex(selectedEventIndex === index ? null : index);
   };
 
+  // (Optional) Arrow key navigation can remain if you want the additional functionality.
+  const handleKeyDown = (event, index) => {
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        if (index < events.length - 1) {
+          setSelectedEventIndex(index + 1);
+        }
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        if (index > 0) {
+          setSelectedEventIndex(index - 1);
+        }
+        break;
+      case 'Home':
+        event.preventDefault();
+        setSelectedEventIndex(0);
+        break;
+      case 'End':
+        event.preventDefault();
+        setSelectedEventIndex(events.length - 1);
+        break;
+      default:
+        break;
+    }
+  };
+
+  // Instructions for screen readers
+  const instructions = "Use arrow keys to navigate between events. Press Enter or Space to expand event details.";
+
   return (
-    <div className="bg-white rounded-none shadow-lg p-8 max-w-full mx-auto">
-      <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
-        A timeline of the history of AI
-      </h2>
-      <div className="relative">
-        <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-indigo-200 via-purple-200 to-pink-200" />
-        <div className="space-y-4 md:space-y-8">
-          {events.map((event, index) => (
-            <TimelineEvent
-              key={event.year}
-              event={event}
-              index={index}
-              isSelected={selectedEventIndex === index}
-              onClick={() => handleEventClick(index)}
-            />
-          ))}
+    <div className="min-h-screen bg-sky-50">
+      {/* Art deco header section */}
+      <div className="bg-gradient-to-b from-red-600 to-red-700 p-8 shadow-xl">
+        <h1 className="text-5xl font-bold text-white mb-2 text-center tracking-widest transform -rotate-1">
+          HISTORY OF AI
+        </h1>
+        <div className="max-w-xl mx-auto">
+          <div className="h-px bg-sky-200 opacity-50"></div>
+        </div>
+      </div>
+
+      {/* Timeline section */}
+      <div
+        className="max-w-6xl mx-auto p-8"
+        ref={timelineRef}
+        role="region"
+        aria-label="AI History Timeline"
+      >
+        {/* Screen reader instructions */}
+        <div className="sr-only">{instructions}</div>
+
+        <div className="relative bg-white shadow-2xl">
+          {/* Art deco background pattern */}
+          <div
+            className="absolute inset-0 opacity-5"
+            style={{
+              backgroundImage: `repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 40px,
+                #000 40px,
+                #000 41px
+              ),
+              repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 40px,
+                #000 40px,
+                #000 41px
+              )`,
+            }}
+            aria-hidden="true"
+          ></div>
+
+          <div className="relative p-8">
+            <div
+              className="space-y-8"
+              role="list"
+              aria-label="Timeline events"
+            >
+              {events.map((event, index) => (
+                <TimelineEvent
+                  key={event.year}
+                  event={event}
+                  index={index}
+                  isSelected={selectedEventIndex === index}
+                  onClick={() => handleEventClick(index)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
