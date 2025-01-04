@@ -5,9 +5,9 @@ import ResizeWrapper from './ResizeWrapper';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import BreakEven from './apps/BreakEven.js';
-import Marketing_Fundamentals_AdvertisingTimeline from './apps/Marketing_Fundamentals/AdvertisingTimeline.js';
-import Marketing_Fundamentals_PositioningStatementCreator from './apps/Marketing_Fundamentals/PositioningStatementCreator.js';
-import Marketing_Fundamentals_PositioningStatementGlobal from './apps/Marketing_Fundamentals/PositioningStatementGlobal.js';
+import MarketingFundamentals_AdvertisingTimeline from './apps/MarketingFundamentals/AdvertisingTimeline.js';
+import MarketingFundamentals_PositioningStatementCreator from './apps/MarketingFundamentals/PositioningStatementCreator.js';
+import MarketingFundamentals_PositioningStatementGlobal from './apps/MarketingFundamentals/PositioningStatementGlobal.js';
 import SMO_TiM_AITimeline from './apps/SMO_TiM/AITimeline.js';
 import SMO_TiM_CampaignIdeas from './apps/SMO_TiM/CampaignIdeas.js';
 import SMO_TiM_DragDropTimeline from './apps/SMO_TiM/DragDropTimeline.js';
@@ -27,7 +27,7 @@ import Test_Apps_ToggleSwitchApp from './apps/Test_Apps/ToggleSwitchApp.js';
  * (and won't throw "no-undef" errors).
  */
 const modules = {
-  "Marketing_Fundamentals": [
+  "MarketingFundamentals": [
     "AdvertisingTimeline.js",
     "PositioningStatementCreator.js",
     "PositioningStatementGlobal.js"
@@ -61,10 +61,10 @@ function DynamicTitle() {
   useEffect(() => {
     const titles = {
       '/breakeven': 'Break Even',
-      '/marketing_fundamentals': 'Marketing_Fundamentals',
-      '/marketing_fundamentals/advertisingtimeline': 'Advertising Timeline',
-      '/marketing_fundamentals/positioningstatementcreator': 'Positioning Statement Creator',
-      '/marketing_fundamentals/positioningstatementglobal': 'Positioning Statement Global',
+      '/marketingfundamentals': 'MarketingFundamentals',
+      '/marketingfundamentals/advertisingtimeline': 'Advertising Timeline',
+      '/marketingfundamentals/positioningstatementcreator': 'Positioning Statement Creator',
+      '/marketingfundamentals/positioningstatementglobal': 'Positioning Statement Global',
       '/smo_tim': 'SMO_TiM',
       '/smo_tim/aitimeline': 'A I Timeline',
       '/smo_tim/campaignideas': 'Campaign Ideas',
@@ -112,8 +112,8 @@ function App() {
         <ul style={{ listStyle: 'none', padding: 0 }}>
           
     <li style={{ marginBottom: '1rem' }}>
-      <Link to="/marketing_fundamentals" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}>
-        Marketing_Fundamentals
+      <Link to="/marketingfundamentals" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}>
+        MarketingFundamentals
       </Link>
     </li>
   
@@ -169,26 +169,26 @@ function App() {
         {/* Module routes */}
         
     <Route
-      path="/marketing_fundamentals"
+      path="/marketingfundamentals"
       element={
         <div className="text-center p-8">
-        <h2 className="text-2xl font-bold mb-4">Marketing_Fundamentals module</h2>
+        <h2 className="text-2xl font-bold mb-4">MarketingFundamentals module</h2>
         <ul className="list-none p-0">
             
                     <li className="mb-3">
-                    <Link to="/marketing_fundamentals/advertisingtimeline" className="text-xl underline text-blue-600 hover:text-blue-400">
+                    <Link to="/marketingfundamentals/advertisingtimeline" className="text-xl underline text-blue-600 hover:text-blue-400">
                       Advertising Timeline
                     </Link>
                   </li>
                 
                     <li className="mb-3">
-                    <Link to="/marketing_fundamentals/positioningstatementcreator" className="text-xl underline text-blue-600 hover:text-blue-400">
+                    <Link to="/marketingfundamentals/positioningstatementcreator" className="text-xl underline text-blue-600 hover:text-blue-400">
                       Positioning Statement Creator
                     </Link>
                   </li>
                 
                     <li className="mb-3">
-                    <Link to="/marketing_fundamentals/positioningstatementglobal" className="text-xl underline text-blue-600 hover:text-blue-400">
+                    <Link to="/marketingfundamentals/positioningstatementglobal" className="text-xl underline text-blue-600 hover:text-blue-400">
                       Positioning Statement Global
                     </Link>
                   </li>
@@ -200,30 +200,30 @@ function App() {
   
 
       <Route
-        path="/marketing_fundamentals/advertisingtimeline"
+        path="/marketingfundamentals/advertisingtimeline"
         element={
           <ResizeWrapper>
-            <Marketing_Fundamentals_AdvertisingTimeline />
+            <MarketingFundamentals_AdvertisingTimeline />
           </ResizeWrapper>
         }
       />
     
 
       <Route
-        path="/marketing_fundamentals/positioningstatementcreator"
+        path="/marketingfundamentals/positioningstatementcreator"
         element={
           <ResizeWrapper>
-            <Marketing_Fundamentals_PositioningStatementCreator />
+            <MarketingFundamentals_PositioningStatementCreator />
           </ResizeWrapper>
         }
       />
     
 
       <Route
-        path="/marketing_fundamentals/positioningstatementglobal"
+        path="/marketingfundamentals/positioningstatementglobal"
         element={
           <ResizeWrapper>
-            <Marketing_Fundamentals_PositioningStatementGlobal />
+            <MarketingFundamentals_PositioningStatementGlobal />
           </ResizeWrapper>
         }
       />
