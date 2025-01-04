@@ -18,6 +18,8 @@ import Test_Apps_DoubleNumber from './apps/Test_Apps/DoubleNumber.js';
 import Test_Apps_FluidAI from './apps/Test_Apps/FluidAI.js';
 import Test_Apps_MarketingDashboard from './apps/Test_Apps/MarketingDashboard.js';
 import Test_Apps_TestApp from './apps/Test_Apps/TestApp.js';
+import Test_Apps_TestAppCopy from './apps/Test_Apps/TestAppCopy.js';
+import Test_Apps_TestAppCopyTwo from './apps/Test_Apps/TestAppCopyTwo.js';
 import Test_Apps_ToggleSwitchApp from './apps/Test_Apps/ToggleSwitchApp.js';
 
 /**
@@ -43,6 +45,8 @@ const modules = {
     "FluidAI.js",
     "MarketingDashboard.js",
     "TestApp.js",
+    "TestAppCopy.js",
+    "TestAppCopyTwo.js",
     "ToggleSwitchApp.js"
   ]
 };
@@ -73,6 +77,8 @@ function DynamicTitle() {
       '/test_apps/fluidai': 'Fluid A I',
       '/test_apps/marketingdashboard': 'Marketing Dashboard',
       '/test_apps/testapp': 'Test App',
+      '/test_apps/testappcopy': 'Test App Copy',
+      '/test_apps/testappcopytwo': 'Test App Copy Two',
       '/test_apps/toggleswitchapp': 'Toggle Switch App'
     };
     document.title = titles[location.pathname] || 'Interactive Learning Apps';
@@ -344,6 +350,18 @@ function App() {
                   </li>
                 
                     <li className="mb-3">
+                    <Link to="/test_apps/testappcopy" className="text-xl underline text-blue-600 hover:text-blue-400">
+                      Test App Copy
+                    </Link>
+                  </li>
+                
+                    <li className="mb-3">
+                    <Link to="/test_apps/testappcopytwo" className="text-xl underline text-blue-600 hover:text-blue-400">
+                      Test App Copy Two
+                    </Link>
+                  </li>
+                
+                    <li className="mb-3">
                     <Link to="/test_apps/toggleswitchapp" className="text-xl underline text-blue-600 hover:text-blue-400">
                       Toggle Switch App
                     </Link>
@@ -410,6 +428,26 @@ function App() {
         element={
           <ResizeWrapper>
             <Test_Apps_TestApp />
+          </ResizeWrapper>
+        }
+      />
+    
+
+      <Route
+        path="/test_apps/testappcopy"
+        element={
+          <ResizeWrapper>
+            <Test_Apps_TestAppCopy />
+          </ResizeWrapper>
+        }
+      />
+    
+
+      <Route
+        path="/test_apps/testappcopytwo"
+        element={
+          <ResizeWrapper>
+            <Test_Apps_TestAppCopyTwo />
           </ResizeWrapper>
         }
       />
