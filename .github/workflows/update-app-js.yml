@@ -3,10 +3,10 @@ name: Update App.js Routes
 on:
   push:
     paths:
-      - 'src/apps/*.js'
+      - 'src/apps/**/*.js' # Update to include all subfolders
   pull_request:
     paths:
-      - 'src/apps/*.js'
+      - 'src/apps/**/*.js' # Update to include all subfolders
 
 jobs:
   update-app-js:
