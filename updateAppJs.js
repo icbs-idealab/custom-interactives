@@ -202,7 +202,7 @@ const moduleLinks = Object.keys(modules).map(moduleName => {
   return `
     <li style={{ marginBottom: '1rem' }}>
       <Link to="${route}" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}>
-        ${moduleName}
+        ${toNiceTitle(moduleName)}
       </Link>
     </li>
   `;
