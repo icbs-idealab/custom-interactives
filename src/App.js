@@ -8,19 +8,18 @@ import BreakEven from './apps/BreakEven.js';
 import MarketingFundamentals_AdvertisingTimeline from './apps/MarketingFundamentals/AdvertisingTimeline.js';
 import MarketingFundamentals_PositioningStatementCreator from './apps/MarketingFundamentals/PositioningStatementCreator.js';
 import MarketingFundamentals_PositioningStatementGlobal from './apps/MarketingFundamentals/PositioningStatementGlobal.js';
-import SMO_TiM_AITimeline from './apps/SMO_TiM/AITimeline.js';
-import SMO_TiM_CampaignIdeas from './apps/SMO_TiM/CampaignIdeas.js';
-import SMO_TiM_DragDropTimeline from './apps/SMO_TiM/DragDropTimeline.js';
-import SMO_TiM_TimModuleMap from './apps/SMO_TiM/TimModuleMap.js';
-import Test_Apps_AverageCalculator from './apps/Test_Apps/AverageCalculator.js';
-import Test_Apps_CounterApp from './apps/Test_Apps/CounterApp.js';
-import Test_Apps_DoubleNumber from './apps/Test_Apps/DoubleNumber.js';
-import Test_Apps_FluidAI from './apps/Test_Apps/FluidAI.js';
-import Test_Apps_MarketingDashboard from './apps/Test_Apps/MarketingDashboard.js';
-import Test_Apps_TestApp from './apps/Test_Apps/TestApp.js';
-import Test_Apps_TestAppCopy from './apps/Test_Apps/TestAppCopy.js';
-import Test_Apps_TestAppCopyTwo from './apps/Test_Apps/TestAppCopyTwo.js';
-import Test_Apps_ToggleSwitchApp from './apps/Test_Apps/ToggleSwitchApp.js';
+import SmoTim_AITimeline from './apps/SmoTim/AITimeline.js';
+import SmoTim_CampaignIdeas from './apps/SmoTim/CampaignIdeas.js';
+import SmoTim_DragDropTimeline from './apps/SmoTim/DragDropTimeline.js';
+import SmoTim_TimModuleMap from './apps/SmoTim/TimModuleMap.js';
+import TestApps_AverageCalculator from './apps/TestApps/AverageCalculator.js';
+import TestApps_CounterApp from './apps/TestApps/CounterApp.js';
+import TestApps_DoubleNumber from './apps/TestApps/DoubleNumber.js';
+import TestApps_FluidAI from './apps/TestApps/FluidAI.js';
+import TestApps_MarketingDashboard from './apps/TestApps/MarketingDashboard.js';
+import TestApps_TestApp from './apps/TestApps/TestApp.js';
+import TestApps_TestAppCopy from './apps/TestApps/TestAppCopy.js';
+import TestApps_ToggleSwitchApp from './apps/TestApps/ToggleSwitchApp.js';
 
 /**
  * We define these constants so the JSX can reference them
@@ -32,13 +31,13 @@ const modules = {
     "PositioningStatementCreator.js",
     "PositioningStatementGlobal.js"
   ],
-  "SMO_TiM": [
+  "SmoTim": [
     "AITimeline.js",
     "CampaignIdeas.js",
     "DragDropTimeline.js",
     "TimModuleMap.js"
   ],
-  "Test_Apps": [
+  "TestApps": [
     "AverageCalculator.js",
     "CounterApp.js",
     "DoubleNumber.js",
@@ -46,7 +45,6 @@ const modules = {
     "MarketingDashboard.js",
     "TestApp.js",
     "TestAppCopy.js",
-    "TestAppCopyTwo.js",
     "ToggleSwitchApp.js"
   ]
 };
@@ -65,21 +63,20 @@ function DynamicTitle() {
       '/marketingfundamentals/advertisingtimeline': 'Advertising Timeline',
       '/marketingfundamentals/positioningstatementcreator': 'Positioning Statement Creator',
       '/marketingfundamentals/positioningstatementglobal': 'Positioning Statement Global',
-      '/smo_tim': 'SMO_TiM',
-      '/smo_tim/aitimeline': 'A I Timeline',
-      '/smo_tim/campaignideas': 'Campaign Ideas',
-      '/smo_tim/dragdroptimeline': 'Drag Drop Timeline',
-      '/smo_tim/timmodulemap': 'Tim Module Map',
-      '/test_apps': 'Test_Apps',
-      '/test_apps/averagecalculator': 'Average Calculator',
-      '/test_apps/counterapp': 'Counter App',
-      '/test_apps/doublenumber': 'Double Number',
-      '/test_apps/fluidai': 'Fluid A I',
-      '/test_apps/marketingdashboard': 'Marketing Dashboard',
-      '/test_apps/testapp': 'Test App',
-      '/test_apps/testappcopy': 'Test App Copy',
-      '/test_apps/testappcopytwo': 'Test App Copy Two',
-      '/test_apps/toggleswitchapp': 'Toggle Switch App'
+      '/smotim': 'SmoTim',
+      '/smotim/aitimeline': 'A I Timeline',
+      '/smotim/campaignideas': 'Campaign Ideas',
+      '/smotim/dragdroptimeline': 'Drag Drop Timeline',
+      '/smotim/timmodulemap': 'Tim Module Map',
+      '/testapps': 'TestApps',
+      '/testapps/averagecalculator': 'Average Calculator',
+      '/testapps/counterapp': 'Counter App',
+      '/testapps/doublenumber': 'Double Number',
+      '/testapps/fluidai': 'Fluid A I',
+      '/testapps/marketingdashboard': 'Marketing Dashboard',
+      '/testapps/testapp': 'Test App',
+      '/testapps/testappcopy': 'Test App Copy',
+      '/testapps/toggleswitchapp': 'Toggle Switch App'
     };
     document.title = titles[location.pathname] || 'Interactive Learning Apps';
   }, [location]);
@@ -113,19 +110,19 @@ function App() {
           
     <li style={{ marginBottom: '1rem' }}>
       <Link to="/marketingfundamentals" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}>
-        MarketingFundamentals
+        Marketing Fundamentals
       </Link>
     </li>
   
     <li style={{ marginBottom: '1rem' }}>
-      <Link to="/smo_tim" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}>
-        SMO_TiM
+      <Link to="/smotim" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}>
+        Smo Tim
       </Link>
     </li>
   
     <li style={{ marginBottom: '1rem' }}>
-      <Link to="/test_apps" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}>
-        Test_Apps
+      <Link to="/testapps" style={{ fontSize: '1.2rem', textDecoration: 'underline' }}>
+        Test Apps
       </Link>
     </li>
   
@@ -230,32 +227,32 @@ function App() {
     
 
     <Route
-      path="/smo_tim"
+      path="/smotim"
       element={
         <div className="text-center p-8">
-        <h2 className="text-2xl font-bold mb-4">SMO_TiM module</h2>
+        <h2 className="text-2xl font-bold mb-4">SmoTim module</h2>
         <ul className="list-none p-0">
             
                     <li className="mb-3">
-                    <Link to="/smo_tim/aitimeline" className="text-xl underline text-blue-600 hover:text-blue-400">
+                    <Link to="/smotim/aitimeline" className="text-xl underline text-blue-600 hover:text-blue-400">
                       A I Timeline
                     </Link>
                   </li>
                 
                     <li className="mb-3">
-                    <Link to="/smo_tim/campaignideas" className="text-xl underline text-blue-600 hover:text-blue-400">
+                    <Link to="/smotim/campaignideas" className="text-xl underline text-blue-600 hover:text-blue-400">
                       Campaign Ideas
                     </Link>
                   </li>
                 
                     <li className="mb-3">
-                    <Link to="/smo_tim/dragdroptimeline" className="text-xl underline text-blue-600 hover:text-blue-400">
+                    <Link to="/smotim/dragdroptimeline" className="text-xl underline text-blue-600 hover:text-blue-400">
                       Drag Drop Timeline
                     </Link>
                   </li>
                 
                     <li className="mb-3">
-                    <Link to="/smo_tim/timmodulemap" className="text-xl underline text-blue-600 hover:text-blue-400">
+                    <Link to="/smotim/timmodulemap" className="text-xl underline text-blue-600 hover:text-blue-400">
                       Tim Module Map
                     </Link>
                   </li>
@@ -267,102 +264,96 @@ function App() {
   
 
       <Route
-        path="/smo_tim/aitimeline"
+        path="/smotim/aitimeline"
         element={
           <ResizeWrapper>
-            <SMO_TiM_AITimeline />
+            <SmoTim_AITimeline />
           </ResizeWrapper>
         }
       />
     
 
       <Route
-        path="/smo_tim/campaignideas"
+        path="/smotim/campaignideas"
         element={
           <ResizeWrapper>
-            <SMO_TiM_CampaignIdeas />
+            <SmoTim_CampaignIdeas />
           </ResizeWrapper>
         }
       />
     
 
       <Route
-        path="/smo_tim/dragdroptimeline"
+        path="/smotim/dragdroptimeline"
         element={
           <ResizeWrapper>
-            <SMO_TiM_DragDropTimeline />
+            <SmoTim_DragDropTimeline />
           </ResizeWrapper>
         }
       />
     
 
       <Route
-        path="/smo_tim/timmodulemap"
+        path="/smotim/timmodulemap"
         element={
           <ResizeWrapper>
-            <SMO_TiM_TimModuleMap />
+            <SmoTim_TimModuleMap />
           </ResizeWrapper>
         }
       />
     
 
     <Route
-      path="/test_apps"
+      path="/testapps"
       element={
         <div className="text-center p-8">
-        <h2 className="text-2xl font-bold mb-4">Test_Apps module</h2>
+        <h2 className="text-2xl font-bold mb-4">TestApps module</h2>
         <ul className="list-none p-0">
             
                     <li className="mb-3">
-                    <Link to="/test_apps/averagecalculator" className="text-xl underline text-blue-600 hover:text-blue-400">
+                    <Link to="/testapps/averagecalculator" className="text-xl underline text-blue-600 hover:text-blue-400">
                       Average Calculator
                     </Link>
                   </li>
                 
                     <li className="mb-3">
-                    <Link to="/test_apps/counterapp" className="text-xl underline text-blue-600 hover:text-blue-400">
+                    <Link to="/testapps/counterapp" className="text-xl underline text-blue-600 hover:text-blue-400">
                       Counter App
                     </Link>
                   </li>
                 
                     <li className="mb-3">
-                    <Link to="/test_apps/doublenumber" className="text-xl underline text-blue-600 hover:text-blue-400">
+                    <Link to="/testapps/doublenumber" className="text-xl underline text-blue-600 hover:text-blue-400">
                       Double Number
                     </Link>
                   </li>
                 
                     <li className="mb-3">
-                    <Link to="/test_apps/fluidai" className="text-xl underline text-blue-600 hover:text-blue-400">
+                    <Link to="/testapps/fluidai" className="text-xl underline text-blue-600 hover:text-blue-400">
                       Fluid A I
                     </Link>
                   </li>
                 
                     <li className="mb-3">
-                    <Link to="/test_apps/marketingdashboard" className="text-xl underline text-blue-600 hover:text-blue-400">
+                    <Link to="/testapps/marketingdashboard" className="text-xl underline text-blue-600 hover:text-blue-400">
                       Marketing Dashboard
                     </Link>
                   </li>
                 
                     <li className="mb-3">
-                    <Link to="/test_apps/testapp" className="text-xl underline text-blue-600 hover:text-blue-400">
+                    <Link to="/testapps/testapp" className="text-xl underline text-blue-600 hover:text-blue-400">
                       Test App
                     </Link>
                   </li>
                 
                     <li className="mb-3">
-                    <Link to="/test_apps/testappcopy" className="text-xl underline text-blue-600 hover:text-blue-400">
+                    <Link to="/testapps/testappcopy" className="text-xl underline text-blue-600 hover:text-blue-400">
                       Test App Copy
                     </Link>
                   </li>
                 
                     <li className="mb-3">
-                    <Link to="/test_apps/testappcopytwo" className="text-xl underline text-blue-600 hover:text-blue-400">
-                      Test App Copy Two
-                    </Link>
-                  </li>
-                
-                    <li className="mb-3">
-                    <Link to="/test_apps/toggleswitchapp" className="text-xl underline text-blue-600 hover:text-blue-400">
+                    <Link to="/testapps/toggleswitchapp" className="text-xl underline text-blue-600 hover:text-blue-400">
                       Toggle Switch App
                     </Link>
                   </li>
@@ -374,90 +365,80 @@ function App() {
   
 
       <Route
-        path="/test_apps/averagecalculator"
+        path="/testapps/averagecalculator"
         element={
           <ResizeWrapper>
-            <Test_Apps_AverageCalculator />
+            <TestApps_AverageCalculator />
           </ResizeWrapper>
         }
       />
     
 
       <Route
-        path="/test_apps/counterapp"
+        path="/testapps/counterapp"
         element={
           <ResizeWrapper>
-            <Test_Apps_CounterApp />
+            <TestApps_CounterApp />
           </ResizeWrapper>
         }
       />
     
 
       <Route
-        path="/test_apps/doublenumber"
+        path="/testapps/doublenumber"
         element={
           <ResizeWrapper>
-            <Test_Apps_DoubleNumber />
+            <TestApps_DoubleNumber />
           </ResizeWrapper>
         }
       />
     
 
       <Route
-        path="/test_apps/fluidai"
+        path="/testapps/fluidai"
         element={
           <ResizeWrapper>
-            <Test_Apps_FluidAI />
+            <TestApps_FluidAI />
           </ResizeWrapper>
         }
       />
     
 
       <Route
-        path="/test_apps/marketingdashboard"
+        path="/testapps/marketingdashboard"
         element={
           <ResizeWrapper>
-            <Test_Apps_MarketingDashboard />
+            <TestApps_MarketingDashboard />
           </ResizeWrapper>
         }
       />
     
 
       <Route
-        path="/test_apps/testapp"
+        path="/testapps/testapp"
         element={
           <ResizeWrapper>
-            <Test_Apps_TestApp />
+            <TestApps_TestApp />
           </ResizeWrapper>
         }
       />
     
 
       <Route
-        path="/test_apps/testappcopy"
+        path="/testapps/testappcopy"
         element={
           <ResizeWrapper>
-            <Test_Apps_TestAppCopy />
+            <TestApps_TestAppCopy />
           </ResizeWrapper>
         }
       />
     
 
       <Route
-        path="/test_apps/testappcopytwo"
+        path="/testapps/toggleswitchapp"
         element={
           <ResizeWrapper>
-            <Test_Apps_TestAppCopyTwo />
-          </ResizeWrapper>
-        }
-      />
-    
-
-      <Route
-        path="/test_apps/toggleswitchapp"
-        element={
-          <ResizeWrapper>
-            <Test_Apps_ToggleSwitchApp />
+            <TestApps_ToggleSwitchApp />
           </ResizeWrapper>
         }
       />
