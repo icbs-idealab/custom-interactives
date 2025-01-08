@@ -9,6 +9,7 @@ import MarketingFundamentals_AdvertisingTimeline from './apps/MarketingFundament
 import MarketingFundamentals_PositioningStatementCreator from './apps/MarketingFundamentals/PositioningStatementCreator.js';
 import MarketingFundamentals_PositioningStatementGlobal from './apps/MarketingFundamentals/PositioningStatementGlobal.js';
 import SmoTim_AITimeline from './apps/SmoTim/AITimeline.js';
+import SmoTim_BlockchainDemo from './apps/SmoTim/BlockchainDemo.js';
 import SmoTim_CampaignIdeas from './apps/SmoTim/CampaignIdeas.js';
 import SmoTim_DragDropTimeline from './apps/SmoTim/DragDropTimeline.js';
 import SmoTim_TimModuleMap from './apps/SmoTim/TimModuleMap.js';
@@ -33,6 +34,7 @@ const modules = {
   ],
   "SmoTim": [
     "AITimeline.js",
+    "BlockchainDemo.js",
     "CampaignIdeas.js",
     "DragDropTimeline.js",
     "TimModuleMap.js"
@@ -65,6 +67,7 @@ function DynamicTitle() {
       '/marketingfundamentals/positioningstatementglobal': 'Positioning Statement Global',
       '/smotim': 'SmoTim',
       '/smotim/aitimeline': 'A I Timeline',
+      '/smotim/blockchaindemo': 'Blockchain Demo',
       '/smotim/campaignideas': 'Campaign Ideas',
       '/smotim/dragdroptimeline': 'Drag Drop Timeline',
       '/smotim/timmodulemap': 'Tim Module Map',
@@ -240,6 +243,12 @@ function App() {
                   </li>
                 
                     <li className="mb-3">
+                    <Link to="/smotim/blockchaindemo" className="text-xl underline text-blue-600 hover:text-blue-400">
+                      Blockchain Demo
+                    </Link>
+                  </li>
+                
+                    <li className="mb-3">
                     <Link to="/smotim/campaignideas" className="text-xl underline text-blue-600 hover:text-blue-400">
                       Campaign Ideas
                     </Link>
@@ -268,6 +277,16 @@ function App() {
         element={
           <ResizeWrapper>
             <SmoTim_AITimeline />
+          </ResizeWrapper>
+        }
+      />
+    
+
+      <Route
+        path="/smotim/blockchaindemo"
+        element={
+          <ResizeWrapper>
+            <SmoTim_BlockchainDemo />
           </ResizeWrapper>
         }
       />
