@@ -174,7 +174,7 @@ export default function BlockchainDemo() {
                 <p className="font-mono text-xs break-all">{block.hash}</p>
               </div>
               <div>
-                <p className="text-sm font-medium">Previous Hash</p>
+                <p className="text-sm font-medium">Previous hash</p>
                 <p className="font-mono text-xs break-all">
                   {block.previousHash}
                 </p>
@@ -238,46 +238,52 @@ export default function BlockchainDemo() {
   // 9. Render Page
   //
   return (
-    <div className="w-full bg-white min-h-screen">
-      <div className="p-6">
-        {/* TOP PART: Full-size interactive chain */}
-        <div className="bg-white shadow-lg p-6 space-y-6 mb-10">
-          <div className="border-b pb-4">
-            <h1 className="text-xl font-bold">Main Interactive Blockchain</h1>
+    // Just a simple top-level, no extra border or shadow
+    <div className="p-6 space-y-10">
+
+      {/* TOP PART: Full-size interactive chain (no outer box) */}
+      <div>
+        <h1 className="text-xl font-bold mb-2">Blockchain demonstration</h1>
+        <p>
+          Try amending some of the data in the blocks below and observe the 
+          impact of your changes.
+        </p>
+
+        {blocks.some(b => !b.isValid) && (
+          <div className="bg-red-100 border-l-4 border-red-500 p-4 rounded mt-4">
+            Blockchain integrity compromised! Some blocks have been tampered with.
           </div>
+        )}
 
-          {blocks.some(b => !b.isValid) && (
-            <div className="bg-red-100 border-l-4 border-red-500 p-4 rounded">
-              Blockchain integrity compromised! Some blocks have been tampered with.
-            </div>
-          )}
-
+        <div className="mt-6">
           {renderChainFull(blocks, true)}
         </div>
+      </div>
 
-        {/* BOTTOM PART: The 3 Nodes in "mini" layout */}
-        <div className="space-y-6">
-          <h2 className="text-lg font-semibold">Network Nodes (Mini Layout)</h2>
+      {/* BOTTOM PART: The 3 Nodes in "mini" layout, no nested white box */}
+      <div>
+        <h2 className="text-lg font-semibold mb-2">Comparison with other nodes</h2>
+        <p className="mb-4">Compare your altered node chain with other nodes.</p>
 
-          {/* Node #1: Reflects the current state */}
-          <div className="bg-white shadow-lg p-4">
-            <h3 className="text-md font-bold mb-2">Node #1 (Current/Tampered)</h3>
-            {renderChainMini(blocks)}
-          </div>
+        {/* Node #1: Reflects the current state */}
+        <div className="mb-6">
+          <h3 className="text-md font-bold mb-2">Node #1 (current/tampered)</h3>
+          {renderChainMini(blocks)}
+        </div>
 
-          {/* Node #2: Original chain => read-only */}
-          <div className="bg-white shadow-lg p-4">
-            <h3 className="text-md font-bold mb-2">Node #2 (Original)</h3>
-            {renderChainMini(originalChain)}
-          </div>
+        {/* Node #2: Original chain => read-only */}
+        <div className="mb-6">
+          <h3 className="text-md font-bold mb-2">Node #2 (original)</h3>
+          {renderChainMini(originalChain)}
+        </div>
 
-          {/* Node #3: Original chain => read-only */}
-          <div className="bg-white shadow-lg p-4">
-            <h3 className="text-md font-bold mb-2">Node #3 (Original)</h3>
-            {renderChainMini(originalChain)}
-          </div>
+        {/* Node #3: Original chain => read-only */}
+        <div>
+          <h3 className="text-md font-bold mb-2">Node #3 (original)</h3>
+          {renderChainMini(originalChain)}
         </div>
       </div>
+
     </div>
   );
 }
