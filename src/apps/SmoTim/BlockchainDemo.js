@@ -11,25 +11,41 @@ function calculateMinedHash(block) {
     hashNum = hashNum & hashNum; // force 32-bit
   }
   const rawHex = Math.abs(hashNum).toString(16).padStart(8, '0');
-  return '0000' + rawHex; // total length 12
+  return '0000' + rawHex; // total length 12, definitely starts with "0000"
 }
 
 //
-// 1b. "Untethered" hash: 12 chars, but no leading zeros
-//     We create an 8-hex base + 4 random hex digits appended.
+// 1b. "Untethered" hash: 12 chars, deterministic, never starts "0000".
+//     STEP: Double-pass approach => final 12 chars => if leading "0000", rewrite.
 //
 function calculateUntetheredHash(block) {
-  const str = `${block.id}${block.timestamp}${block.data}${block.previousHash}${block.nonce}`;
-  let hashNum = 0;
-  for (let i = 0; i < str.length; i++) {
-    hashNum = ((hashNum << 5) - hashNum) + str.charCodeAt(i);
-    hashNum = hashNum & hashNum; // force 32-bit
+  const baseStr = `${block.id}${block.timestamp}${block.data}${block.previousHash}${block.nonce}`;
+
+  // PASS 1: integer shift => 8-hex
+  let hashNum1 = 0;
+  for (let i = 0; i < baseStr.length; i++) {
+    hashNum1 = ((hashNum1 << 5) - hashNum1) + baseStr.charCodeAt(i);
+    hashNum1 = hashNum1 & hashNum1; 
   }
-  const baseHex = Math.abs(hashNum).toString(16).padStart(8, '0');
-  const randomSuffix = Math.floor(Math.random() * 0xffff)
-    .toString(16)
-    .padStart(4, '0');
-  return baseHex + randomSuffix; // total length 12, no leading zeros
+  const firstHex = Math.abs(hashNum1).toString(16).padStart(8, '0');
+
+  // PASS 2: feed firstHex into the same shift logic => second 8-hex
+  let hashNum2 = 0;
+  for (let j = 0; j < firstHex.length; j++) {
+    hashNum2 = ((hashNum2 << 5) - hashNum2) + firstHex.charCodeAt(j);
+    hashNum2 = hashNum2 & hashNum2;
+  }
+  const secondHex = Math.abs(hashNum2).toString(16).padStart(8, '0');
+
+  // COMBINE => 16 hex chars => slice(0,12)
+  let finalHex = (firstHex + secondHex).slice(0, 12);
+
+  // If it starts with "0000", replace that with "abcd" so it never looks mined.
+  if (finalHex.startsWith('0000')) {
+    finalHex = 'abcd' + finalHex.slice(4);
+  }
+
+  return finalHex;
 }
 
 //
@@ -119,15 +135,13 @@ export default function BlockchainDemo() {
         // fully original => keep the original "mined" hash
         block.hash = block.originalHash;
       } else {
-        // otherwise => "untethered" hash
+        // otherwise => "untethered" (double-pass approach)
         block.hash = calculateUntetheredHash(block);
       }
     }
 
     // 6. Re-check validity
-    //    a) genesis is valid if data hasn't changed
     newBlocks[0].isValid = (newBlocks[0].data === newBlocks[0].originalData);
-    //    b) others valid if the previous block is valid, data is original, and link is original
     for (let i = 1; i < newBlocks.length; i++) {
       const prev = newBlocks[i - 1];
       const curr = newBlocks[i];
@@ -238,15 +252,12 @@ export default function BlockchainDemo() {
   // 9. Render Page
   //
   return (
-    // Just a simple top-level, no extra border or shadow
     <div className="p-6 space-y-10">
-
-      {/* TOP PART: Full-size interactive chain (no outer box) */}
       <div>
         <h1 className="text-xl font-bold mb-2">Blockchain demonstration</h1>
         <p>
-          Try amending some of the data in the blocks below and observe the 
-          impact of your changes.
+          Try amending some of the data in the blocks below and observe 
+          the impact of your changes.
         </p>
 
         {blocks.some(b => !b.isValid) && (
@@ -260,7 +271,6 @@ export default function BlockchainDemo() {
         </div>
       </div>
 
-      {/* BOTTOM PART: The 3 Nodes in "mini" layout, no nested white box */}
       <div>
         <h2 className="text-lg font-semibold mb-2">Comparison with other nodes</h2>
         <p className="mb-4">Compare your altered node chain with other nodes.</p>
@@ -283,7 +293,6 @@ export default function BlockchainDemo() {
           {renderChainMini(originalChain)}
         </div>
       </div>
-
     </div>
   );
 }
