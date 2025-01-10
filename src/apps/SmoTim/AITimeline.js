@@ -51,18 +51,29 @@ const TimelineEvent = ({ event, index, isSelected, onClick, onKeyDown }) => {
             ></div>
 
             <div className="relative z-10">
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-lg tracking-wider">
-                  {event.title}
-                </span>
-                <div
-                  className={`text-xl font-bold ${
-                    isSelected ? "text-sky-100" : "text-red-600"
-                  }`}
-                  aria-label={`Year ${event.year}`}
-                >
-                  {event.year}
-                </div>
+              {/* MOBILE: Year above Title */}
+              <div
+                className={`block md:hidden text-xl font-bold ${
+                  isSelected ? "text-white" : "text-red-600"
+                } mb-1`}
+                aria-label={`Year ${event.year}`}
+              >
+                {event.year}
+              </div>
+
+              {/* Title */}
+              <span className="font-bold text-lg tracking-wider block">
+                {event.title}
+              </span>
+
+              {/* DESKTOP: Year to the right */}
+              <div
+                className={`hidden md:block text-xl font-bold ${
+                  isSelected ? "text-white" : "text-red-600"
+                }`}
+                aria-label={`Year ${event.year}`}
+              >
+                {event.year}
               </div>
             </div>
           </button>
