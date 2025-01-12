@@ -1,7 +1,42 @@
 import OpenAI from "openai";
+import { z } from "zod";
+import { zodResponseFormat } from "openai/helpers/zod";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY, // Make sure this is set in your environment variables
+  apiKey: process.env.OPENAI_API_KEY, // Ensure your API key is set
+});
+
+// Define the persona schema using Zod
+const PersonaSchema = z.object({
+  demographics: z.object({
+    name: z.string(),
+    age: z.string(), // or z.number() if you prefer, adjust prompt accordingly
+    gender: z.string(),
+    occupation: z.string(),
+    incomeLevel: z.string(),
+    educationLevel: z.string(),
+    location: z.string(),
+  }),
+  psychographics: z.object({
+    valuesAndBeliefs: z.string(),
+    lifestyle: z.string(),
+    personalityTraits: z.string(),
+    goalsAndAspirations: z.string(),
+  }),
+  behavioral: z.object({
+    buyingHabits: z.string(),
+    painPoints: z.string(),
+    motivations: z.string(),
+    preferredChannels: z.string(),
+  }),
+  situational: z.object({
+    technologyUsage: z.string(),
+    decisionMakingProcess: z.string(),
+    brandAffinities: z.string(),
+    roleInBuyingProcess: z.string(),
+  }),
+  quote: z.string(),
+  scenario: z.string(),
 });
 
 export default async function handler(req, res) {
@@ -12,104 +47,64 @@ export default async function handler(req, res) {
   const { brandName, brandDescription } = req.body;
 
   try {
-    // 1) Use GPT-3.5-Turbo to create a persona JSON
-    const chatResponse = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+    // 1) Use GPT-4o with Structured Outputs to create a persona JSON
+    const completion = await openai.beta.chat.completions.parse({
+      model: "gpt-4o-2024-08-06", // or another supported GPT-4o model
       messages: [
         {
           role: "system",
           content: `
-You are a marketing expert generating a structured consumer persona. 
-Output must be valid JSON with the following structure:
-
-{
-  "demographics": {
-    "name": "string",
-    "age": "string or number",
-    "gender": "string",
-    "occupation": "string",
-    "incomeLevel": "string",
-    "educationLevel": "string",
-    "location": "string"
-  },
-  "psychographics": {
-    "valuesAndBeliefs": "string",
-    "lifestyle": "string",
-    "personalityTraits": "string",
-    "goalsAndAspirations": "string"
-  },
-  "behavioral": {
-    "buyingHabits": "string",
-    "painPoints": "string",
-    "motivations": "string",
-    "preferredChannels": "string"
-  },
-  "situational": {
-    "technologyUsage": "string",
-    "decisionMakingProcess": "string",
-    "brandAffinities": "string",
-    "roleInBuyingProcess": "string"
-  },
-  "quote": "string",
-  "scenario": "string"
-}
-Answer only with JSON, no extra text.`,
+You are a marketing expert generating a structured consumer persona.
+Follow the schema exactly as provided.
+          `,
         },
         {
           role: "user",
           content: `
-Given the following brand:
+Generate a consumer persona using the following brand details:
 - Brand Name: ${brandName}
 - Brand Description: ${brandDescription}
 
-Create a consumer persona card that includes:
-Demographics (name, age, gender, occupation, income level, education level, location),
-Psychographics (values and beliefs, lifestyle, personality traits, goals, aspirations),
-Behavioral characteristics (buying habits, pain points, motivations, preferred channels),
-Situational details (technology usage, decision-making process, brand affinities, role in the buying process),
-A short quote,
-And a short scenario describing a day in their life or typical interaction with the brand.
-`,
+The persona must include:
+- Demographics: name, age, gender, occupation, income level, education level, location
+- Psychographics: values and beliefs, lifestyle, personality traits, goals and aspirations
+- Behavioral: buying habits, pain points, motivations, preferred channels
+- Situational: technology usage, decision-making process, brand affinities, role in buying process
+- A short quote
+- A short scenario describing a day in their life or their interaction with the brand
+
+Respond using only valid JSON that exactly conforms to the provided schema.
+          `,
         },
       ],
-      temperature: 0,
+      response_format: zodResponseFormat(PersonaSchema, "persona"),
     });
 
-    const assistantMessage = chatResponse.choices[0].message.content;
-
-    // Try parsing the assistant's message as JSON
-    let personaData;
-    try {
-      personaData = JSON.parse(assistantMessage);
-    } catch (parseError) {
-      console.error("Error parsing assistant message as JSON:", parseError);
-      console.error("Assistant message:", assistantMessage);
-      return res.status(500).json({
-        error: "Failed to parse persona data from OpenAI",
-      });
-    }
+    // Extract the structured persona from the response
+    const personaData = completion.choices[0].message.parsed;
 
     // 2) Generate an image using DALL·E 3
-    // We'll base the prompt on some persona details (like age, gender) to get a relevant image.
-    // Note that DALL·E 3 uses the same `createImage` endpoint in the Node.js OpenAI library (as of now).
+    // Create an image prompt that uses some persona details (adjust as desired)
     const imagePrompt = `
-Portrait photo of a ${personaData.demographics?.age || "35-year-old"} 
-${personaData.demographics?.gender || "person"} 
-who is a ${personaData.demographics?.occupation || "professional"} 
-in a style that reflects their lifestyle (${personaData.psychographics?.lifestyle || "modern"}).
-Background is simple, minimal.
+Create a portrait of a ${
+      personaData.demographics.age || "35-year-old"
+    } ${personaData.demographics.gender || "person"}
+who works as a ${personaData.demographics.occupation || "professional"}.
+The portrait should reflect a style that fits a consumer who embraces a ${
+      personaData.psychographics.lifestyle || "modern"
+    } lifestyle. Use a minimal background.
 `;
 
     const imageResponse = await openai.images.generate({
       prompt: imagePrompt,
       n: 1,
-      size: "512x512", // or '1024x1024'
+      size: "512x512", // You can also use 1024x1024 if preferred
     });
 
-    // Extract the image URL from the response
+    // Extract the image URL
     const imageUrl = imageResponse.data[0].url;
 
-    // Combine the personaData and the imageUrl into a single JSON object
+    // Combine persona data and image URL in the final response
     const finalResponse = {
       ...personaData,
       imageUrl,
@@ -117,7 +112,8 @@ Background is simple, minimal.
 
     return res.status(200).json(finalResponse);
   } catch (error) {
-    console.error("Error from OpenAI:", error);
+    console.error("Error generating consumer persona:", error);
+
     res.status(500).json({
       error: "Failed to generate consumer persona",
       details: error.message || "Unknown error occurred",
