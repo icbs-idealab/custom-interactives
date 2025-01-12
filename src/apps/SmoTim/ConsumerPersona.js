@@ -37,7 +37,6 @@ const ConsumerPersona = () => {
       if (liveRegionRef.current) {
         liveRegionRef.current.textContent = "Consumer persona generated.";
       }
-      // Focus on the heading
       generatedContentRef.current.querySelector("h2").focus();
     }
   }, [persona]);
@@ -283,19 +282,8 @@ const ConsumerPersona = () => {
             <h2 className="text-2xl font-bold text-center text-green-700" tabIndex="-1">
               Consumer Persona
             </h2>
-            {/* Show the persona card */}
+            {/* Show the persona card without image section */}
             <div className="bg-white p-6 shadow-lg border border-green-100">
-              {/* Image */}
-              {persona.imageUrl && (
-                <div className="mb-4 flex justify-center">
-                  <img
-                    src={persona.imageUrl}
-                    alt={`Persona for ${persona.demographics?.name || "User Persona"}`}
-                    className="w-48 h-48 object-cover rounded-full shadow-lg"
-                  />
-                </div>
-              )}
-
               {/* Demographics */}
               <h3 className="text-xl font-semibold mb-2 text-green-700">Demographics</h3>
               <ul className="mb-4 ml-4 list-disc">
@@ -335,7 +323,7 @@ const ConsumerPersona = () => {
                 <li><strong>Role in Buying Process:</strong> {persona.situational?.roleInBuyingProcess}</li>
               </ul>
 
-              {/* Visual / Contextual Elements */}
+              {/* Context & Story */}
               <h3 className="text-xl font-semibold mb-2 text-green-700">Context & Story</h3>
               <p className="mb-2"><strong>Quote:</strong> {persona.quote}</p>
               <p><strong>Scenario:</strong> {persona.scenario}</p>

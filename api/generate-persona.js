@@ -10,7 +10,7 @@ const openai = new OpenAI({
 const PersonaSchema = z.object({
   demographics: z.object({
     name: z.string(),
-    age: z.string(), // or z.number() if you prefer, adjust prompt accordingly
+    age: z.string(), // or z.number() if you prefer; adjust prompt accordingly
     gender: z.string(),
     occupation: z.string(),
     incomeLevel: z.string(),
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
   const { brandName, brandDescription } = req.body;
 
   try {
-    // 1) Use GPT-4o with Structured Outputs to create a persona JSON
+    // Use GPT-4o with Structured Outputs to create a persona JSON
     const completion = await openai.beta.chat.completions.parse({
       model: "gpt-4o-2024-08-06", // or another supported GPT-4o model
       messages: [
@@ -87,50 +87,8 @@ Respond using only valid JSON that exactly conforms to the provided schema.
     const personaData = completion.choices[0].message.parsed;
     console.log("Parsed persona data:", JSON.stringify(personaData, null, 2));
 
-    // 2) Generate an image using DALL·E 3
-    // Create an image prompt that uses some persona details (adjust as desired)
-    const imagePrompt = `
-Create a portrait of a ${
-      personaData.demographics.age || "35-year-old"
-    } ${personaData.demographics.gender || "person"}
-who works as a ${personaData.demographics.occupation || "professional"}.
-The portrait should reflect a style that fits a consumer who embraces a ${
-      personaData.psychographics.lifestyle || "modern"
-    } lifestyle. Use a minimal background.
-`;
-    console.log("Image prompt:", imagePrompt);
-
-// Generate image using the basic image creation method (DALL·E 2)
-const imageResponse = await openai.createImage({
-    prompt: imagePrompt,
-    n: 1,
-    size: "512x512", // You can change this to "1024x1024" if desired
-  });
-  
-  // Log the full image response for debugging
-  console.log("Full image response:", JSON.stringify(imageResponse, null, 2));
-  
-  // Extract the image URL from the response
-  const imageUrl =
-    imageResponse.data &&
-    imageResponse.data.data &&
-    Array.isArray(imageResponse.data.data) &&
-    imageResponse.data.data.length > 0 &&
-    imageResponse.data.data[0].url
-      ? imageResponse.data.data[0].url
-      : null;
-  
-  if (!imageUrl) {
-    throw new Error("Image URL not found in response from the image generation endpoint");
-  }
-  
-    // Combine persona data and image URL in the final response
-    const finalResponse = {
-      ...personaData,
-      imageUrl,
-    };
-
-    return res.status(200).json(finalResponse);
+    // Return only the persona data (without an image URL)
+    return res.status(200).json(personaData);
   } catch (error) {
     console.error("Error generating consumer persona:", error);
     return res.status(500).json({
