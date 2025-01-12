@@ -46,7 +46,7 @@ export default async function handler(req, res) {
 
     // Generate image (remove model parameter for now)
     const imagePrompt = `Professional headshot of ${persona.demographics.name}, ...`;
-    const imageResponse = await openai.images.generate({
+   /*  const imageResponse = await openai.images.generate({
       prompt: imagePrompt,
       size: "1024x1024",
       n: 1,
@@ -57,7 +57,7 @@ export default async function handler(req, res) {
       ...persona,
       image: imageResponse.data[0].url,
     };
-
+ */
     return res.status(200).json(responseData);
   } catch (error) {
     console.error("Error generating persona:", error);
