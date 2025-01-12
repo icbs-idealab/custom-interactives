@@ -39,6 +39,61 @@ function toNiceTitle(str) {
   return base.replace(/([A-Z])/g, ' $1').trim();
 }
 
+/**
+ * Generate the "module index" page markup in the same style as the homepage:
+ *   - Subtle grid background
+ *   - White card with red corner brackets
+ *   - Link list inside
+ * @param {string} moduleName - The folder name of the module
+ * @param {string} liTags - The <li> tags (links) to display inside the card
+ */
+function moduleIndexPageMarkup(moduleName, liTags) {
+  return `
+<div className="min-h-screen bg-sky-50 relative flex flex-col justify-start items-center p-8">
+
+  {/* Faint grid background */}
+  <div
+    className="absolute inset-0 opacity-5 pointer-events-none"
+    style={{
+      backgroundImage: \`repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 40px,
+        #000 40px,
+        #000 41px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 40px,
+        #000 40px,
+        #000 41px
+      )\`
+    }}
+    aria-hidden="true"
+  />
+
+  {/* White card */}
+  <div className="relative bg-white shadow-2xl px-8 py-10 max-w-3xl w-full">
+
+    {/* Corner brackets */}
+    <div className="absolute top-0 left-0 w-5 h-5 border-t-2 border-l-2 border-red-600"></div>
+    <div className="absolute top-0 right-0 w-5 h-5 border-t-2 border-r-2 border-red-600"></div>
+    <div className="absolute bottom-0 left-0 w-5 h-5 border-b-2 border-l-2 border-red-600"></div>
+    <div className="absolute bottom-0 right-0 w-5 h-5 border-b-2 border-r-2 border-red-600"></div>
+
+    <h2 className="text-3xl font-bold text-red-600 mb-6 uppercase text-center">
+      ${moduleName} module
+    </h2>
+
+    <ul className="list-none p-0 text-center space-y-4">
+      ${liTags}
+    </ul>
+  </div>
+</div>
+  `;
+}
+
 // --------------------------
 // 1. DISCOVER APPS & MODULES
 // --------------------------
@@ -151,28 +206,27 @@ const routesForTopLevel = topLevelApps.map(filename => {
 // Module routes
 const routesForModules = [];
 Object.keys(modules).forEach(moduleName => {
-  // Module's "index" page
+  // Build <li> items for sub-apps inside the module
+  const liTags = modules[moduleName].map(appFile => {
+    const route = `/${toRouteName(moduleName)}/${toRouteName(appFile)}`;
+    return `
+      <li>
+        <Link
+          to="${route}"
+          className="text-xl underline text-red-600 hover:text-red-800"
+        >
+          ${toNiceTitle(appFile)}
+        </Link>
+      </li>
+    `;
+  }).join('');
+
+  // Module's "index" page (the folder menu)
   routesForModules.push(`
     <Route
       path="/${toRouteName(moduleName)}"
       element={
-        <div className="text-center p-8">
-        <h2 className="text-2xl font-bold mb-4">${moduleName} module</h2>
-        <ul className="list-none p-0">
-            ${
-              modules[moduleName].map(appFile => {
-                const route = `/${toRouteName(moduleName)}/${toRouteName(appFile)}`;
-                return `
-                    <li className="mb-3">
-                    <Link to="${route}" className="text-xl underline text-blue-600 hover:text-blue-400">
-                      ${toNiceTitle(appFile)}
-                    </Link>
-                  </li>
-                `;
-              }).join('')
-            }
-          </ul>
-        </div>
+        ${moduleIndexPageMarkup(moduleName, liTags)}
       }
     />
   `);
@@ -221,39 +275,107 @@ const topLevelLinks = topLevelApps.map(filename => {
 
 /**
  * This is the JSX that goes in the "homepage" route (path="/").
- * Notice references to 'modules' and 'topLevelApps'. We need
- * to inject them as constants in the final output so we can do
- * {Object.keys(modules).length > 0 && ...} safely in runtime.
  */
 const homepageElement = `
-<div className="text-center p-8 bg-slate-200">
-  <h1 className="text-3xl font-bold mb-4">
-    Welcome to Interactive Learning Apps
-  </h1>
+<div className="min-h-screen bg-sky-50 relative flex flex-col">
 
-  <nav className="mt-4">
+  {/* Faint repeating grid background (like AI timeline) */}
+  <div
+    className="absolute inset-0 opacity-5 pointer-events-none"
+    style={{
+      backgroundImage: \`repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 40px,
+        #000 40px,
+        #000 41px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 40px,
+        #000 40px,
+        #000 41px
+      )\`
+    }}
+    aria-hidden="true"
+  ></div>
 
-    {/* Only show Modules heading if there's at least one module */}
-    {Object.keys(modules).length > 0 && (
-      <>
-        <h2 className="font-bold text-2xl">Modules</h2>
-        <ul style={{ listStyle: 'none', padding: 0 }}>
-          ${moduleLinks}
-        </ul>
-      </>
-    )}
+  {/* Red gradient header */}
+  <header className="bg-gradient-to-b from-red-600 to-red-700 p-8 shadow-xl z-10">
+    <h1 className="text-5xl font-extrabold text-white mb-2 text-center tracking-widest">
+      Interactive Learning Apps
+    </h1>
+    <div className="max-w-xl mx-auto">
+      <div className="h-px bg-sky-200 opacity-50"></div>
+    </div>
+  </header>
 
-    {/* Only show Other Apps heading if there's at least one top-level app */}
-    {topLevelApps.length > 0 && (
-      <>
-        <h2 className="font-bold text-2xl">Other apps</h2>
-        <ul style={{ listStyle: 'none', padding: 0 }}>
-          ${topLevelLinks}
-        </ul>
-      </>
-    )}
+  {/* Main container for the modules/apps list */}
+  <div className="flex-grow p-8 z-10 flex justify-center items-start">
+    {/* White 'card' mimicking timeline style */}
+    <div className="relative bg-white shadow-2xl px-8 py-10 max-w-3xl w-full">
+      {/* Red corner brackets: top-left */}
+      <div
+        className="absolute top-0 left-0 w-5 h-5 border-t-2 border-l-2 border-red-600"
+        aria-hidden="true"
+      ></div>
+      {/* top-right */}
+      <div
+        className="absolute top-0 right-0 w-5 h-5 border-t-2 border-r-2 border-red-600"
+        aria-hidden="true"
+      ></div>
+      {/* bottom-left */}
+      <div
+        className="absolute bottom-0 left-0 w-5 h-5 border-b-2 border-l-2 border-red-600"
+        aria-hidden="true"
+      ></div>
+      {/* bottom-right */}
+      <div
+        className="absolute bottom-0 right-0 w-5 h-5 border-b-2 border-r-2 border-red-600"
+        aria-hidden="true"
+      ></div>
 
-  </nav>
+      {/* Actual links */}
+      <nav className="text-center space-y-12">
+        {/* Modules Section */}
+        {Object.keys(modules).length > 0 && (
+          <section>
+            <h2 className="text-3xl font-bold text-red-600 mb-4 uppercase tracking-wide">
+              Modules
+            </h2>
+            <ul className="list-none flex flex-col items-center space-y-3">
+              ${moduleLinks
+                .replaceAll('style={{ marginBottom: \'1rem\' }}', '')
+                .replaceAll(
+                  'style={{ fontSize: \'1.2rem\', textDecoration: \'underline\' }}',
+                  'className="text-lg font-semibold underline text-red-600 hover:text-red-800 transition-colors"'
+                )
+              }
+            </ul>
+          </section>
+        )}
+
+        {/* Other Apps Section */}
+        {topLevelApps.length > 0 && (
+          <section>
+            <h2 className="text-3xl font-bold text-blue-700 mb-4 uppercase tracking-wide">
+              Other Apps
+            </h2>
+            <ul className="list-none flex flex-col items-center space-y-3">
+              ${topLevelLinks
+                .replaceAll('style={{ marginBottom: \'1rem\' }}', '')
+                .replaceAll(
+                  'style={{ fontSize: \'1.2rem\', textDecoration: \'underline\' }}',
+                  'className="text-lg font-semibold underline text-blue-700 hover:text-blue-900 transition-colors"'
+                )
+              }
+            </ul>
+          </section>
+        )}
+      </nav>
+    </div>
+  </div>
 </div>
 `;
 
