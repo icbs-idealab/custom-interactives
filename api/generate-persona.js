@@ -80,8 +80,12 @@ Respond using only valid JSON that exactly conforms to the provided schema.
       response_format: zodResponseFormat(PersonaSchema, "persona"),
     });
 
+    // Log the entire completion object for debugging
+    console.log("Full completion object:", JSON.stringify(completion, null, 2));
+
     // Extract the structured persona from the response
     const personaData = completion.choices[0].message.parsed;
+    console.log("Parsed persona data:", JSON.stringify(personaData, null, 2));
 
     // 2) Generate an image using DALL·E 3
     // Create an image prompt that uses some persona details (adjust as desired)
@@ -94,6 +98,7 @@ The portrait should reflect a style that fits a consumer who embraces a ${
       personaData.psychographics.lifestyle || "modern"
     } lifestyle. Use a minimal background.
 `;
+    console.log("Image prompt:", imagePrompt);
 
     const imageResponse = await openai.images.generate({
       prompt: imagePrompt,
@@ -101,8 +106,20 @@ The portrait should reflect a style that fits a consumer who embraces a ${
       size: "512x512", // You can also use 1024x1024 if preferred
     });
 
-    // Extract the image URL
-    const imageUrl = imageResponse.data[0].url;
+    // Log the full image response object for debugging
+    console.log("Full image response:", JSON.stringify(imageResponse, null, 2));
+
+    // Extract the image URL, with defensive check
+    const imageUrl =
+      imageResponse.data &&
+      imageResponse.data.length > 0 &&
+      imageResponse.data[0].url
+        ? imageResponse.data[0].url
+        : null;
+
+    if (!imageUrl) {
+      throw new Error("Image URL not found in response from DALL·E 3");
+    }
 
     // Combine persona data and image URL in the final response
     const finalResponse = {
@@ -113,8 +130,7 @@ The portrait should reflect a style that fits a consumer who embraces a ${
     return res.status(200).json(finalResponse);
   } catch (error) {
     console.error("Error generating consumer persona:", error);
-
-    res.status(500).json({
+    return res.status(500).json({
       error: "Failed to generate consumer persona",
       details: error.message || "Unknown error occurred",
     });
