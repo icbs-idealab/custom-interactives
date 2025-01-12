@@ -11,6 +11,7 @@ import MarketingFundamentals_PositioningStatementGlobal from './apps/MarketingFu
 import SmoTim_AITimeline from './apps/SmoTim/AITimeline.js';
 import SmoTim_BlockchainDemo from './apps/SmoTim/BlockchainDemo.js';
 import SmoTim_CampaignIdeas from './apps/SmoTim/CampaignIdeas.js';
+import SmoTim_ConsumerPersona from './apps/SmoTim/ConsumerPersona.js';
 import SmoTim_DragDropTimeline from './apps/SmoTim/DragDropTimeline.js';
 import SmoTim_TimModuleMap from './apps/SmoTim/TimModuleMap.js';
 import TestApps_AverageCalculator from './apps/TestApps/AverageCalculator.js';
@@ -35,6 +36,7 @@ const modules = {
     "AITimeline.js",
     "BlockchainDemo.js",
     "CampaignIdeas.js",
+    "ConsumerPersona.js",
     "DragDropTimeline.js",
     "TimModuleMap.js"
   ],
@@ -67,6 +69,7 @@ function DynamicTitle() {
       '/smotim/aitimeline': 'A I Timeline',
       '/smotim/blockchaindemo': 'Blockchain Demo',
       '/smotim/campaignideas': 'Campaign Ideas',
+      '/smotim/consumerpersona': 'Consumer Persona',
       '/smotim/dragdroptimeline': 'Drag Drop Timeline',
       '/smotim/timmodulemap': 'Tim Module Map',
       '/testapps': 'TestApps',
@@ -404,6 +407,15 @@ function App() {
     
       <li>
         <Link
+          to="/smotim/consumerpersona"
+          className="text-xl underline text-red-600 hover:text-red-800"
+        >
+          Consumer Persona
+        </Link>
+      </li>
+    
+      <li>
+        <Link
           to="/smotim/dragdroptimeline"
           className="text-xl underline text-red-600 hover:text-red-800"
         >
@@ -453,6 +465,16 @@ function App() {
         element={
           <ResizeWrapper>
             <SmoTim_CampaignIdeas />
+          </ResizeWrapper>
+        }
+      />
+    
+
+      <Route
+        path="/smotim/consumerpersona"
+        element={
+          <ResizeWrapper>
+            <SmoTim_ConsumerPersona />
           </ResizeWrapper>
         }
       />
