@@ -100,28 +100,30 @@ The portrait should reflect a style that fits a consumer who embraces a ${
 `;
     console.log("Image prompt:", imagePrompt);
 
-    const imageResponse = await openai.images.generate({
-        model: "dall-e-2", // using the DALL·E 2 model
-        prompt: imagePrompt,
-      n: 1,
-      size: "512x512", // You can also use 1024x1024 if preferred
-    });
-
-    // Log the full image response object for debugging
-    console.log("Full image response:", JSON.stringify(imageResponse, null, 2));
-
-    // Extract the image URL, with defensive check
-    const imageUrl =
-      imageResponse.data &&
-      imageResponse.data.length > 0 &&
-      imageResponse.data[0].url
-        ? imageResponse.data[0].url
-        : null;
-
-    if (!imageUrl) {
-      throw new Error("Image URL not found in response from DALL·E 3");
-    }
-
+// Generate image using the basic image creation method (DALL·E 2)
+const imageResponse = await openai.createImage({
+    prompt: imagePrompt,
+    n: 1,
+    size: "512x512", // You can change this to "1024x1024" if desired
+  });
+  
+  // Log the full image response for debugging
+  console.log("Full image response:", JSON.stringify(imageResponse, null, 2));
+  
+  // Extract the image URL from the response
+  const imageUrl =
+    imageResponse.data &&
+    imageResponse.data.data &&
+    Array.isArray(imageResponse.data.data) &&
+    imageResponse.data.data.length > 0 &&
+    imageResponse.data.data[0].url
+      ? imageResponse.data.data[0].url
+      : null;
+  
+  if (!imageUrl) {
+    throw new Error("Image URL not found in response from the image generation endpoint");
+  }
+  
     // Combine persona data and image URL in the final response
     const finalResponse = {
       ...personaData,
