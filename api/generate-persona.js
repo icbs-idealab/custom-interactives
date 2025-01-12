@@ -49,7 +49,7 @@ export default async function handler(req, res) {
   try {
     // Use GPT-4o with Structured Outputs to create a persona JSON
     const completion = await openai.beta.chat.completions.parse({
-      model: "gpt-4o-2024-08-06", // or another supported GPT-4o model
+      model: "gpt-4-turbo", // or another supported GPT-4o model
       messages: [
         {
           role: "system",
