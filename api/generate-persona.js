@@ -101,7 +101,8 @@ The portrait should reflect a style that fits a consumer who embraces a ${
     console.log("Image prompt:", imagePrompt);
 
     const imageResponse = await openai.images.generate({
-      prompt: imagePrompt,
+        model: "dall-e-2", // using the DALL·E 2 model
+        prompt: imagePrompt,
       n: 1,
       size: "512x512", // You can also use 1024x1024 if preferred
     });
