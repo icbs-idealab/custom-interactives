@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { User, Heart, ShoppingCart, Smartphone, BookOpen } from "lucide-react";
 
 const ConsumerPersona = () => {
   const [formData, setFormData] = useState({
@@ -147,17 +148,9 @@ const ConsumerPersona = () => {
         <div className="sr-only" aria-live="polite" ref={liveRegionRef} />
         <div className="sr-only" aria-live="assertive" ref={errorRegionRef} />
 
-        <div
-          ref={formRef}
-          role="form"
-          aria-describedby="globalErrorContainer"
-          className="space-y-6 mb-8"
-        >
+        <div ref={formRef} role="form" aria-describedby="globalErrorContainer" className="space-y-6 mb-8">
           <div className="bg-white p-6 shadow-md rounded-lg border border-gray-200">
-            <label
-              htmlFor="brandName"
-              className="block text-lg font-semibold text-gray-800 mb-2"
-            >
+            <label htmlFor="brandName" className="block text-lg font-semibold text-gray-800 mb-2">
               Brand Name
             </label>
             <textarea
@@ -174,10 +167,7 @@ const ConsumerPersona = () => {
               rows="2"
             />
             {fieldErrors.brandName && (
-              <p
-                id={`brandNameError_${fieldErrors.brandName ? "error" : ""}`}
-                className="text-red-500 text-sm mt-1"
-              >
+              <p id={`brandNameError_${fieldErrors.brandName ? "error" : ""}`} className="text-red-500 text-sm mt-1">
                 {fieldErrors.brandName}
               </p>
             )}
@@ -187,10 +177,7 @@ const ConsumerPersona = () => {
           </div>
 
           <div className="bg-white p-6 shadow-md rounded-lg border border-gray-200">
-            <label
-              htmlFor="brandDescription"
-              className="block text-lg font-semibold text-gray-800 mb-2"
-            >
+            <label htmlFor="brandDescription" className="block text-lg font-semibold text-gray-800 mb-2">
               Brand Description
             </label>
             <textarea
@@ -207,10 +194,7 @@ const ConsumerPersona = () => {
               rows="3"
             />
             {fieldErrors.brandDescription && (
-              <p
-                id={`brandDescriptionError_${fieldErrors.brandDescription ? "error" : ""}`}
-                className="text-red-500 text-sm mt-1"
-              >
+              <p id={`brandDescriptionError_${fieldErrors.brandDescription ? "error" : ""}`} className="text-red-500 text-sm mt-1">
                 {fieldErrors.brandDescription}
               </p>
             )}
@@ -222,11 +206,7 @@ const ConsumerPersona = () => {
 
         {getErrorSummary()}
         {fieldErrors.global && (
-          <div
-            id="globalErrorContainer"
-            aria-live="assertive"
-            className="text-red-500 text-center mt-4"
-          >
+          <div id="globalErrorContainer" aria-live="assertive" className="text-red-500 text-center mt-4">
             {fieldErrors.global}
           </div>
         )}
@@ -255,20 +235,19 @@ const ConsumerPersona = () => {
           )}
         </button>
 
-        {/* Updated Generated Persona Display */}
         {persona && (
           <div className="mt-12" aria-live="polite" ref={generatedContentRef}>
-            <h2
-              className="text-3xl font-bold text-center text-indigo-700 mb-8 focus:outline-none"
-              tabIndex="-1"
-            >
+            <h2 className="text-3xl font-bold text-center text-indigo-900 mb-8 focus:outline-none" tabIndex="-1">
               Consumer Persona
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Demographics */}
-              <div className="bg-gradient-to-tr from-purple-600 to-indigo-600 text-white p-6 rounded-xl shadow-xl transform transition hover:scale-105">
-                <h3 className="text-2xl font-semibold mb-3 border-b pb-1">Demographics</h3>
+              <div className="bg-gradient-to-tr from-gray-800 to-gray-700 text-white p-6 rounded-xl shadow-xl transform transition hover:scale-105">
+                <div className="flex items-center mb-3">
+                  <User className="h-6 w-6 mr-2" aria-hidden="true" />
+                  <h3 className="text-2xl font-semibold border-b pb-1">Demographics</h3>
+                </div>
                 <ul className="space-y-2">
                   <li>
                     <strong>Name:</strong> {persona.demographics?.name}
@@ -295,8 +274,11 @@ const ConsumerPersona = () => {
               </div>
 
               {/* Psychographics */}
-              <div className="bg-gradient-to-tr from-green-500 to-teal-500 text-white p-6 rounded-xl shadow-xl transform transition hover:scale-105">
-                <h3 className="text-2xl font-semibold mb-3 border-b pb-1">Psychographics</h3>
+              <div className="bg-gradient-to-tr from-blue-900 to-blue-800 text-white p-6 rounded-xl shadow-xl transform transition hover:scale-105">
+                <div className="flex items-center mb-3">
+                  <Heart className="h-6 w-6 mr-2" aria-hidden="true" />
+                  <h3 className="text-2xl font-semibold border-b pb-1">Psychographics</h3>
+                </div>
                 <ul className="space-y-2">
                   <li>
                     <strong>Values & Beliefs:</strong> {persona.psychographics?.valuesAndBeliefs}
@@ -314,8 +296,11 @@ const ConsumerPersona = () => {
               </div>
 
               {/* Behavioral */}
-              <div className="bg-gradient-to-tr from-pink-500 to-red-500 text-white p-6 rounded-xl shadow-xl transform transition hover:scale-105">
-                <h3 className="text-2xl font-semibold mb-3 border-b pb-1">Behavioral</h3>
+              <div className="bg-gradient-to-tr from-red-900 to-red-800 text-white p-6 rounded-xl shadow-xl transform transition hover:scale-105">
+                <div className="flex items-center mb-3">
+                  <ShoppingCart className="h-6 w-6 mr-2" aria-hidden="true" />
+                  <h3 className="text-2xl font-semibold border-b pb-1">Behavioral</h3>
+                </div>
                 <ul className="space-y-2">
                   <li>
                     <strong>Buying Habits:</strong> {persona.behavioral?.buyingHabits}
@@ -333,8 +318,11 @@ const ConsumerPersona = () => {
               </div>
 
               {/* Situational */}
-              <div className="bg-gradient-to-tr from-yellow-500 to-orange-500 text-white p-6 rounded-xl shadow-xl transform transition hover:scale-105">
-                <h3 className="text-2xl font-semibold mb-3 border-b pb-1">Situational</h3>
+              <div className="bg-gradient-to-tr from-green-900 to-green-800 text-white p-6 rounded-xl shadow-xl transform transition hover:scale-105">
+                <div className="flex items-center mb-3">
+                  <Smartphone className="h-6 w-6 mr-2" aria-hidden="true" />
+                  <h3 className="text-2xl font-semibold border-b pb-1">Situational</h3>
+                </div>
                 <ul className="space-y-2">
                   <li>
                     <strong>Tech Usage:</strong> {persona.situational?.technologyUsage}
@@ -353,15 +341,18 @@ const ConsumerPersona = () => {
             </div>
 
             {/* Context & Story */}
-            <div className="bg-white p-8 rounded-xl shadow-2xl border border-gray-200 mt-10 transform transition hover:scale-105">
-              <h3 className="text-2xl font-semibold text-indigo-700 mb-4 border-b pb-1">
-                Context & Story
-              </h3>
+            <div className="bg-white p-8 rounded-xl shadow-2xl border border-gray-300 mt-10 transform transition hover:scale-105">
+              <div className="flex items-center mb-3">
+                <BookOpen className="h-6 w-6 mr-2 text-indigo-900" aria-hidden="true" />
+                <h3 className="text-2xl font-semibold text-indigo-900 border-b pb-1">
+                  Context & Story
+                </h3>
+              </div>
               <p className="text-gray-800 mb-3">
-                <span className="font-semibold">Quote:</span> {persona.quote}
+                <strong>Quote:</strong> {persona.quote}
               </p>
               <p className="text-gray-800">
-                <span className="font-semibold">Scenario:</span> {persona.scenario}
+                <strong>Scenario:</strong> {persona.scenario}
               </p>
             </div>
           </div>
