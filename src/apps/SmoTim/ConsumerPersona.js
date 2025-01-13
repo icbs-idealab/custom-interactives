@@ -122,7 +122,9 @@ const ConsumerPersona = () => {
   };
 
   const getErrorSummary = () => {
-    const errorKeys = Object.keys(fieldErrors).filter((key) => key !== "global" && fieldErrors[key]);
+    const errorKeys = Object.keys(fieldErrors).filter(
+      (key) => key !== "global" && fieldErrors[key]
+    );
     if (errorKeys.length === 0) {
       return null;
     }
@@ -145,9 +147,17 @@ const ConsumerPersona = () => {
         <div className="sr-only" aria-live="polite" ref={liveRegionRef} />
         <div className="sr-only" aria-live="assertive" ref={errorRegionRef} />
 
-        <div ref={formRef} role="form" aria-describedby="globalErrorContainer" className="space-y-6 mb-8">
+        <div
+          ref={formRef}
+          role="form"
+          aria-describedby="globalErrorContainer"
+          className="space-y-6 mb-8"
+        >
           <div className="bg-white p-6 shadow-md rounded-lg border border-gray-200">
-            <label htmlFor="brandName" className="block text-lg font-semibold text-gray-800 mb-2">
+            <label
+              htmlFor="brandName"
+              className="block text-lg font-semibold text-gray-800 mb-2"
+            >
               Brand Name
             </label>
             <textarea
@@ -164,7 +174,10 @@ const ConsumerPersona = () => {
               rows="2"
             />
             {fieldErrors.brandName && (
-              <p id={`brandNameError_${fieldErrors.brandName ? "error" : ""}`} className="text-red-500 text-sm mt-1">
+              <p
+                id={`brandNameError_${fieldErrors.brandName ? "error" : ""}`}
+                className="text-red-500 text-sm mt-1"
+              >
                 {fieldErrors.brandName}
               </p>
             )}
@@ -174,7 +187,10 @@ const ConsumerPersona = () => {
           </div>
 
           <div className="bg-white p-6 shadow-md rounded-lg border border-gray-200">
-            <label htmlFor="brandDescription" className="block text-lg font-semibold text-gray-800 mb-2">
+            <label
+              htmlFor="brandDescription"
+              className="block text-lg font-semibold text-gray-800 mb-2"
+            >
               Brand Description
             </label>
             <textarea
@@ -191,7 +207,10 @@ const ConsumerPersona = () => {
               rows="3"
             />
             {fieldErrors.brandDescription && (
-              <p id={`brandDescriptionError_${fieldErrors.brandDescription ? "error" : ""}`} className="text-red-500 text-sm mt-1">
+              <p
+                id={`brandDescriptionError_${fieldErrors.brandDescription ? "error" : ""}`}
+                className="text-red-500 text-sm mt-1"
+              >
                 {fieldErrors.brandDescription}
               </p>
             )}
@@ -203,7 +222,11 @@ const ConsumerPersona = () => {
 
         {getErrorSummary()}
         {fieldErrors.global && (
-          <div id="globalErrorContainer" aria-live="assertive" className="text-red-500 text-center mt-4">
+          <div
+            id="globalErrorContainer"
+            aria-live="assertive"
+            className="text-red-500 text-center mt-4"
+          >
             {fieldErrors.global}
           </div>
         )}
@@ -232,16 +255,21 @@ const ConsumerPersona = () => {
           )}
         </button>
 
+        {/* Updated Generated Persona Display */}
         {persona && (
-          <div className="mt-12 space-y-8" aria-live="polite" ref={generatedContentRef}>
-            <h2 className="text-3xl font-bold text-center text-indigo-700" tabIndex="-1">
+          <div className="mt-12" aria-live="polite" ref={generatedContentRef}>
+            <h2
+              className="text-3xl font-bold text-center text-indigo-700 mb-8 focus:outline-none"
+              tabIndex="-1"
+            >
               Consumer Persona
             </h2>
-            <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Demographics */}
-              <section className="mb-6">
-                <h3 className="text-2xl font-semibold text-gray-800 mb-3">Demographics</h3>
-                <ul className="space-y-1 ml-6 list-disc text-gray-700">
+              <div className="bg-gradient-to-tr from-purple-600 to-indigo-600 text-white p-6 rounded-xl shadow-xl transform transition hover:scale-105">
+                <h3 className="text-2xl font-semibold mb-3 border-b pb-1">Demographics</h3>
+                <ul className="space-y-2">
                   <li>
                     <strong>Name:</strong> {persona.demographics?.name}
                   </li>
@@ -264,31 +292,31 @@ const ConsumerPersona = () => {
                     <strong>Location:</strong> {persona.demographics?.location}
                   </li>
                 </ul>
-              </section>
+              </div>
 
               {/* Psychographics */}
-              <section className="mb-6">
-                <h3 className="text-2xl font-semibold text-gray-800 mb-3">Psychographics</h3>
-                <ul className="space-y-1 ml-6 list-disc text-gray-700">
+              <div className="bg-gradient-to-tr from-green-500 to-teal-500 text-white p-6 rounded-xl shadow-xl transform transition hover:scale-105">
+                <h3 className="text-2xl font-semibold mb-3 border-b pb-1">Psychographics</h3>
+                <ul className="space-y-2">
                   <li>
-                    <strong>Values and Beliefs:</strong> {persona.psychographics?.valuesAndBeliefs}
+                    <strong>Values & Beliefs:</strong> {persona.psychographics?.valuesAndBeliefs}
                   </li>
                   <li>
                     <strong>Lifestyle:</strong> {persona.psychographics?.lifestyle}
                   </li>
                   <li>
-                    <strong>Personality Traits:</strong> {persona.psychographics?.personalityTraits}
+                    <strong>Personality:</strong> {persona.psychographics?.personalityTraits}
                   </li>
                   <li>
-                    <strong>Goals and Aspirations:</strong> {persona.psychographics?.goalsAndAspirations}
+                    <strong>Goals & Aspirations:</strong> {persona.psychographics?.goalsAndAspirations}
                   </li>
                 </ul>
-              </section>
+              </div>
 
               {/* Behavioral */}
-              <section className="mb-6">
-                <h3 className="text-2xl font-semibold text-gray-800 mb-3">Behavioral</h3>
-                <ul className="space-y-1 ml-6 list-disc text-gray-700">
+              <div className="bg-gradient-to-tr from-pink-500 to-red-500 text-white p-6 rounded-xl shadow-xl transform transition hover:scale-105">
+                <h3 className="text-2xl font-semibold mb-3 border-b pb-1">Behavioral</h3>
+                <ul className="space-y-2">
                   <li>
                     <strong>Buying Habits:</strong> {persona.behavioral?.buyingHabits}
                   </li>
@@ -302,37 +330,39 @@ const ConsumerPersona = () => {
                     <strong>Preferred Channels:</strong> {persona.behavioral?.preferredChannels}
                   </li>
                 </ul>
-              </section>
+              </div>
 
               {/* Situational */}
-              <section className="mb-6">
-                <h3 className="text-2xl font-semibold text-gray-800 mb-3">Situational Details</h3>
-                <ul className="space-y-1 ml-6 list-disc text-gray-700">
+              <div className="bg-gradient-to-tr from-yellow-500 to-orange-500 text-white p-6 rounded-xl shadow-xl transform transition hover:scale-105">
+                <h3 className="text-2xl font-semibold mb-3 border-b pb-1">Situational</h3>
+                <ul className="space-y-2">
                   <li>
-                    <strong>Technology Usage:</strong> {persona.situational?.technologyUsage}
+                    <strong>Tech Usage:</strong> {persona.situational?.technologyUsage}
                   </li>
                   <li>
-                    <strong>Decision-Making Process:</strong> {persona.situational?.decisionMakingProcess}
+                    <strong>Decision Process:</strong> {persona.situational?.decisionMakingProcess}
                   </li>
                   <li>
                     <strong>Brand Affinities:</strong> {persona.situational?.brandAffinities}
                   </li>
                   <li>
-                    <strong>Role in Buying Process:</strong> {persona.situational?.roleInBuyingProcess}
+                    <strong>Role in Buying:</strong> {persona.situational?.roleInBuyingProcess}
                   </li>
                 </ul>
-              </section>
+              </div>
+            </div>
 
-              {/* Context & Story */}
-              <section>
-                <h3 className="text-2xl font-semibold text-gray-800 mb-3">Context & Story</h3>
-                <p className="text-gray-700 mb-2">
-                  <strong>Quote:</strong> {persona.quote}
-                </p>
-                <p className="text-gray-700">
-                  <strong>Scenario:</strong> {persona.scenario}
-                </p>
-              </section>
+            {/* Context & Story */}
+            <div className="bg-white p-8 rounded-xl shadow-2xl border border-gray-200 mt-10 transform transition hover:scale-105">
+              <h3 className="text-2xl font-semibold text-indigo-700 mb-4 border-b pb-1">
+                Context & Story
+              </h3>
+              <p className="text-gray-800 mb-3">
+                <span className="font-semibold">Quote:</span> {persona.quote}
+              </p>
+              <p className="text-gray-800">
+                <span className="font-semibold">Scenario:</span> {persona.scenario}
+              </p>
             </div>
           </div>
         )}
