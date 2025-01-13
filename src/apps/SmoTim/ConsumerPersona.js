@@ -139,7 +139,7 @@ const ConsumerPersona = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-4">
+    <div className="min-h-full bg-gradient-to-br from-indigo-50 to-purple-50 p-4">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-extrabold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
           Consumer Persona Generator
@@ -299,7 +299,7 @@ const ConsumerPersona = () => {
               <div className="bg-gradient-to-tr from-red-900 to-red-800 text-white p-6 rounded-xl shadow-xl transform transition hover:scale-105">
                 <div className="flex items-center mb-3">
                   <ShoppingCart className="h-6 w-6 mr-2" aria-hidden="true" />
-                  <h3 className="text-2xl font-semibold border-b pb-1">Behavioral</h3>
+                  <h3 className="text-2xl font-semibold border-b pb-1">Behavioural</h3>
                 </div>
                 <ul className="space-y-2">
                   <li>
