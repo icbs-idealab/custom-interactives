@@ -19,7 +19,6 @@ import TestApps_CounterApp from './apps/TestApps/CounterApp.js';
 import TestApps_DoubleNumber from './apps/TestApps/DoubleNumber.js';
 import TestApps_FluidAI from './apps/TestApps/FluidAI.js';
 import TestApps_MarketingDashboard from './apps/TestApps/MarketingDashboard.js';
-import TestApps_SurveyBuilder from './apps/TestApps/SurveyBuilder.js';
 import TestApps_TestApp__copy_ from './apps/TestApps/TestApp (copy).js';
 import TestApps_TestApp from './apps/TestApps/TestApp.js';
 import TestApps_ToggleSwitchApp from './apps/TestApps/ToggleSwitchApp.js';
@@ -48,7 +47,6 @@ const modules = {
     "DoubleNumber.js",
     "FluidAI.js",
     "MarketingDashboard.js",
-    "SurveyBuilder.js",
     "TestApp (copy).js",
     "TestApp.js",
     "ToggleSwitchApp.js"
@@ -82,7 +80,6 @@ function DynamicTitle() {
       '/testapps/doublenumber': 'Double Number',
       '/testapps/fluidai': 'Fluid A I',
       '/testapps/marketingdashboard': 'Marketing Dashboard',
-      '/testapps/surveybuilder': 'Survey Builder',
       '/testapps/testapp (copy)': 'Test App (copy)',
       '/testapps/testapp': 'Test App',
       '/testapps/toggleswitchapp': 'Toggle Switch App'
@@ -596,15 +593,6 @@ function App() {
     
       <li>
         <Link
-          to="/testapps/surveybuilder"
-          className="text-xl underline text-red-600 hover:text-red-800"
-        >
-          Survey Builder
-        </Link>
-      </li>
-    
-      <li>
-        <Link
           to="/testapps/testapp (copy)"
           className="text-xl underline text-red-600 hover:text-red-800"
         >
@@ -683,16 +671,6 @@ function App() {
         element={
           <ResizeWrapper>
             <TestApps_MarketingDashboard />
-          </ResizeWrapper>
-        }
-      />
-    
-
-      <Route
-        path="/testapps/surveybuilder"
-        element={
-          <ResizeWrapper>
-            <TestApps_SurveyBuilder />
           </ResizeWrapper>
         }
       />
