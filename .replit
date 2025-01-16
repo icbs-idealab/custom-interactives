@@ -1,5 +1,5 @@
 modules = ["nodejs-20", "python-3.11", "web"]
-run = "npm run start"
+run = "npx nodemon --watch src/apps --exec 'node updateAppJs.js && npm start'"
 
 [nix]
 channel = "stable-24_05"
