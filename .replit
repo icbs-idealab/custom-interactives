@@ -14,3 +14,4 @@ externalPort = 80
 [watches]
 path = "src/apps"
 onFileChange = ["node", "updateAppJs.js"]
+enable = true
