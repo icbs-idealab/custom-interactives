@@ -10,3 +10,7 @@ run = ["sh", "-c", "npm run start"]
 [[ports]]
 localPort = 3000
 externalPort = 80
+
+[watches]
+path = "src/apps"
+onFileChange = ["node", "updateAppJs.js"]
