@@ -23,14 +23,12 @@ const AverageCalculator = () => {
         }
 
         const userId = generateUserId();
-        const { error } = await supabase
-            .from("app_data")
-            .insert([
-                {
-                    app_id: appId,
-                    data: { number: Number(inputNumber), userId },
-                },
-            ]);
+        const { error } = await supabase.from("app_data").insert([
+            {
+                app_id: appId,
+                data: { number: Number(inputNumber), userId },
+            },
+        ]);
 
         if (error) {
             console.error("Error saving number:", error);
@@ -44,10 +42,23 @@ const AverageCalculator = () => {
     };
 
     const fetchAverage = async () => {
+        const currentYear = new Date().getFullYear();
+        const startOfYear = new Date(currentYear, 0, 1).toISOString();
+        const endOfYear = new Date(
+            currentYear,
+            11,
+            31,
+            23,
+            59,
+            59,
+        ).toISOString();
+
         const { data, error } = await supabase
             .from("app_data")
-            .select("data")
-            .eq("app_id", appId);
+            .select("data, created_at")
+            .eq("app_id", appId)
+            .gte("created_at", startOfYear)
+            .lte("created_at", endOfYear);
 
         if (error) {
             console.error("Error fetching numbers:", error);
@@ -61,7 +72,7 @@ const AverageCalculator = () => {
 
         setAllInputs(numbers);
         setAverage(avg);
-        setStatus("");
+        setStatus(`Showing data for ${currentYear}`);
     };
 
     const resetSubmission = async () => {
