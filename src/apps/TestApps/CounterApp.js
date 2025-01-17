@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const CounterApp = () => {
   const [count, setCount] = useState(0);
@@ -21,7 +21,7 @@ const CounterApp = () => {
           onClick={decrement}
           className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
         >
-          Decrement
+          Decrement!
         </button>
       </div>
     </div>

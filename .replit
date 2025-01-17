@@ -1,5 +1,5 @@
 modules = ["nodejs-20", "python-3.11", "web"]
-run = "npx nodemon --watch src/apps --exec 'node updateAppJs.js && npm start'"
+run = "npm start"
 
 [nix]
 channel = "stable-24_05"
@@ -11,7 +11,22 @@ run = ["sh", "-c", "npm run start"]
 localPort = 3000
 externalPort = 80
 
-[watches]
-path = "src/apps"
-onFileChange = ["node", "updateAppJs.js"]
-enable = true
+# BELOW CODE COULD REPLACE ABOVE IF WE WANT THE APP TO AUTOMATICALLY REBUILD EVERYTIME A CHANGE IS MADE. MEANS YOU DON'T HAVE TO RUN node updateAppJs.js MANUALLY EACH TIME YOU ADD OR REMOVE AN APP, BUT ALSO MEANS IT FRUSTRATINGLY RELOADS EVERYTIME YOU MAKE A MODIFICATION TO A FILE. 
+
+# modules = ["nodejs-20", "python-3.11", "web"]
+# run = "npx nodemon --watch src/apps --exec 'node updateAppJs.js && npm start'"
+
+# [nix]
+# channel = "stable-24_05"
+
+# [deployment]
+# run = ["sh", "-c", "npm run start"]
+
+# [[ports]]
+# localPort = 3000
+# externalPort = 80
+
+# [watches]
+# path = "src/apps"
+# onFileChange = ["node", "updateAppJs.js"]
+# enable = true
