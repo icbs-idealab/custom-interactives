@@ -72,7 +72,7 @@ const AverageCalculator = () => {
 
         setAllInputs(numbers);
         setAverage(avg);
-        setStatus(`Showing data for ${currentYear}`);
+        setStatus("");
     };
 
     const resetSubmission = async () => {
