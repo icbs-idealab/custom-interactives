@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 //
 // 1. "Mined" hash: 12 chars, starting with '0000'
@@ -7,11 +7,11 @@ function calculateMinedHash(block) {
   const str = `${block.id}${block.timestamp}${block.data}${block.previousHash}${block.nonce}`;
   let hashNum = 0;
   for (let i = 0; i < str.length; i++) {
-    hashNum = ((hashNum << 5) - hashNum) + str.charCodeAt(i);
+    hashNum = (hashNum << 5) - hashNum + str.charCodeAt(i);
     hashNum = hashNum & hashNum; // force 32-bit
   }
-  const rawHex = Math.abs(hashNum).toString(16).padStart(8, '0');
-  return '0000' + rawHex; // total length 12, definitely starts with "0000"
+  const rawHex = Math.abs(hashNum).toString(16).padStart(8, "0");
+  return "0000" + rawHex; // total length 12, definitely starts with "0000"
 }
 
 //
@@ -24,25 +24,25 @@ function calculateUntetheredHash(block) {
   // PASS 1: integer shift => 8-hex
   let hashNum1 = 0;
   for (let i = 0; i < baseStr.length; i++) {
-    hashNum1 = ((hashNum1 << 5) - hashNum1) + baseStr.charCodeAt(i);
-    hashNum1 = hashNum1 & hashNum1; 
+    hashNum1 = (hashNum1 << 5) - hashNum1 + baseStr.charCodeAt(i);
+    hashNum1 = hashNum1 & hashNum1;
   }
-  const firstHex = Math.abs(hashNum1).toString(16).padStart(8, '0');
+  const firstHex = Math.abs(hashNum1).toString(16).padStart(8, "0");
 
   // PASS 2: feed firstHex into the same shift logic => second 8-hex
   let hashNum2 = 0;
   for (let j = 0; j < firstHex.length; j++) {
-    hashNum2 = ((hashNum2 << 5) - hashNum2) + firstHex.charCodeAt(j);
+    hashNum2 = (hashNum2 << 5) - hashNum2 + firstHex.charCodeAt(j);
     hashNum2 = hashNum2 & hashNum2;
   }
-  const secondHex = Math.abs(hashNum2).toString(16).padStart(8, '0');
+  const secondHex = Math.abs(hashNum2).toString(16).padStart(8, "0");
 
   // COMBINE => 16 hex chars => slice(0,12)
   let finalHex = (firstHex + secondHex).slice(0, 12);
 
   // If it starts with "0000", replace that with "abcd" so it never looks mined.
-  if (finalHex.startsWith('0000')) {
-    finalHex = 'abcd' + finalHex.slice(4);
+  if (finalHex.startsWith("0000")) {
+    finalHex = "abcd" + finalHex.slice(4);
   }
 
   return finalHex;
@@ -54,7 +54,7 @@ function calculateUntetheredHash(block) {
 function mineBlock(block) {
   let nonce = 0;
   let hash = calculateMinedHash({ ...block, nonce });
-  while (hash.slice(-1) !== '0' && nonce < 50000) {
+  while (hash.slice(-1) !== "0" && nonce < 50000) {
     nonce++;
     hash = calculateMinedHash({ ...block, nonce });
   }
@@ -74,7 +74,7 @@ function createInitialChain() {
     data: "Genesis block",
     previousHash: "0",
     nonce: 0,
-    isValid: true
+    isValid: true,
   };
   const minedGenesis = mineBlock(genesis);
   genesis.nonce = minedGenesis.nonce;
@@ -93,7 +93,7 @@ function createInitialChain() {
       data: `Block #${i} data`,
       previousHash: chain[chain.length - 1].hash,
       nonce: 0,
-      isValid: true
+      isValid: true,
     };
     const mined = mineBlock(newBlock);
     newBlock.nonce = mined.nonce;
@@ -128,8 +128,8 @@ export default function BlockchainDemo() {
       }
 
       // Decide if block is still "original" or "untethered"
-      const dataIsOriginal = (block.data === block.originalData);
-      const linkIsOriginal = (block.previousHash === block.originalPreviousHash);
+      const dataIsOriginal = block.data === block.originalData;
+      const linkIsOriginal = block.previousHash === block.originalPreviousHash;
 
       if (dataIsOriginal && linkIsOriginal) {
         // fully original => keep the original "mined" hash
@@ -141,12 +141,12 @@ export default function BlockchainDemo() {
     }
 
     // 6. Re-check validity
-    newBlocks[0].isValid = (newBlocks[0].data === newBlocks[0].originalData);
+    newBlocks[0].isValid = newBlocks[0].data === newBlocks[0].originalData;
     for (let i = 1; i < newBlocks.length; i++) {
       const prev = newBlocks[i - 1];
       const curr = newBlocks[i];
-      const dataUnchanged = (curr.data === curr.originalData);
-      const linkUnchanged = (curr.previousHash === curr.originalPreviousHash);
+      const dataUnchanged = curr.data === curr.originalData;
+      const linkUnchanged = curr.previousHash === curr.originalPreviousHash;
       curr.isValid = prev.isValid && dataUnchanged && linkUnchanged;
     }
 
@@ -163,8 +163,8 @@ export default function BlockchainDemo() {
           <div
             className={`w-full border-2 rounded-lg p-4 ${
               block.isValid
-                ? 'bg-green-50 border-green-200'
-                : 'bg-red-50 border-red-200'
+                ? "bg-green-50 border-green-200"
+                : "bg-red-50 border-red-200"
             }`}
           >
             <div className="grid grid-cols-2 gap-4">
@@ -202,7 +202,7 @@ export default function BlockchainDemo() {
           {idx < chain.length - 1 && (
             <div
               className={`py-2 ${
-                block.isValid ? 'text-green-600' : 'text-red-500'
+                block.isValid ? "text-green-600" : "text-red-500"
               }`}
             >
               {/* chain arrow or line */}
@@ -220,8 +220,8 @@ export default function BlockchainDemo() {
     <div className="flex flex-col md:flex-row flex-wrap md:items-center gap-4">
       {chain.map((block, idx) => {
         const blockColor = block.isValid
-          ? 'bg-green-50 border-green-200'
-          : 'bg-red-50 border-red-200';
+          ? "bg-green-50 border-green-200"
+          : "bg-red-50 border-red-200";
         return (
           <React.Fragment key={block.id}>
             <div
@@ -256,24 +256,27 @@ export default function BlockchainDemo() {
       <div>
         <h1 className="text-xl font-bold mb-2">Blockchain demonstration</h1>
         <p>
-          Try amending some of the data in the blocks below and observe 
-          the impact of your changes.
+          Try amending some of the data in the blocks below and observe the
+          impact of your changes on the hashes and subsequent blocks.
         </p>
 
-        {blocks.some(b => !b.isValid) && (
+        {blocks.some((b) => !b.isValid) && (
           <div className="bg-red-100 border-l-4 border-red-500 p-4 rounded mt-4">
-            Blockchain integrity compromised! Some blocks have been tampered with.
+            Blockchain integrity compromised! Some blocks have been tampered
+            with.
           </div>
         )}
 
-        <div className="mt-6">
-          {renderChainFull(blocks, true)}
-        </div>
+        <div className="mt-6">{renderChainFull(blocks, true)}</div>
       </div>
 
       <div>
-        <h2 className="text-lg font-semibold mb-2">Comparison with other nodes</h2>
-        <p className="mb-4">Compare your altered node chain with other nodes.</p>
+        <h2 className="text-lg font-semibold mb-2">
+          Comparison with other nodes
+        </h2>
+        <p className="mb-4">
+          Compare your altered node chain with other nodes.
+        </p>
 
         {/* Node #1: Reflects the current state */}
         <div className="mb-6">
