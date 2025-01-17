@@ -88,9 +88,7 @@ const TimelineEvent = ({ event, index, isSelected, onClick, onKeyDown }) => {
             isSelected ? "block bg-red-600 text-white p-4" : "hidden"
           }`}
         >
-          <p className="text-sm font-medium leading-relaxed">
-            {event.summary}
-          </p>
+          <p className="text-sm font-medium leading-relaxed">{event.summary}</p>
         </div>
       </div>
 
@@ -159,7 +157,7 @@ const Timeline = () => {
       year: 1986,
       title: "Backpropagation in neural networks",
       summary:
-        "Geoffrey Hinton, David Rumelhart, and Ronald Williams introduced the backpropagation algorithm, allowing for the training of deeper neural networks and advancing machine learning techniques.",
+        "Geoffrey Hinton, David Rumelhart and Ronald Williams introduced the backpropagation algorithm, allowing for the training of deeper neural networks and advancing machine learning techniques.",
     },
     {
       year: 1997,
@@ -207,18 +205,9 @@ const Timeline = () => {
       year: 2023,
       title: "AI copyright lawsuit",
       summary:
-        "Artists filed a class-action lawsuit against Stability AI, DeviantArt, and MidJourney, raising legal questions about the use of copyrighted works in training AI models.",
+        "Artists filed a class-action lawsuit against Stability AI, DeviantArt and MidJourney, raising legal questions about the use of copyrighted works in training AI models.",
     },
   ];
-
-
-
-
-
-
-    
-
-  
 
   const handleEventClick = (index) => {
     setSelectedEventIndex(selectedEventIndex === index ? null : index);
@@ -227,23 +216,23 @@ const Timeline = () => {
   // (Optional) Arrow key navigation can remain if you want the additional functionality.
   const handleKeyDown = (event, index) => {
     switch (event.key) {
-      case 'ArrowDown':
+      case "ArrowDown":
         event.preventDefault();
         if (index < events.length - 1) {
           setSelectedEventIndex(index + 1);
         }
         break;
-      case 'ArrowUp':
+      case "ArrowUp":
         event.preventDefault();
         if (index > 0) {
           setSelectedEventIndex(index - 1);
         }
         break;
-      case 'Home':
+      case "Home":
         event.preventDefault();
         setSelectedEventIndex(0);
         break;
-      case 'End':
+      case "End":
         event.preventDefault();
         setSelectedEventIndex(events.length - 1);
         break;
@@ -253,7 +242,8 @@ const Timeline = () => {
   };
 
   // Instructions for screen readers
-  const instructions = "Use arrow keys (on desktop) or swipe gestures (on mobile) to navigate between events. Press Enter, Space, or double-tap to expand event details.";
+  const instructions =
+    "Use arrow keys (on desktop) or swipe gestures (on mobile) to navigate between events. Press Enter, Space, or double-tap to expand event details.";
 
   return (
     <div className="min-h-full bg-sky-50">
@@ -301,11 +291,7 @@ const Timeline = () => {
           ></div>
 
           <div className="relative p-8">
-            <div
-              className="space-y-8"
-              role="list"
-              aria-label="Timeline events"
-            >
+            <div className="space-y-8" role="list" aria-label="Timeline events">
               {events.map((event, index) => (
                 <TimelineEvent
                   key={event.year}
