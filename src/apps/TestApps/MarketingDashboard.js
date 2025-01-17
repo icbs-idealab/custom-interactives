@@ -136,10 +136,16 @@ const MarketingROISimulator = () => {
     };
 
     const fetchResults = async () => {
+        const currentYear = new Date().getFullYear();
+        const startOfYear = new Date(currentYear, 0, 1).toISOString();
+        const endOfYear = new Date(currentYear, 11, 31, 23, 59, 59).toISOString();
+
         const { data, error } = await supabase
             .from("app_data")
             .select("*")
-            .eq("app_id", appId);
+            .eq("app_id", appId)
+            .gte('created_at', startOfYear)
+            .lte('created_at', endOfYear);
 
         if (error) {
             console.error("Error fetching data:", error);
