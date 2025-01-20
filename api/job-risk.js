@@ -9,7 +9,7 @@ const openai = new OpenAI({
 // Define the schema for the risk response
 const RiskResponseSchema = z.object({
   jobTitle: z.string(),
-  riskScore: z.number().min(0).max(10),
+  riskScore: z.number(),
   explanation: z.string(),
 });
 
