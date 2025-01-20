@@ -14,6 +14,7 @@ import SmoTim_CampaignIdeas from './apps/SmoTim/CampaignIdeas.js';
 import SmoTim_ConsumerPersona from './apps/SmoTim/ConsumerPersona.js';
 import SmoTim_ConsumerPersona2 from './apps/SmoTim/ConsumerPersona2.js';
 import SmoTim_DragDropTimeline from './apps/SmoTim/DragDropTimeline.js';
+import SmoTim_JobRisk from './apps/SmoTim/JobRisk.js';
 import SmoTim_TimModuleMap from './apps/SmoTim/TimModuleMap.js';
 import TestApps_AverageCalculator from './apps/TestApps/AverageCalculator.js';
 import TestApps_CounterApp from './apps/TestApps/CounterApp.js';
@@ -40,6 +41,7 @@ const modules = {
     "ConsumerPersona.js",
     "ConsumerPersona2.js",
     "DragDropTimeline.js",
+    "JobRisk.js",
     "TimModuleMap.js"
   ],
   "TestApps": [
@@ -74,6 +76,7 @@ function DynamicTitle() {
       '/smotim/consumerpersona': 'Consumer Persona',
       '/smotim/consumerpersona2': 'Consumer Persona2',
       '/smotim/dragdroptimeline': 'Drag Drop Timeline',
+      '/smotim/jobrisk': 'Job Risk',
       '/smotim/timmodulemap': 'Tim Module Map',
       '/testapps': 'TestApps',
       '/testapps/averagecalculator': 'Average Calculator',
@@ -437,6 +440,15 @@ function App() {
     
       <li>
         <Link
+          to="/smotim/jobrisk"
+          className="text-xl underline text-red-600 hover:text-red-800"
+        >
+          Job Risk
+        </Link>
+      </li>
+    
+      <li>
+        <Link
           to="/smotim/timmodulemap"
           className="text-xl underline text-red-600 hover:text-red-800"
         >
@@ -507,6 +519,16 @@ function App() {
         element={
           <ResizeWrapper>
             <SmoTim_DragDropTimeline />
+          </ResizeWrapper>
+        }
+      />
+    
+
+      <Route
+        path="/smotim/jobrisk"
+        element={
+          <ResizeWrapper>
+            <SmoTim_JobRisk />
           </ResizeWrapper>
         }
       />
