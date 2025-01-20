@@ -92,7 +92,7 @@ Respond using only valid JSON that exactly conforms to the provided schema.
           `,
         },
       ],
-      temperature: 0.7, // Increase randomness
+      temperature: 0.9, // Increase randomness
       response_format: zodResponseFormat(PersonaSchema, "persona"),
     });
 
