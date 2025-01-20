@@ -81,12 +81,14 @@ The persona must include:
 - A short quote
 - A short scenario describing a day in their life or their interaction with the brand
 
-Additionally, include a new property called "personalityRadar" with numeric values (each between 0 and 100) for the following traits:
+Additionally, include a new property called "personalityRadar" with numeric values (each between 0 and 100) for the following traits (try to vary it but base on the descrption of their persona):
 - Openness
 - Conscientiousness
 - Extraversion
 - Agreeableness
 - Neuroticism
+
+Do not always use basic English names; it should be 50/50 as to whether you use bog-standard British names or not. Similarly, should be 50/50 as to whether you use male or female names.
 
 Respond using only valid JSON that exactly conforms to the provided schema.
           `,
