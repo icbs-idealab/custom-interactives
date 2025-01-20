@@ -26,11 +26,11 @@ export default async function handler(req, res) {
       messages: [
         {
           role: "system",
-          content: "You are an AI expert assessing the automation risk of job roles.",
+          content: "You are an expert assessing the risk of job roles in the future (e.g. because they could become automated or redundant for other reasons).",
         },
         {
           role: "user",
-          content: `Evaluate the risk of automation for the job title: "${jobTitle}".
+          content: `Evaluate the risk for the job title: "${jobTitle}".
           Provide:
           - A risk score between 0 (no risk) and 10 (high risk).
           - A brief explanation for the score.`,

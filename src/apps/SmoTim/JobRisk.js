@@ -25,7 +25,7 @@ const JobRisk = () => {
     setRiskData(null);
 
     if (liveRegionRef.current) {
-      liveRegionRef.current.textContent = "Calculating automation risk. Please wait.";
+      liveRegionRef.current.textContent = "Calculating risk. Please wait.";
     }
 
     try {
@@ -36,14 +36,14 @@ const JobRisk = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to assess automation risk.");
+        throw new Error("Failed to assess risk.");
       }
 
       const data = await response.json();
       setRiskData(data);
 
       if (liveRegionRef.current) {
-        liveRegionRef.current.textContent = "Automation risk calculated.";
+        liveRegionRef.current.textContent = "Risk calculated.";
       }
     } catch (error) {
       console.error(error);
@@ -57,14 +57,14 @@ const JobRisk = () => {
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-lg mx-auto">
         <h1 className="text-3xl font-bold text-center mb-6">
-          Job Automation Risk Assessment
+        Risk Assessment
         </h1>
 
         <div className="sr-only" aria-live="polite" ref={liveRegionRef}></div>
 
         <div className="mb-4">
           <label htmlFor="jobTitle" className="block text-lg font-medium text-gray-800">
-            Enter a Job Title
+            Enter a job title
           </label>
           <input
             id="jobTitle"
@@ -96,12 +96,12 @@ const JobRisk = () => {
 
         {riskData && (
           <div className="mt-6 bg-white shadow-md rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4">Automation Risk</h2>
+            <h2 className="text-xl font-semibold mb-4">Assessment</h2>
             <p>
-              <strong>Job Title:</strong> {riskData.jobTitle}
+              <strong>Job title:</strong> {riskData.jobTitle}
             </p>
             <p>
-              <strong>Risk Score:</strong> {riskData.riskScore} / 10
+              <strong>Risk score:</strong> {riskData.riskScore} / 10
             </p>
             <p>
               <strong>Explanation:</strong> {riskData.explanation}
