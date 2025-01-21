@@ -113,7 +113,7 @@ Respond using only valid JSON that exactly conforms to the provided schema.
       const imageResponse = await openai.images.generate({
         prompt: imagePrompt,
         n: 1,
-        size: "512x512",
+        size: "256x256",
       });
 
       if (imageResponse.data && imageResponse.data.length > 0) {
