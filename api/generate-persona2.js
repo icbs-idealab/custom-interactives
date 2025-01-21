@@ -6,11 +6,11 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY, // Ensure your API key is set
 });
 
-// Define the persona schema using Zod (note the new "personalityRadar" field)
+// Define the persona schema using Zod
 const PersonaSchema = z.object({
   demographics: z.object({
     name: z.string(),
-    age: z.string(), // or z.number() if you prefer; adjust prompt accordingly
+    age: z.string(),
     gender: z.string(),
     occupation: z.string(),
     incomeLevel: z.string(),
@@ -37,7 +37,6 @@ const PersonaSchema = z.object({
   }),
   quote: z.string(),
   scenario: z.string(),
-  // New property for personality radar values
   personalityRadar: z.object({
     openness: z.number(),
     conscientiousness: z.number(),
@@ -45,6 +44,9 @@ const PersonaSchema = z.object({
     agreeableness: z.number(),
     neuroticism: z.number(),
   }),
+  // New property for the DALL·E image URL
+  // We'll mark it optional so we can set it ourselves after GPT's response
+  imageUrl: z.string().url().optional(),
 });
 
 export default async function handler(req, res) {
@@ -81,7 +83,7 @@ The persona must include:
 - A short quote
 - A short scenario describing a day in their life or their interaction with the brand
 
-Additionally, include a new property called "personalityRadar" with numeric values (each between 0 and 100) for the following traits (try to vary it but base on the descrption of their persona):
+Additionally, include a new property called "personalityRadar" with numeric values (each between 0 and 100) for the following traits:
 - Openness
 - Conscientiousness
 - Extraversion
@@ -98,12 +100,32 @@ Respond using only valid JSON that exactly conforms to the provided schema.
       response_format: zodResponseFormat(PersonaSchema, "persona"),
     });
 
-    // Log the entire completion object for debugging
     console.log("Full completion object:", JSON.stringify(completion, null, 2));
 
     // Extract the structured persona from the response
     const personaData = completion.choices[0].message.parsed;
     console.log("Parsed persona data:", JSON.stringify(personaData, null, 2));
+
+    // --- New DALL·E Image Generation ---
+    try {
+      const { name, age, gender } = personaData.demographics || {};
+      // Basic prompt; feel free to refine as needed
+      const imagePrompt = `A realistic portrait of a ${age}-year-old ${gender} named ${name}, digital art, highly detailed, professional, photorealistic.`;
+
+      const imageResponse = await openai.images.generate({
+        prompt: imagePrompt,
+        n: 1,
+        size: "512x512",
+      });
+
+      if (imageResponse.data && imageResponse.data.length > 0) {
+        personaData.imageUrl = imageResponse.data[0].url;
+      }
+    } catch (imageError) {
+      console.error("Error generating DALL·E image:", imageError);
+      // Optionally set a fallback or leave personaData.imageUrl undefined
+    }
+    // --- End New DALL·E Image Generation ---
 
     // Return only the persona data
     return res.status(200).json(personaData);

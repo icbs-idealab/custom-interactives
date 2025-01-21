@@ -282,6 +282,17 @@ const ConsumerPersona = () => {
               Consumer Persona
             </h2>
 
+            {/* Display persona image if available */}
+            {persona.imageUrl && (
+              <div className="flex justify-center mb-8">
+                <img
+                  src={persona.imageUrl}
+                  alt={`Portrait of ${persona.demographics?.name}`}
+                  className="rounded-full h-48 w-48 object-cover border border-gray-300 shadow-md"
+                />
+              </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Demographics */}
               <div className="bg-gradient-to-tr from-gray-800 to-gray-700 text-white p-6 rounded-xl shadow-xl transform transition hover:scale-105">
