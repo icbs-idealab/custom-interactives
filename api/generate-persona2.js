@@ -44,9 +44,8 @@ const PersonaSchema = z.object({
     agreeableness: z.number(),
     neuroticism: z.number(),
   }),
-  // New property for the DALL·E image URL
-  // We'll mark it optional so we can set it ourselves after GPT's response
-  imageUrl: z.string().url().optional(),
+  // Changed to plain string so that "format": "url" won't appear in the JSON schema
+  imageUrl: z.string().optional(),
 });
 
 export default async function handler(req, res) {
@@ -106,10 +105,9 @@ Respond using only valid JSON that exactly conforms to the provided schema.
     const personaData = completion.choices[0].message.parsed;
     console.log("Parsed persona data:", JSON.stringify(personaData, null, 2));
 
-    // --- New DALL·E Image Generation ---
+    // --- DALL·E Image Generation ---
     try {
       const { name, age, gender } = personaData.demographics || {};
-      // Basic prompt; feel free to refine as needed
       const imagePrompt = `A realistic portrait of a ${age}-year-old ${gender} named ${name}, digital art, highly detailed, professional, photorealistic.`;
 
       const imageResponse = await openai.images.generate({
@@ -123,9 +121,9 @@ Respond using only valid JSON that exactly conforms to the provided schema.
       }
     } catch (imageError) {
       console.error("Error generating DALL·E image:", imageError);
-      // Optionally set a fallback or leave personaData.imageUrl undefined
+      // If there's an error, we just won't set personaData.imageUrl
     }
-    // --- End New DALL·E Image Generation ---
+    // --- End DALL·E Image Generation ---
 
     // Return only the persona data
     return res.status(200).json(personaData);
