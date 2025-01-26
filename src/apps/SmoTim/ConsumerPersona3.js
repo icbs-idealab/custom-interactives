@@ -205,40 +205,47 @@ const ConsumerPersona = () => {
   // Handle PDF Download
   // ---------------------------------
   const handleDownloadPDF = async () => {
+    // Grab the DOM element you want to capture
     const personaElement = document.getElementById("personaContainer");
     if (!personaElement) return;
-
+  
     try {
-      // Convert the DOM node to a canvas
+      // 1) Convert the DOM node to a canvas
       const canvas = await html2canvas(personaElement);
-
-      // Convert canvas to an image
+  
+      // 2) Convert canvas to an image data URL
       const imageData = canvas.toDataURL("image/png");
-
-      // Create jsPDF object
+  
+      // 3) Create a new jsPDF instance (portrait, mm, A4)
       const pdf = new jsPDF("p", "mm", "a4");
-
-      // Calculate dimensions to fit the width while preserving aspect ratio
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-
+  
+      // 4) Get page dimensions
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+  
+      // 5) Get the actual width/height of the screenshot
       const imgProps = pdf.getImageProperties(imageData);
-      const imageRatio = imgProps.width / imgProps.height;
-      let imgHeight = pdfWidth / imageRatio;
-
-      // If the height goes beyond a single page, you could handle pagination or scale
-      if (imgHeight > pdfHeight) {
-        imgHeight = pdfHeight;
-      }
-
-      // Add image and save
-      pdf.addImage(imageData, "PNG", 0, 0, pdfWidth, imgHeight);
+      const imgWidth = imgProps.width;
+      const imgHeight = imgProps.height;
+  
+      // 6) Calculate the ratio to fit *both* width and height
+      //    so there is no stretching and everything fits on a single page
+      const ratio = Math.min(pageWidth / imgWidth, pageHeight / imgHeight);
+  
+      // The final dimensions to render on PDF
+      const pdfWidth = imgWidth * ratio;
+      const pdfHeight = imgHeight * ratio;
+  
+      // 7) Draw the image onto the PDF at 0,0 with the new scaled dimensions
+      pdf.addImage(imageData, "PNG", 0, 0, pdfWidth, pdfHeight);
+  
+      // 8) Download the PDF
       pdf.save("consumer-persona.pdf");
     } catch (error) {
       console.error("Error generating PDF:", error);
     }
   };
-
+  
   // ---------------------------------
   // Render
   // ---------------------------------
