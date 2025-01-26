@@ -1,16 +1,15 @@
+// api/generate-persona2.js
 
-
-const OpenAI = require("openai");
-const { z } = require("zod");
-const { Readable } = require("stream");
-require("dotenv").config();
+import OpenAI from "openai";
+import { z } from "zod";
+import { zodResponseFormat } from "openai/helpers/zod";
 
 // Initialize OpenAI with your API key
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY, // Ensure your API key is set in Vercel's environment variables
 });
 
-// Define the persona schema using Zod (including the new "imageUrl" field)
+// Define the persona schema using Zod
 const PersonaSchema = z.object({
   demographics: z.object({
     name: z.string(),
@@ -48,21 +47,20 @@ const PersonaSchema = z.object({
     agreeableness: z.number(),
     neuroticism: z.number(),
   }),
-  imageUrl: z.string().url().optional(), // Optional until generated
+  // Changed to plain string so that "format": "url" won't appear in the JSON schema
+  imageUrl: z.string().optional(),
 });
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", ["POST"]);
-    res.status(405).json({ error: "Method not allowed" });
-    return;
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   const { brandName, brandDescription } = req.body;
 
   if (!brandName || !brandDescription) {
-    res.status(400).json({ error: "Missing brandName or brandDescription" });
-    return;
+    return res.status(400).json({ error: "Missing brandName or brandDescription" });
   }
 
   try {
@@ -74,7 +72,7 @@ module.exports = async (req, res) => {
 
     // Initialize OpenAI streaming for persona generation
     const personaStream = await openai.chat.completions.create({
-      model: "gpt-4o-mini", // Replace with your desired model
+      model: "gpt-4o-mini-2024-07-18", // Replace with your desired model
       messages: [
         {
           role: "system",
@@ -98,7 +96,7 @@ The persona must include:
 - A short quote
 - A short scenario describing a day in their life or their interaction with the brand
 
-Additionally, include a new property called "personalityRadar" with numeric values (each between 0 and 100) for the following traits (try to vary it but based on the description of their persona):
+Additionally, include a new property called "personalityRadar" with numeric values (each between 0 and 100) for the following traits:
 - Openness
 - Conscientiousness
 - Extraversion
@@ -117,62 +115,78 @@ Respond using only valid JSON that exactly conforms to the provided schema.
 
     let personaData = "";
 
-    // Stream persona data to the client
-    for await (const chunk of personaStream) {
-      if (chunk.choices && chunk.choices[0].delta && chunk.choices[0].delta.content) {
-        const content = chunk.choices[0].delta.content;
-        personaData += content;
+    // Function to send data to the client
+    const sendSSE = (data) => {
+      res.write(`data: ${JSON.stringify(data)}\n\n`);
+    };
 
-        // Stream the chunk to the client
-        res.write(`data: ${content}\n\n`);
+    // Listen to the stream and send data incrementally
+    personaStream.on("data", (chunk) => {
+      const parsed = chunk.choices?.[0]?.delta?.content;
+      if (parsed) {
+        personaData += parsed;
+        // Attempt to parse the JSON as it builds
+        try {
+          const json = JSON.parse(personaData);
+          // Validate against Zod schema
+          PersonaSchema.parse(json);
+          // If valid, send the current data
+          sendSSE(json);
+        } catch (err) {
+          // If JSON is incomplete, wait for more data
+        }
       }
-    }
+    });
 
-    // Once persona data is fully received, parse it
-    let parsedPersona;
-    try {
-      parsedPersona = PersonaSchema.parse(JSON.parse(personaData));
-    } catch (parseError) {
-      console.error("Error parsing persona JSON:", parseError);
-      res.write(`data: {"error": "Invalid persona format."}\n\n`);
+    personaStream.on("end", async () => {
+      // Once streaming is done, parse the complete persona data
+      let parsedPersona;
+      try {
+        parsedPersona = PersonaSchema.parse(JSON.parse(personaData));
+      } catch (parseError) {
+        console.error("Error parsing persona JSON:", parseError);
+        sendSSE({ error: "Invalid persona format." });
+        res.end();
+        return;
+      }
+
+      // --- DALL·E Image Generation ---
+      try {
+        const { name, age, gender, occupation, location } = parsedPersona.demographics || {};
+        const imagePrompt = `A realistic portrait of a ${age}-year-old ${gender} named ${name}, a ${occupation} from ${location}, digital art, highly detailed, professional, photorealistic.`;
+
+        const imageResponse = await openai.images.generate({
+          prompt: imagePrompt,
+          n: 1,
+          size: "512x512", // Adjust size as needed
+          response_format: "url",
+        });
+
+        if (imageResponse.data && imageResponse.data.length > 0) {
+          parsedPersona.imageUrl = imageResponse.data[0].url;
+          // Send the image URL to the client
+          sendSSE({ imageUrl: parsedPersona.imageUrl });
+        }
+      } catch (imageError) {
+        console.error("Error generating DALL·E image:", imageError);
+        // If there's an error, stream an error message
+        sendSSE({ error: "Failed to generate image." });
+      }
+      // --- End DALL·E Image Generation ---
+
+      // End the SSE stream
+      res.write("event: end\ndata: \n\n");
       res.end();
-      return;
-    }
+    });
 
-    // --- DALL·E Image Generation ---
-    try {
-      const { name, age, gender, occupation, location } = parsedPersona.demographics || {};
-      const imagePrompt = `A professional portrait of ${name}, a ${age}-year-old ${gender} ${occupation} from ${location}.`;
-
-      const imageResponse = await openai.images.generate({
-        prompt: imagePrompt,
-        n: 1,
-        size: "512x512", // Adjust size as needed
-        response_format: "url",
-      });
-
-      if (imageResponse.data && imageResponse.data.length > 0) {
-        const imageUrl = imageResponse.data[0].url;
-        parsedPersona.imageUrl = imageUrl;
-
-        // Stream the image URL to the client
-        res.write(`data: ${JSON.stringify({ imageUrl })}\n\n`);
-      }
-    } catch (imageError) {
-      console.error("Error generating DALL·E image:", imageError);
-      // If there's an error, stream an error message
-      res.write(`data: {"error": "Failed to generate image."}\n\n`);
-    }
-    // --- End DALL·E Image Generation ---
-
-    // End the SSE stream
-    res.write("event: end\ndata: \n\n");
-    res.end();
+    personaStream.on("error", (error) => {
+      console.error("Error during persona generation:", error);
+      sendSSE({ error: "Failed to generate consumer persona." });
+      res.end();
+    });
   } catch (error) {
     console.error("Error generating consumer persona:", error);
-    res.write(
-      `data: {"error": "Failed to generate consumer persona.", "details": "${error.message || "Unknown error."}"}\n\n`
-    );
+    sendSSE({ error: "Failed to generate consumer persona.", details: error.message || "Unknown error occurred." });
     res.end();
   }
-};
+}
