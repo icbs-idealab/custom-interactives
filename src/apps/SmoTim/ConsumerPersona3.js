@@ -240,48 +240,65 @@ const ConsumerPersona = () => {
   // Handle PDF Download
   // ---------------------------------
   const handleDownloadPDF = () => {
-    if (!persona) return;
+    if (!persona) return; // Make sure persona data is loaded
   
+    // Create a new A4 PDF in portrait orientation
     const pdf = new jsPDF("p", "mm", "a4");
+  
+    // Page dimensions
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
   
-    // Our dynamic "y" cursor for text
+    // We'll track a "y" position for where we draw text
     let y = 20;
-    const leftMargin = 20;
-    const maxLineWidth = pageWidth - leftMargin * 2; // 20mm each side
   
-    // Helpers
+    // Margins
+    const leftMargin = 20;
+    const maxLineWidth = pageWidth - leftMargin * 2; // 20mm on each side
+    const lineHeight = 6;
+    const bottomMargin = 20; // how close to bottom before adding a new page?
+  
+    // Helper: check if we have space or need a new page before a heading
+    const checkNewPageForHeading = (neededSpace = 8) => {
+      if (y + neededSpace > pageHeight - bottomMargin) {
+        pdf.addPage();
+        y = 20; // reset after adding page
+      }
+    };
+  
+    // Helper: draw a heading
     const addHeading = (heading) => {
       pdf.setFontSize(14);
       pdf.setFont("helvetica", "bold");
-      // If near bottom, add new page
-      if (y + 8 > pageHeight - 20) {
-        pdf.addPage();
-        y = 20;
-      }
+      checkNewPageForHeading(); // ensure heading won't get cut off
       pdf.text(heading, leftMargin, y);
-      y += 8;
+      y += 8; // space after heading
     };
   
+    // Helper: wrap a text line
     const addWrapped = (text) => {
       pdf.setFontSize(12);
       pdf.setFont("helvetica", "normal");
+      // Use our multi-line function
       y = addWrappedTextWithPagination(pdf, text, leftMargin, y, {
         maxWidth: maxLineWidth,
-        lineHeight: 6,
-        bottomMargin: 20
+        lineHeight,
+        bottomMargin,
+        pageHeight,
+        leftMargin
       });
-      y += 2; // small space after blocks
+      y += 2; // small gap after each chunk
     };
   
-    // ---------------- Title ----------------
+    // 1) Title
     pdf.setFontSize(18);
     pdf.setFont("helvetica", "bold");
     pdf.text("Consumer Persona", pageWidth / 2, y, { align: "center" });
     y += 12;
   
-    // -------------- DEMOGRAPHICS -----------
+    // ----------------------
+    // DEMOGRAPHICS
+    // ----------------------
     addHeading("Demographics");
     if (persona.demographics) {
       if (persona.demographics.name) {
@@ -290,27 +307,99 @@ const ConsumerPersona = () => {
       if (persona.demographics.age) {
         addWrapped(`Age: ${persona.demographics.age}`);
       }
-      // ... repeat for each field ...
+      if (persona.demographics.gender) {
+        addWrapped(`Gender: ${persona.demographics.gender}`);
+      }
+      if (persona.demographics.occupation) {
+        addWrapped(`Occupation: ${persona.demographics.occupation}`);
+      }
+      if (persona.demographics.incomeLevel) {
+        addWrapped(`Income level: ${persona.demographics.incomeLevel}`);
+      }
+      if (persona.demographics.educationLevel) {
+        addWrapped(`Education level: ${persona.demographics.educationLevel}`);
+      }
+      if (persona.demographics.location) {
+        addWrapped(`Location: ${persona.demographics.location}`);
+      }
+      y += 4; // spacing at end of this block
     }
   
-    // -------------- PSYCHOGRAPHICS ---------
+    // ----------------------
+    // PSYCHOGRAPHICS
+    // ----------------------
     addHeading("Psychographics");
     if (persona.psychographics) {
       if (persona.psychographics.valuesAndBeliefs) {
-        addWrapped(`Values & beliefs: ${persona.psychographics.valuesAndBeliefs}`);
+        addWrapped(
+          `Values & beliefs: ${persona.psychographics.valuesAndBeliefs}`
+        );
       }
-      // ...
+      if (persona.psychographics.lifestyle) {
+        addWrapped(`Lifestyle: ${persona.psychographics.lifestyle}`);
+      }
+      if (persona.psychographics.personalityTraits) {
+        addWrapped(
+          `Personality traits: ${persona.psychographics.personalityTraits}`
+        );
+      }
+      if (persona.psychographics.goalsAndAspirations) {
+        addWrapped(
+          `Goals & aspirations: ${persona.psychographics.goalsAndAspirations}`
+        );
+      }
+      y += 4;
     }
   
-    // -------------- BEHAVIORAL -------------
+    // ----------------------
+    // BEHAVIORAL
+    // ----------------------
     addHeading("Behavioral");
-    // ...
+    if (persona.behavioral) {
+      if (persona.behavioral.buyingHabits) {
+        addWrapped(`Buying habits: ${persona.behavioral.buyingHabits}`);
+      }
+      if (persona.behavioral.painPoints) {
+        addWrapped(`Pain points: ${persona.behavioral.painPoints}`);
+      }
+      if (persona.behavioral.motivations) {
+        addWrapped(`Motivations: ${persona.behavioral.motivations}`);
+      }
+      if (persona.behavioral.preferredChannels) {
+        addWrapped(
+          `Preferred channels: ${persona.behavioral.preferredChannels}`
+        );
+      }
+      y += 4;
+    }
   
-    // -------------- SITUATIONAL ------------
+    // ----------------------
+    // SITUATIONAL
+    // ----------------------
     addHeading("Situational");
-    // ...
+    if (persona.situational) {
+      if (persona.situational.technologyUsage) {
+        addWrapped(`Tech usage: ${persona.situational.technologyUsage}`);
+      }
+      if (persona.situational.decisionMakingProcess) {
+        addWrapped(
+          `Decision process: ${persona.situational.decisionMakingProcess}`
+        );
+      }
+      if (persona.situational.brandAffinities) {
+        addWrapped(`Brand affinities: ${persona.situational.brandAffinities}`);
+      }
+      if (persona.situational.roleInBuyingProcess) {
+        addWrapped(
+          `Role in buying: ${persona.situational.roleInBuyingProcess}`
+        );
+      }
+      y += 4;
+    }
   
-    // -------------- CONTEXT & STORY --------
+    // ----------------------
+    // CONTEXT & STORY
+    // ----------------------
     addHeading("Context & story");
     if (persona.quote) {
       addWrapped(`Quote: "${persona.quote}"`);
@@ -318,20 +407,37 @@ const ConsumerPersona = () => {
     if (persona.scenario) {
       addWrapped(`Scenario: ${persona.scenario}`);
     }
+    y += 4;
   
-    // -------------- PERSONALITY TRAITS -----
+    // ----------------------
+    // PERSONALITY TRAITS
+    // ----------------------
     if (persona.personalityRadar) {
       addHeading("Personality traits");
-      if (persona.personalityRadar.openness !== undefined) {
-        addWrapped(`Openness: ${persona.personalityRadar.openness}`);
+      const radar = persona.personalityRadar;
+      // We'll just check for each trait; if it's not undefined, we print
+      if (radar.openness !== undefined) {
+        addWrapped(`Openness: ${radar.openness}`);
       }
-      // ...
+      if (radar.conscientiousness !== undefined) {
+        addWrapped(`Conscientiousness: ${radar.conscientiousness}`);
+      }
+      if (radar.extraversion !== undefined) {
+        addWrapped(`Extraversion: ${radar.extraversion}`);
+      }
+      if (radar.agreeableness !== undefined) {
+        addWrapped(`Agreeableness: ${radar.agreeableness}`);
+      }
+      if (radar.neuroticism !== undefined) {
+        addWrapped(`Neuroticism: ${radar.neuroticism}`);
+      }
+      y += 4;
     }
   
-    // Finally, download
+    // Finally, save the PDF
     pdf.save("consumer-persona.pdf");
   };
-    
+      
       
   // ---------------------------------
   // Render
