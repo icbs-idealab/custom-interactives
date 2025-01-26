@@ -205,18 +205,21 @@ const ConsumerPersona = () => {
   // Handle PDF Download
   // ---------------------------------
   const handleDownloadPDF = async () => {
-    // Grab the DOM element you want to capture
     const personaElement = document.getElementById("personaContainer");
     if (!personaElement) return;
   
     try {
-      // 1) Convert the DOM node to a canvas
-      const canvas = await html2canvas(personaElement);
+      // 1) Convert the DOM node to a canvas; enable cross-origin images
+      //    so external images (like from a CDN) won't be blank.
+      const canvas = await html2canvas(personaElement, {
+        useCORS: true,
+        crossOrigin: "anonymous"
+      });
   
       // 2) Convert canvas to an image data URL
       const imageData = canvas.toDataURL("image/png");
   
-      // 3) Create a new jsPDF instance (portrait, mm, A4)
+      // 3) Create a new jsPDF (portrait, mm, A4)
       const pdf = new jsPDF("p", "mm", "a4");
   
       // 4) Get page dimensions
@@ -228,24 +231,30 @@ const ConsumerPersona = () => {
       const imgWidth = imgProps.width;
       const imgHeight = imgProps.height;
   
-      // 6) Calculate the ratio to fit *both* width and height
-      //    so there is no stretching and everything fits on a single page
+      // 6) Scale ratio to fit inside the page while preserving aspect ratio
       const ratio = Math.min(pageWidth / imgWidth, pageHeight / imgHeight);
   
-      // The final dimensions to render on PDF
+      // 7) Final image dimensions within the PDF
       const pdfWidth = imgWidth * ratio;
       const pdfHeight = imgHeight * ratio;
   
-      // 7) Draw the image onto the PDF at 0,0 with the new scaled dimensions
-      pdf.addImage(imageData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      // 8) Calculate offsets to center the image on the page
+      const offsetX = (pageWidth - pdfWidth) / 2;   // horizontal center
+      const offsetY = (pageHeight - pdfHeight) / 2; // vertical center
+      // If you only want to center horizontally (and align at top), do:
+      // const offsetX = (pageWidth - pdfWidth) / 2;
+      // const offsetY = 10;  // for a small top margin, e.g. 10mm
   
-      // 8) Download the PDF
+      // 9) Add the image at the calculated offsets
+      pdf.addImage(imageData, "PNG", offsetX, offsetY, pdfWidth, pdfHeight);
+  
+      // 10) Download the PDF
       pdf.save("consumer-persona.pdf");
     } catch (error) {
       console.error("Error generating PDF:", error);
     }
   };
-  
+    
   // ---------------------------------
   // Render
   // ---------------------------------
