@@ -10,6 +10,21 @@ import {
 } from "recharts";
 import jsPDF from "jspdf";
 
+const addWrappedText = (pdf, text, x, initialY, maxWidth, lineHeight) => {
+  // Split the text into an array of lines
+  const lines = pdf.splitTextToSize(text, maxWidth);
+  let currentY = initialY;
+
+  // Draw each line on the PDF
+  lines.forEach(line => {
+    pdf.text(line, x, currentY);
+    currentY += lineHeight;
+  });
+
+  return currentY; // return the final 'y' after drawing
+};
+
+
 // Radar chart component for personality traits
 const PersonaRadarChart = ({ data }) => {
   return (
