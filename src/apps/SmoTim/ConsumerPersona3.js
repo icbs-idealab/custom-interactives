@@ -204,144 +204,177 @@ const ConsumerPersona = () => {
   // Handle PDF Download
   // ---------------------------------
   const handleDownloadPDF = () => {
-    if (!persona) return; // Safety check
-  
-    // Create a new jsPDF (portrait, mm, A4)
+    if (!persona) return;
     const pdf = new jsPDF("p", "mm", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
   
-    // We'll keep track of "y" for vertical text placement
+    // Page dimensions
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    // We'll keep 'y' to track vertical position
     let y = 20;
   
-    // A little helper for headings
-    const addHeading = (text) => {
-      pdf.setFontSize(14);
-      pdf.setFont("helvetica", "bold");
-      pdf.text(text, 20, y);
-      y += 8;
-    };
+    // Optionally define margin and line height
+    const leftMargin = 20;
+    const maxLineWidth = pageWidth - leftMargin * 2;
+    const lineHeight = 6;
   
-    // A helper for normal text
-    const addNormalText = (text) => {
-      pdf.setFontSize(12);
-      pdf.setFont("helvetica", "normal");
-      pdf.text(text, 20, y);
-      y += 6;
-    };
-  
-    // Centered big title
+    // 1) Title
     pdf.setFontSize(18);
     pdf.setFont("helvetica", "bold");
     pdf.text("Consumer Persona", pageWidth / 2, y, { align: "center" });
     y += 12;
   
-    // ---------------------------
-    // Demographics
-    // ---------------------------
-    addHeading("Demographics");
-    if (persona.demographics) {
-      addNormalText(`Name: ${persona.demographics.name || ""}`);
-      addNormalText(`Age: ${persona.demographics.age || ""}`);
-      addNormalText(`Gender: ${persona.demographics.gender || ""}`);
-      addNormalText(`Occupation: ${persona.demographics.occupation || ""}`);
-      addNormalText(`Income level: ${persona.demographics.incomeLevel || ""}`);
-      addNormalText(`Education level: ${persona.demographics.educationLevel || ""}`);
-      addNormalText(`Location: ${persona.demographics.location || ""}`);
-      y += 4;
-    }
+    // A little inline helper for headings
+    const addHeading = (heading) => {
+      pdf.setFontSize(14);
+      pdf.setFont("helvetica", "bold");
+      pdf.text(heading, leftMargin, y);
+      y += 8;
+    };
   
-    // ---------------------------
-    // Psychographics
-    // ---------------------------
-    addHeading("Psychographics");
-    if (persona.psychographics) {
-      addNormalText(`Values & beliefs: ${persona.psychographics.valuesAndBeliefs || ""}`);
-      addNormalText(`Lifestyle: ${persona.psychographics.lifestyle || ""}`);
-      addNormalText(
-        `Personality traits: ${persona.psychographics.personalityTraits || ""}`
-      );
-      addNormalText(
-        `Goals & aspirations: ${persona.psychographics.goalsAndAspirations || ""}`
-      );
-      y += 4;
-    }
-  
-    // ---------------------------
-    // Behavioral
-    // ---------------------------
-    addHeading("Behavioral");
-    if (persona.behavioral) {
-      addNormalText(`Buying habits: ${persona.behavioral.buyingHabits || ""}`);
-      addNormalText(`Pain points: ${persona.behavioral.painPoints || ""}`);
-      addNormalText(`Motivations: ${persona.behavioral.motivations || ""}`);
-      addNormalText(
-        `Preferred channels: ${persona.behavioral.preferredChannels || ""}`
-      );
-      y += 4;
-    }
-  
-    // ---------------------------
-    // Situational
-    // ---------------------------
-    addHeading("Situational");
-    if (persona.situational) {
-      addNormalText(`Tech usage: ${persona.situational.technologyUsage || ""}`);
-      addNormalText(
-        `Decision process: ${persona.situational.decisionMakingProcess || ""}`
-      );
-      addNormalText(`Brand affinities: ${persona.situational.brandAffinities || ""}`);
-      addNormalText(
-        `Role in buying: ${persona.situational.roleInBuyingProcess || ""}`
-      );
-      y += 4;
-    }
-  
-    // ---------------------------
-    // Context & story
-    // ---------------------------
-    addHeading("Context & story");
-    if (persona.quote) {
-      addNormalText(`Quote: "${persona.quote}"`);
-    }
-    if (persona.scenario) {
-      // If scenario is long, let's do text wrapping:
+    // A helper for normal wrapped text
+    const addWrappedLine = (text) => {
       pdf.setFontSize(12);
       pdf.setFont("helvetica", "normal");
-      const wrappedScenario = pdf.splitTextToSize(
-        `Scenario: ${persona.scenario}`,
-        pageWidth - 40 // allow for margins
-      );
-      pdf.text(wrappedScenario, 20, y);
-      y += wrappedScenario.length * 6 + 4; // give some space after
-    }
+      y = addWrappedText(pdf, text, leftMargin, y, maxLineWidth, lineHeight);
+      y += 2; // a bit of extra spacing after each chunk
+    };
   
-    // ---------------------------
-    // Personality traits as text
-    // ---------------------------
-    if (persona.personalityRadar) {
-      addHeading("Personality traits");
-      // Each trait is a numeric value
-      if (persona.personalityRadar.openness !== undefined) {
-        addNormalText(`Openness: ${persona.personalityRadar.openness}`);
+    // ----------------------------------
+    // DEMOGRAPHICS
+    // ----------------------------------
+    addHeading("Demographics");
+    if (persona.demographics) {
+      if (persona.demographics.name) {
+        addWrappedLine(`Name: ${persona.demographics.name}`);
       }
-      if (persona.personalityRadar.conscientiousness !== undefined) {
-        addNormalText(`Conscientiousness: ${persona.personalityRadar.conscientiousness}`);
+      if (persona.demographics.age) {
+        addWrappedLine(`Age: ${persona.demographics.age}`);
       }
-      if (persona.personalityRadar.extraversion !== undefined) {
-        addNormalText(`Extraversion: ${persona.personalityRadar.extraversion}`);
+      if (persona.demographics.gender) {
+        addWrappedLine(`Gender: ${persona.demographics.gender}`);
       }
-      if (persona.personalityRadar.agreeableness !== undefined) {
-        addNormalText(`Agreeableness: ${persona.personalityRadar.agreeableness}`);
+      if (persona.demographics.occupation) {
+        addWrappedLine(`Occupation: ${persona.demographics.occupation}`);
       }
-      if (persona.personalityRadar.neuroticism !== undefined) {
-        addNormalText(`Neuroticism: ${persona.personalityRadar.neuroticism}`);
+      if (persona.demographics.incomeLevel) {
+        addWrappedLine(`Income level: ${persona.demographics.incomeLevel}`);
+      }
+      if (persona.demographics.educationLevel) {
+        addWrappedLine(`Education level: ${persona.demographics.educationLevel}`);
+      }
+      if (persona.demographics.location) {
+        addWrappedLine(`Location: ${persona.demographics.location}`);
       }
       y += 4;
     }
   
-    // DONE! Download the PDF
+    // ----------------------------------
+    // PSYCHOGRAPHICS
+    // ----------------------------------
+    addHeading("Psychographics");
+    if (persona.psychographics) {
+      if (persona.psychographics.valuesAndBeliefs) {
+        addWrappedLine(`Values & beliefs: ${persona.psychographics.valuesAndBeliefs}`);
+      }
+      if (persona.psychographics.lifestyle) {
+        addWrappedLine(`Lifestyle: ${persona.psychographics.lifestyle}`);
+      }
+      if (persona.psychographics.personalityTraits) {
+        addWrappedLine(
+          `Personality traits: ${persona.psychographics.personalityTraits}`
+        );
+      }
+      if (persona.psychographics.goalsAndAspirations) {
+        addWrappedLine(
+          `Goals & aspirations: ${persona.psychographics.goalsAndAspirations}`
+        );
+      }
+      y += 4;
+    }
+  
+    // ----------------------------------
+    // BEHAVIORAL
+    // ----------------------------------
+    addHeading("Behavioral");
+    if (persona.behavioral) {
+      if (persona.behavioral.buyingHabits) {
+        addWrappedLine(`Buying habits: ${persona.behavioral.buyingHabits}`);
+      }
+      if (persona.behavioral.painPoints) {
+        addWrappedLine(`Pain points: ${persona.behavioral.painPoints}`);
+      }
+      if (persona.behavioral.motivations) {
+        addWrappedLine(`Motivations: ${persona.behavioral.motivations}`);
+      }
+      if (persona.behavioral.preferredChannels) {
+        addWrappedLine(`Preferred channels: ${persona.behavioral.preferredChannels}`);
+      }
+      y += 4;
+    }
+  
+    // ----------------------------------
+    // SITUATIONAL
+    // ----------------------------------
+    addHeading("Situational");
+    if (persona.situational) {
+      if (persona.situational.technologyUsage) {
+        addWrappedLine(`Tech usage: ${persona.situational.technologyUsage}`);
+      }
+      if (persona.situational.decisionMakingProcess) {
+        addWrappedLine(
+          `Decision process: ${persona.situational.decisionMakingProcess}`
+        );
+      }
+      if (persona.situational.brandAffinities) {
+        addWrappedLine(`Brand affinities: ${persona.situational.brandAffinities}`);
+      }
+      if (persona.situational.roleInBuyingProcess) {
+        addWrappedLine(
+          `Role in buying: ${persona.situational.roleInBuyingProcess}`
+        );
+      }
+      y += 4;
+    }
+  
+    // ----------------------------------
+    // CONTEXT & STORY
+    // ----------------------------------
+    addHeading("Context & story");
+    if (persona.quote) {
+      addWrappedLine(`Quote: "${persona.quote}"`);
+    }
+    if (persona.scenario) {
+      addWrappedLine(`Scenario: ${persona.scenario}`);
+    }
+    y += 4;
+  
+    // ----------------------------------
+    // PERSONALITY TRAITS
+    // ----------------------------------
+    if (persona.personalityRadar) {
+      addHeading("Personality traits");
+      if (persona.personalityRadar.openness !== undefined) {
+        addWrappedLine(`Openness: ${persona.personalityRadar.openness}`);
+      }
+      if (persona.personalityRadar.conscientiousness !== undefined) {
+        addWrappedLine(`Conscientiousness: ${persona.personalityRadar.conscientiousness}`);
+      }
+      if (persona.personalityRadar.extraversion !== undefined) {
+        addWrappedLine(`Extraversion: ${persona.personalityRadar.extraversion}`);
+      }
+      if (persona.personalityRadar.agreeableness !== undefined) {
+        addWrappedLine(`Agreeableness: ${persona.personalityRadar.agreeableness}`);
+      }
+      if (persona.personalityRadar.neuroticism !== undefined) {
+        addWrappedLine(`Neuroticism: ${persona.personalityRadar.neuroticism}`);
+      }
+      y += 4;
+    }
+  
+    // Lastly, download the PDF
     pdf.save("consumer-persona.pdf");
   };
+  
       
   // ---------------------------------
   // Render
@@ -368,7 +401,7 @@ const ConsumerPersona = () => {
               htmlFor="brandName"
               className="block text-lg font-semibold text-gray-800 mb-2"
             >
-              Brand Name
+              Brand name
             </label>
             <textarea
               id="brandName"
@@ -406,7 +439,7 @@ const ConsumerPersona = () => {
               htmlFor="brandDescription"
               className="block text-lg font-semibold text-gray-800 mb-2"
             >
-              Brand Description
+              Brand description
             </label>
             <textarea
               id="brandDescription"
@@ -472,9 +505,9 @@ const ConsumerPersona = () => {
               Generating...
             </div>
           ) : hasSubmitted ? (
-            "Persona Already Submitted"
+            "Persona already submitted"
           ) : (
-            "Generate Consumer Persona"
+            "Generate consumer persona"
           )}
         </button>
 
@@ -492,7 +525,7 @@ const ConsumerPersona = () => {
                 className="text-3xl font-bold text-center text-indigo-900 mb-8 focus:outline-none"
                 tabIndex="-1"
               >
-                Consumer Persona
+                Consumer persona
               </h2>
 
               {/* Display persona image if available */}

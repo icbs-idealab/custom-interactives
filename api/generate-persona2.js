@@ -108,7 +108,7 @@ Respond using only valid JSON that exactly conforms to the provided schema.
     // --- DALL·E Image Generation ---
     try {
       const { name, age, gender } = personaData.demographics || {};
-      const imagePrompt = `A realistic portrait of a ${age}-year-old ${gender} named ${name}, highly detailed, professional, photorealistic.`;
+      const imagePrompt = `A realistic photo of a ${age}-year-old ${gender} named ${name}, highly detailed, professional, photorealistic.`;
 
       const imageResponse = await openai.images.generate({
         prompt: imagePrompt,
