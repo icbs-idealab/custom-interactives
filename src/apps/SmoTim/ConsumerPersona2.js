@@ -223,7 +223,7 @@ const ConsumerPersona = () => {
               htmlFor="brandName"
               className="block text-lg font-semibold text-gray-800 mb-2"
             >
-              Brand Name
+              Brand name
             </label>
             <textarea
               id="brandName"
@@ -257,7 +257,7 @@ const ConsumerPersona = () => {
               htmlFor="brandDescription"
               className="block text-lg font-semibold text-gray-800 mb-2"
             >
-              Brand Description
+              Brand description
             </label>
             <textarea
               id="brandDescription"
@@ -319,9 +319,9 @@ const ConsumerPersona = () => {
               Generating...
             </div>
           ) : hasSubmitted ? (
-            "Persona Already Submitted"
+            "Persona already submitted"
           ) : (
-            "Generate Consumer Persona"
+            "Generate consumer persona"
           )}
         </button>
 
@@ -332,7 +332,7 @@ const ConsumerPersona = () => {
               className="text-3xl font-bold text-center text-indigo-900 mb-8 focus:outline-none"
               tabIndex="-1"
             >
-              Consumer Persona
+              Consumer persona
             </h2>
 
             {/* Display persona image if available */}
