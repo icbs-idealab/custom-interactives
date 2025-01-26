@@ -74,14 +74,21 @@ const ConsumerPersona = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const currentWordCount = countWords(value);
-
-    if (currentWordCount <= wordLimit) {
-      setFormData({ ...formData, [name]: value });
-      setWordCounts({ ...wordCounts, [name]: currentWordCount });
-      setFieldErrors({ ...fieldErrors, [name]: "", global: null });
+    let words = value.trim().split(/\s+/);
+  
+    if (words.length > wordLimit) {
+      // Slice the array down to 50 words
+      words = words.slice(0, wordLimit);
     }
+  
+    const newValue = words.join(" ");
+    const newCount = words.length;
+  
+    setFormData({ ...formData, [name]: newValue });
+    setWordCounts({ ...wordCounts, [name]: newCount });
+    setFieldErrors({ ...fieldErrors, [name]: "", global: null });
   };
+  
 
   const validateForm = () => {
     const errors = {};
