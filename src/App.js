@@ -13,7 +13,6 @@ import SmoTim_BlockchainDemo from './apps/SmoTim/BlockchainDemo.js';
 import SmoTim_CampaignIdeas from './apps/SmoTim/CampaignIdeas.js';
 import SmoTim_ConsumerPersona from './apps/SmoTim/ConsumerPersona.js';
 import SmoTim_ConsumerPersona2 from './apps/SmoTim/ConsumerPersona2.js';
-import SmoTim_ConsumerPersona3 from './apps/SmoTim/ConsumerPersona3.js';
 import SmoTim_DragDropTimeline from './apps/SmoTim/DragDropTimeline.js';
 import SmoTim_JobRisk from './apps/SmoTim/JobRisk.js';
 import SmoTim_TShapedMarketer from './apps/SmoTim/TShapedMarketer.js';
@@ -42,7 +41,6 @@ const modules = {
     "CampaignIdeas.js",
     "ConsumerPersona.js",
     "ConsumerPersona2.js",
-    "ConsumerPersona3.js",
     "DragDropTimeline.js",
     "JobRisk.js",
     "TShapedMarketer.js",
@@ -79,7 +77,6 @@ function DynamicTitle() {
       '/smotim/campaignideas': 'Campaign Ideas',
       '/smotim/consumerpersona': 'Consumer Persona',
       '/smotim/consumerpersona2': 'Consumer Persona2',
-      '/smotim/consumerpersona3': 'Consumer Persona3',
       '/smotim/dragdroptimeline': 'Drag Drop Timeline',
       '/smotim/jobrisk': 'Job Risk',
       '/smotim/tshapedmarketer': 'T Shaped Marketer',
@@ -437,15 +434,6 @@ function App() {
     
       <li>
         <Link
-          to="/smotim/consumerpersona3"
-          className="text-xl underline text-red-600 hover:text-red-800"
-        >
-          Consumer Persona3
-        </Link>
-      </li>
-    
-      <li>
-        <Link
           to="/smotim/dragdroptimeline"
           className="text-xl underline text-red-600 hover:text-red-800"
         >
@@ -533,16 +521,6 @@ function App() {
         element={
           <ResizeWrapper>
             <SmoTim_ConsumerPersona2 />
-          </ResizeWrapper>
-        }
-      />
-    
-
-      <Route
-        path="/smotim/consumerpersona3"
-        element={
-          <ResizeWrapper>
-            <SmoTim_ConsumerPersona3 />
           </ResizeWrapper>
         }
       />
