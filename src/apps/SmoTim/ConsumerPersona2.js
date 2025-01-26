@@ -370,11 +370,11 @@ const ConsumerPersona = () => {
                     {persona.demographics?.occupation}
                   </li>
                   <li>
-                    <strong>Income Level:</strong>{" "}
+                    <strong>Income level:</strong>{" "}
                     {persona.demographics?.incomeLevel}
                   </li>
                   <li>
-                    <strong>Education Level:</strong>{" "}
+                    <strong>Education level:</strong>{" "}
                     {persona.demographics?.educationLevel}
                   </li>
                   <li>
@@ -393,7 +393,7 @@ const ConsumerPersona = () => {
                 </div>
                 <ul className="space-y-2">
                   <li>
-                    <strong>Values & Beliefs:</strong>{" "}
+                    <strong>Values & beliefs:</strong>{" "}
                     {persona.psychographics?.valuesAndBeliefs}
                   </li>
                   <li>
@@ -405,7 +405,7 @@ const ConsumerPersona = () => {
                     {persona.psychographics?.personalityTraits}
                   </li>
                   <li>
-                    <strong>Goals & Aspirations:</strong>{" "}
+                    <strong>Goals & aspirations:</strong>{" "}
                     {persona.psychographics?.goalsAndAspirations}
                   </li>
                 </ul>
@@ -421,17 +421,17 @@ const ConsumerPersona = () => {
                 </div>
                 <ul className="space-y-2">
                   <li>
-                    <strong>Buying Habits:</strong>{" "}
+                    <strong>Buying habits:</strong>{" "}
                     {persona.behavioral?.buyingHabits}
                   </li>
                   <li>
-                    <strong>Pain Points:</strong> {persona.behavioral?.painPoints}
+                    <strong>Pain points:</strong> {persona.behavioral?.painPoints}
                   </li>
                   <li>
                     <strong>Motivations:</strong> {persona.behavioral?.motivations}
                   </li>
                   <li>
-                    <strong>Preferred Channels:</strong>{" "}
+                    <strong>Preferred channels:</strong>{" "}
                     {persona.behavioral?.preferredChannels}
                   </li>
                 </ul>
@@ -447,19 +447,19 @@ const ConsumerPersona = () => {
                 </div>
                 <ul className="space-y-2">
                   <li>
-                    <strong>Tech Usage:</strong>{" "}
+                    <strong>Tech usage:</strong>{" "}
                     {persona.situational?.technologyUsage}
                   </li>
                   <li>
-                    <strong>Decision Process:</strong>{" "}
+                    <strong>Decision process:</strong>{" "}
                     {persona.situational?.decisionMakingProcess}
                   </li>
                   <li>
-                    <strong>Brand Affinities:</strong>{" "}
+                    <strong>Brand affinities:</strong>{" "}
                     {persona.situational?.brandAffinities}
                   </li>
                   <li>
-                    <strong>Role in Buying:</strong>{" "}
+                    <strong>Role in buying:</strong>{" "}
                     {persona.situational?.roleInBuyingProcess}
                   </li>
                 </ul>
@@ -474,7 +474,7 @@ const ConsumerPersona = () => {
                   aria-hidden="true"
                 />
                 <h3 className="text-2xl font-semibold text-indigo-900 border-b pb-1">
-                  Context & Story
+                  Context & story
                 </h3>
               </div>
               <p className="text-gray-800 mb-3">
@@ -489,7 +489,7 @@ const ConsumerPersona = () => {
             {radarData.length > 0 && (
               <div className="mt-10 bg-white p-8 rounded-xl shadow-2xl border border-gray-300 ">
                 <h3 className="text-2xl font-semibold text-indigo-900 mb-4 text-center">
-                  Personality Traits
+                  Personality traits
                 </h3>
                 <PersonaRadarChart data={radarData} />
               </div>
