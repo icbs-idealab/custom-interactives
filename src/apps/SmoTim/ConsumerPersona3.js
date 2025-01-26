@@ -9,7 +9,6 @@ import {
   Tooltip,
 } from "recharts";
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 
 // Radar chart component for personality traits
 const PersonaRadarChart = ({ data }) => {
@@ -204,57 +203,146 @@ const ConsumerPersona = () => {
   // ---------------------------------
   // Handle PDF Download
   // ---------------------------------
-  const handleDownloadPDF = async () => {
-    const personaElement = document.getElementById("personaContainer");
-    if (!personaElement) return;
+  const handleDownloadPDF = () => {
+    if (!persona) return; // Safety check
   
-    try {
-      // 1) Convert the DOM node to a canvas; enable cross-origin images
-      //    so external images (like from a CDN) won't be blank.
-      const canvas = await html2canvas(personaElement, {
-        useCORS: true,
-        crossOrigin: "anonymous"
-      });
+    // Create a new jsPDF (portrait, mm, A4)
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pageWidth = pdf.internal.pageSize.getWidth();
   
-      // 2) Convert canvas to an image data URL
-      const imageData = canvas.toDataURL("image/png");
+    // We'll keep track of "y" for vertical text placement
+    let y = 20;
   
-      // 3) Create a new jsPDF (portrait, mm, A4)
-      const pdf = new jsPDF("p", "mm", "a4");
+    // A little helper for headings
+    const addHeading = (text) => {
+      pdf.setFontSize(14);
+      pdf.setFont("helvetica", "bold");
+      pdf.text(text, 20, y);
+      y += 8;
+    };
   
-      // 4) Get page dimensions
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
+    // A helper for normal text
+    const addNormalText = (text) => {
+      pdf.setFontSize(12);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(text, 20, y);
+      y += 6;
+    };
   
-      // 5) Get the actual width/height of the screenshot
-      const imgProps = pdf.getImageProperties(imageData);
-      const imgWidth = imgProps.width;
-      const imgHeight = imgProps.height;
+    // Centered big title
+    pdf.setFontSize(18);
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Consumer Persona", pageWidth / 2, y, { align: "center" });
+    y += 12;
   
-      // 6) Scale ratio to fit inside the page while preserving aspect ratio
-      const ratio = Math.min(pageWidth / imgWidth, pageHeight / imgHeight);
-  
-      // 7) Final image dimensions within the PDF
-      const pdfWidth = imgWidth * ratio;
-      const pdfHeight = imgHeight * ratio;
-  
-      // 8) Calculate offsets to center the image on the page
-      const offsetX = (pageWidth - pdfWidth) / 2;   // horizontal center
-      const offsetY = (pageHeight - pdfHeight) / 2; // vertical center
-      // If you only want to center horizontally (and align at top), do:
-      // const offsetX = (pageWidth - pdfWidth) / 2;
-      // const offsetY = 10;  // for a small top margin, e.g. 10mm
-  
-      // 9) Add the image at the calculated offsets
-      pdf.addImage(imageData, "PNG", offsetX, offsetY, pdfWidth, pdfHeight);
-  
-      // 10) Download the PDF
-      pdf.save("consumer-persona.pdf");
-    } catch (error) {
-      console.error("Error generating PDF:", error);
+    // ---------------------------
+    // Demographics
+    // ---------------------------
+    addHeading("Demographics");
+    if (persona.demographics) {
+      addNormalText(`Name: ${persona.demographics.name || ""}`);
+      addNormalText(`Age: ${persona.demographics.age || ""}`);
+      addNormalText(`Gender: ${persona.demographics.gender || ""}`);
+      addNormalText(`Occupation: ${persona.demographics.occupation || ""}`);
+      addNormalText(`Income level: ${persona.demographics.incomeLevel || ""}`);
+      addNormalText(`Education level: ${persona.demographics.educationLevel || ""}`);
+      addNormalText(`Location: ${persona.demographics.location || ""}`);
+      y += 4;
     }
+  
+    // ---------------------------
+    // Psychographics
+    // ---------------------------
+    addHeading("Psychographics");
+    if (persona.psychographics) {
+      addNormalText(`Values & beliefs: ${persona.psychographics.valuesAndBeliefs || ""}`);
+      addNormalText(`Lifestyle: ${persona.psychographics.lifestyle || ""}`);
+      addNormalText(
+        `Personality traits: ${persona.psychographics.personalityTraits || ""}`
+      );
+      addNormalText(
+        `Goals & aspirations: ${persona.psychographics.goalsAndAspirations || ""}`
+      );
+      y += 4;
+    }
+  
+    // ---------------------------
+    // Behavioral
+    // ---------------------------
+    addHeading("Behavioral");
+    if (persona.behavioral) {
+      addNormalText(`Buying habits: ${persona.behavioral.buyingHabits || ""}`);
+      addNormalText(`Pain points: ${persona.behavioral.painPoints || ""}`);
+      addNormalText(`Motivations: ${persona.behavioral.motivations || ""}`);
+      addNormalText(
+        `Preferred channels: ${persona.behavioral.preferredChannels || ""}`
+      );
+      y += 4;
+    }
+  
+    // ---------------------------
+    // Situational
+    // ---------------------------
+    addHeading("Situational");
+    if (persona.situational) {
+      addNormalText(`Tech usage: ${persona.situational.technologyUsage || ""}`);
+      addNormalText(
+        `Decision process: ${persona.situational.decisionMakingProcess || ""}`
+      );
+      addNormalText(`Brand affinities: ${persona.situational.brandAffinities || ""}`);
+      addNormalText(
+        `Role in buying: ${persona.situational.roleInBuyingProcess || ""}`
+      );
+      y += 4;
+    }
+  
+    // ---------------------------
+    // Context & story
+    // ---------------------------
+    addHeading("Context & story");
+    if (persona.quote) {
+      addNormalText(`Quote: "${persona.quote}"`);
+    }
+    if (persona.scenario) {
+      // If scenario is long, let's do text wrapping:
+      pdf.setFontSize(12);
+      pdf.setFont("helvetica", "normal");
+      const wrappedScenario = pdf.splitTextToSize(
+        `Scenario: ${persona.scenario}`,
+        pageWidth - 40 // allow for margins
+      );
+      pdf.text(wrappedScenario, 20, y);
+      y += wrappedScenario.length * 6 + 4; // give some space after
+    }
+  
+    // ---------------------------
+    // Personality traits as text
+    // ---------------------------
+    if (persona.personalityRadar) {
+      addHeading("Personality traits");
+      // Each trait is a numeric value
+      if (persona.personalityRadar.openness !== undefined) {
+        addNormalText(`Openness: ${persona.personalityRadar.openness}`);
+      }
+      if (persona.personalityRadar.conscientiousness !== undefined) {
+        addNormalText(`Conscientiousness: ${persona.personalityRadar.conscientiousness}`);
+      }
+      if (persona.personalityRadar.extraversion !== undefined) {
+        addNormalText(`Extraversion: ${persona.personalityRadar.extraversion}`);
+      }
+      if (persona.personalityRadar.agreeableness !== undefined) {
+        addNormalText(`Agreeableness: ${persona.personalityRadar.agreeableness}`);
+      }
+      if (persona.personalityRadar.neuroticism !== undefined) {
+        addNormalText(`Neuroticism: ${persona.personalityRadar.neuroticism}`);
+      }
+      y += 4;
+    }
+  
+    // DONE! Download the PDF
+    pdf.save("consumer-persona.pdf");
   };
-    
+      
   // ---------------------------------
   // Render
   // ---------------------------------

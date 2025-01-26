@@ -161,10 +161,10 @@ export default function BlockchainDemo() {
       {chain.map((block, idx) => (
         <div key={block.id} className="flex flex-col items-center">
           <div
-            className={`w-full border-2 rounded-lg p-4 ${
+            className={`w-full border-2 rounded-lg p-4 text-gray-100 ${
               block.isValid
-                ? "bg-green-50 border-green-200"
-                : "bg-red-50 border-red-200"
+                ? "bg-green-900 border-green-700"
+                : "bg-red-900 border-red-700"
             }`}
           >
             <div className="grid grid-cols-2 gap-4">
@@ -175,10 +175,15 @@ export default function BlockchainDemo() {
                     type="text"
                     value={block.data}
                     onChange={(e) => tamperBlock(idx, e.target.value)}
-                    className="mt-1 w-full px-3 py-2 border rounded-md"
+                    className="mt-1 w-full px-3 py-2 border rounded-md 
+                               bg-white text-black
+                               border-gray-300"
                   />
                 ) : (
-                  <p className="mt-1 w-full px-3 py-2 border rounded-md bg-gray-50">
+                  <p
+                    className="mt-1 w-full px-3 py-2 border rounded-md 
+                               bg-gray-800 border-gray-600"
+                  >
                     {block.data}
                   </p>
                 )}
@@ -202,7 +207,7 @@ export default function BlockchainDemo() {
           {idx < chain.length - 1 && (
             <div
               className={`py-2 ${
-                block.isValid ? "text-green-600" : "text-red-500"
+                block.isValid ? "text-green-400" : "text-red-400"
               }`}
             >
               {/* chain arrow or line */}
@@ -220,14 +225,14 @@ export default function BlockchainDemo() {
     <div className="flex flex-col md:flex-row flex-wrap md:items-center gap-4">
       {chain.map((block, idx) => {
         const blockColor = block.isValid
-          ? "bg-green-50 border-green-200"
-          : "bg-red-50 border-red-200";
+          ? "bg-green-900 border-green-700"
+          : "bg-red-900 border-red-700";
         return (
           <React.Fragment key={block.id}>
             <div
               className={`
                 flex flex-col p-2 border-2 rounded text-xs 
-                break-all w-full md:w-40
+                break-all w-full md:w-40 text-gray-100
                 ${blockColor}
               `}
             >
@@ -238,7 +243,7 @@ export default function BlockchainDemo() {
               <p>Prev: {block.previousHash}</p>
             </div>
             {idx < chain.length - 1 && (
-              <div className="hidden md:flex items-center text-gray-500 text-xl">
+              <div className="hidden md:flex items-center text-gray-400 text-xl">
                 &#8594; {/* arrow */}
               </div>
             )}
@@ -252,7 +257,7 @@ export default function BlockchainDemo() {
   // 9. Render Page
   //
   return (
-    <div className="p-6 space-y-10">
+    <div className="min-h-screen bg-gray-900 text-gray-100 p-6 space-y-10">
       <div>
         <h1 className="text-xl font-bold mb-2">Blockchain demonstration</h1>
         <p>
@@ -261,7 +266,7 @@ export default function BlockchainDemo() {
         </p>
 
         {blocks.some((b) => !b.isValid) && (
-          <div className="bg-red-100 border-l-4 border-red-500 p-4 rounded mt-4">
+          <div className="bg-red-900 border-l-4 border-red-700 p-4 rounded mt-4 text-red-100">
             Blockchain integrity compromised! Some blocks have been tampered
             with.
           </div>
