@@ -205,7 +205,7 @@ const ConsumerPersona = () => {
     <div className="min-h-full bg-gradient-to-br from-indigo-50 to-purple-50 p-4">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-extrabold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
-          Consumer Persona Generator
+          Consumer persona generator
         </h1>
 
         <div className="sr-only" aria-live="polite" ref={liveRegionRef} />
