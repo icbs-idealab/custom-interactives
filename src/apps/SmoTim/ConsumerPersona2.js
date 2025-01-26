@@ -74,20 +74,27 @@ const ConsumerPersona = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    let words = value.trim().split(/\s+/);
+    
+    // Count words by splitting on whitespace but ignoring empty strings:
+    const wordCount = value.split(/\s+/).filter(Boolean).length;
   
-    if (words.length > wordLimit) {
-      // Slice the array down to 50 words
-      words = words.slice(0, wordLimit);
+    if (wordCount <= wordLimit) {
+      // Under (or exactly at) the limit: keep the user's exact input,
+      // including any trailing spaces.
+      setFormData((prev) => ({ ...prev, [name]: value }));
+      setWordCounts((prev) => ({ ...prev, [name]: wordCount }));
+    } else {
+      // Over the limit: we forcibly slice to 50 words
+      const wordsArray = value.split(/\s+/).filter(Boolean).slice(0, wordLimit);
+      const truncatedValue = wordsArray.join(" ");
+      setFormData((prev) => ({ ...prev, [name]: truncatedValue }));
+      setWordCounts((prev) => ({ ...prev, [name]: wordLimit }));
     }
   
-    const newValue = words.join(" ");
-    const newCount = words.length;
-  
-    setFormData({ ...formData, [name]: newValue });
-    setWordCounts({ ...wordCounts, [name]: newCount });
-    setFieldErrors({ ...fieldErrors, [name]: "", global: null });
+    // Optionally clear individual field errors if you like:
+    setFieldErrors((prev) => ({ ...prev, [name]: "", global: null }));
   };
+  
   
 
   const validateForm = () => {
