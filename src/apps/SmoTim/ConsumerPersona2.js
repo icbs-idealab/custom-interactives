@@ -295,7 +295,7 @@ const ConsumerPersona = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Demographics */}
-              <div className="bg-gradient-to-tr from-gray-800 to-gray-700 text-white p-6 rounded-xl shadow-xl transform transition hover:scale-105">
+              <div className="bg-gradient-to-tr from-gray-800 to-gray-700 text-white p-6 rounded-xl shadow-xl ">
                 <div className="flex items-center mb-3">
                   <User className="h-6 w-6 mr-2" aria-hidden="true" />
                   <h3 className="text-2xl font-semibold border-b pb-1">Demographics</h3>
@@ -312,7 +312,7 @@ const ConsumerPersona = () => {
               </div>
 
               {/* Psychographics */}
-              <div className="bg-gradient-to-tr from-blue-900 to-blue-800 text-white p-6 rounded-xl shadow-xl transform transition hover:scale-105">
+              <div className="bg-gradient-to-tr from-blue-900 to-blue-800 text-white p-6 rounded-xl shadow-xl ">
                 <div className="flex items-center mb-3">
                   <Heart className="h-6 w-6 mr-2" aria-hidden="true" />
                   <h3 className="text-2xl font-semibold border-b pb-1">Psychographics</h3>
@@ -326,7 +326,7 @@ const ConsumerPersona = () => {
               </div>
 
               {/* Behavioral */}
-              <div className="bg-gradient-to-tr from-red-900 to-red-800 text-white p-6 rounded-xl shadow-xl transform transition hover:scale-105">
+              <div className="bg-gradient-to-tr from-red-900 to-red-800 text-white p-6 rounded-xl shadow-xl ">
                 <div className="flex items-center mb-3">
                   <ShoppingCart className="h-6 w-6 mr-2" aria-hidden="true" />
                   <h3 className="text-2xl font-semibold border-b pb-1">Behavioural</h3>
@@ -340,7 +340,7 @@ const ConsumerPersona = () => {
               </div>
 
               {/* Situational */}
-              <div className="bg-gradient-to-tr from-green-900 to-green-800 text-white p-6 rounded-xl shadow-xl transform transition hover:scale-105">
+              <div className="bg-gradient-to-tr from-green-900 to-green-800 text-white p-6 rounded-xl shadow-xl ">
                 <div className="flex items-center mb-3">
                   <Smartphone className="h-6 w-6 mr-2" aria-hidden="true" />
                   <h3 className="text-2xl font-semibold border-b pb-1">Situational</h3>
@@ -355,7 +355,7 @@ const ConsumerPersona = () => {
             </div>
 
             {/* Context & Story */}
-            <div className="bg-white p-8 rounded-xl shadow-2xl border border-gray-300 mt-10 transform transition hover:scale-105">
+            <div className="bg-white p-8 rounded-xl shadow-2xl border border-gray-300 mt-10 ">
               <div className="flex items-center mb-3">
                 <BookOpen className="h-6 w-6 mr-2 text-indigo-900" aria-hidden="true" />
                 <h3 className="text-2xl font-semibold text-indigo-900 border-b pb-1">Context & Story</h3>
@@ -366,7 +366,7 @@ const ConsumerPersona = () => {
 
             {/* Personality Radar Chart */}
             {radarData.length > 0 && (
-              <div className="mt-10 bg-white p-8 rounded-xl shadow-2xl border border-gray-300 transform transition hover:scale-105">
+              <div className="mt-10 bg-white p-8 rounded-xl shadow-2xl border border-gray-300 ">
                 <h3 className="text-2xl font-semibold text-indigo-900 mb-4 text-center">Personality Traits</h3>
                 <PersonaRadarChart data={radarData} />
               </div>
